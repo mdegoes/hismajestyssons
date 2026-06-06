@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Seven Days of Family Prayer — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Prayer guide ---------- */
+  .guide-head {
+    padding-top: clamp(36px, 5vw, 80px);
+    padding-bottom: clamp(36px, 5vw, 72px);
+  }
+  .guide-title {
+    font-family: var(--display);
+    font-size: clamp(56px, 9vw, 140px);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    margin: 0;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .guide-title em {
+    font-style: italic; font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+  }
+  .guide-title .row { display: block; }
+
+  .guide-lede {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: start;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 900px) { .guide-lede { grid-template-columns: 1fr; } }
+
+  .guide-lede p {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.6;
+    color: var(--ink-2);
+    font-style: italic;
+    max-width: 52ch;
+  }
+  .guide-lede .meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+    align-self: end;
+  }
+  .guide-lede .meta strong {
+    display: block;
+    font-family: var(--display); font-weight: 400; font-style: italic;
+    font-size: 28px; letter-spacing: -0.01em; color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .guide-lede .actions {
+    grid-column: 1 / -1;
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-top: 8px;
+  }
+
+  /* ---------- The seven days ---------- */
+  .days {
+    display: flex; flex-direction: column;
+    border-top: 2px solid var(--ink);
+  }
+
+  .day {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: clamp(24px, 4vw, 72px);
+    padding: clamp(36px, 5vw, 64px) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 720px) {
+    .day { grid-template-columns: 1fr; gap: 18px; padding: 36px 0; }
+  }
+
+  .day-plate {
+    display: flex; flex-direction: column; gap: 6px;
+    position: sticky; top: 80px;
+    align-self: start;
+  }
+  @media (max-width: 720px) { .day-plate { position: static; flex-direction: row; align-items: baseline; gap: 14px; } }
+
+  .day-num {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(72px, 10vw, 144px);
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  @media (max-width: 720px) { .day-num { font-size: 56px; } }
+
+  .day-label {
+    font-family: var(--sans); font-size: 11px;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+
+  .day-body { padding-top: 12px; }
+  @media (max-width: 720px) { .day-body { padding-top: 0; } }
+
+  .day-topic {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(36px, 4.5vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+  }
+  .day-topic em { font-style: italic; }
+
+  .day-text {
+    margin: 22px 0 0;
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+  .day-text em { font-style: italic; }
+
+  .day-verse {
+    margin-top: 26px;
+    padding-left: 22px;
+    border-left: 2px solid var(--accent);
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    font-style: italic;
+    max-width: 50ch;
+  }
+  .day-verse cite {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); font-style: normal;
+    margin-top: 10px;
+  }
+
+  /* ---------- Send-off ---------- */
+  .send-off {
+    padding-top: clamp(64px, 8vw, 120px);
+    padding-bottom: clamp(64px, 8vw, 120px);
+    text-align: center;
+  }
+  .send-off .amen {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(56px, 8vw, 120px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--accent);
+    margin: 0;
+    font-weight: 400;
+  }
+  .send-off p {
+    margin: 24px auto 0;
+    max-width: 44ch;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .send-off .actions {
+    display: flex; justify-content: center; gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Print ---------- */
+  @media print {
+    .nav, .foot, .send-off .actions, .guide-lede .actions { display: none !important; }
+    body { background: #fff; color: #000; }
+    .day { break-inside: avoid; page-break-inside: avoid; }
+    .day-plate { position: static !important; }
+    .day-num { color: #000; }
+    .day-verse { border-left-color: #000; }
+    a { color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html">Art</a>
+    <a href="music.html">Music</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap guide-head" id="print">
+  <a class="back-link" href="resources.html">
+    <span class="arrow">←</span> Back to Resources
+  </a>
+  <h1 class="guide-title">
+    <span class="row">Seven Days</span>
+    <span class="row"><em>of Family Prayer.</em></span>
+  </h1>
+
+  <div class="guide-lede">
+    <div class="meta">
+      <div><strong>VII</strong>Days · one week</div>
+      <div><strong>5 min</strong>Read aloud each</div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary" type="button" onclick="window.print()">Print this Guide</button>
+      <a class="btn-ghost" href="resources.html">All Resources</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(48px, 6vw, 96px);">
+  <ol class="days" start="1">
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">I</span>
+        <span class="day-label">Day One · Lord's Day</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">The Church</h2>
+        <p class="day-text">
+          Ask for unity, growth, and effectiveness in your congregation and
+          the wider church. Pray for your church leaders to have wisdom and
+          for the church to be a beacon of truth.
+        </p>
+        <blockquote class="day-verse">
+          "I will build my church, and the gates of hell shall not prevail against it."
+          <cite>Matthew 16:18</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">II</span>
+        <span class="day-label">Day Two · Monday</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">Against Evil</h2>
+        <p class="day-text">
+          Stand firm against spiritual darkness and the challenges of the
+          age, advocating for righteousness and for life. Pray for a godly
+          culture to prevail.
+        </p>
+        <blockquote class="day-verse">
+          "Put on the whole armor of God, that ye may be able to stand against the wiles of the devil."
+          <cite>Ephesians 6:11</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">III</span>
+        <span class="day-label">Day Three · Tuesday</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">The Household</h2>
+        <p class="day-text">
+          Seek God's blessing, protection, and guidance for your household.
+          Pray for conviction of sin, for spiritual growth, and for every
+          soul under your roof.
+        </p>
+        <blockquote class="day-verse">
+          "As for me and my house, we will serve the Lord."
+          <cite>Joshua 24:15</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">IV</span>
+        <span class="day-label">Day Four · Wednesday</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">The Broader Family</h2>
+        <p class="day-text">
+          Intercede for extended family — their well-being, their
+          relationships, and their spiritual growth. Ask God to strengthen
+          bonds, heal any rifts, and bring them closer to Him.
+        </p>
+        <blockquote class="day-verse">
+          "Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house."
+          <cite>Acts 16:31</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">V</span>
+        <span class="day-label">Day Five · Thursday</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">City, State &amp; Nation</h2>
+        <p class="day-text">
+          Petition for wisdom, integrity, and godly decision-making among
+          those in authority. Pray that leaders would prioritize justice
+          and turn to the one true source of life and wisdom — Christ.
+        </p>
+        <blockquote class="day-verse">
+          "When the righteous are in authority, the people rejoice."
+          <cite>Proverbs 29:2</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">VI</span>
+        <span class="day-label">Day Six · Friday</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">Praise &amp; Thanksgiving</h2>
+        <p class="day-text">
+          Express gratitude and adoration to God for His goodness, love,
+          and faithfulness. Reflect on the blessings in your life and
+          celebrate the ways God has worked in your family and community.
+        </p>
+        <blockquote class="day-verse">
+          "Oh give thanks unto the Lord; for he is good: for his mercy endureth for ever."
+          <cite>Psalm 107:1</cite>
+        </blockquote>
+      </div>
+    </li>
+
+    <li class="day">
+      <div class="day-plate">
+        <span class="day-num">VII</span>
+        <span class="day-label">Day Seven · Sabbath Eve</span>
+      </div>
+      <div class="day-body">
+        <h2 class="day-topic">Confession of Sins</h2>
+        <p class="day-text">
+          Acknowledge personal and collective shortcomings, seeking God's
+          forgiveness and transformation. Pray for a humble heart and for
+          God to cleanse and renew you and your household.
+        </p>
+        <blockquote class="day-verse">
+          "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness."
+          <cite>1 John 1:9</cite>
+        </blockquote>
+      </div>
+    </li>
+
+  </ol>
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

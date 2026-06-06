@@ -1,0 +1,197 @@
+/* Crown & Calling — shared tokens, nav, footer (used by sub-pages) */
+:root {
+  --paper: #F1ECE0;
+  --paper-2: #E7E1D2;
+  --ink: #0E0E0C;
+  --ink-2: #2A2925;
+  --muted: #6E685D;
+  --rule: rgba(14,14,12,0.18);
+  --accent: #8C2A1F;
+  --on-accent: #F1ECE0;
+
+  --pad-x: clamp(20px, 4vw, 72px);
+  --pad-y: clamp(48px, 7vw, 120px);
+
+  --display: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
+  --serif: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
+  --sans: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
+}
+
+[data-scheme="ink"] {
+  --paper: #0E0E0C;
+  --paper-2: #1A1916;
+  --ink: #F1ECE0;
+  --ink-2: #D8D2C2;
+  --muted: #8A857A;
+  --rule: rgba(241,236,224,0.18);
+  --on-accent: #F1ECE0;
+}
+
+[data-density="compact"] {
+  --pad-y: clamp(32px, 5vw, 80px);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--accent); color: var(--on-accent); }
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+
+.wrap { padding-left: var(--pad-x); padding-right: var(--pad-x); }
+.section { padding-top: var(--pad-y); padding-bottom: var(--pad-y); }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px var(--pad-x);
+  background: color-mix(in oklab, var(--paper) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease, padding .2s ease;
+}
+.nav[data-scrolled="true"] { border-bottom-color: var(--rule); padding-top: 12px; padding-bottom: 12px; }
+
+.mark { display: inline-flex; align-items: center; gap: 12px; }
+.mark .sigil { display: inline-block; line-height: 0; }
+.mark .sigil img { width: 100%; height: auto; display: block; }
+[data-scheme="ink"] .mark .sigil img { filter: invert(1); }
+
+.nav-links {
+  display: flex; gap: 32px; align-items: center;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; font-weight: 700;
+}
+.nav-links a { position: relative; padding: 6px 0; }
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; right: 100%; bottom: 0;
+  height: 1px; background: var(--ink);
+  transition: right .25s ease;
+}
+.nav-links a:hover::after,
+.nav-links a[aria-current="page"]::after { right: 0; }
+.nav-links a[aria-current="page"] { color: var(--ink); }
+
+@media (max-width: 720px) { .nav-links { display: none; } }
+
+/* ---------- Buttons ---------- */
+.btn-primary, .btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 16px 26px;
+  border-radius: 999px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; font-weight: 700;
+  transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  border: 1.5px solid var(--ink);
+}
+.btn-primary { background: var(--ink); color: var(--paper); }
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn-ghost:hover { border-color: var(--ink); transform: translateY(-1px); }
+
+/* ---------- Section heads ---------- */
+.sec-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+.sec-head h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(40px, 5.5vw, 80px);
+  letter-spacing: -0.025em;
+  line-height: 0.96;
+  font-weight: 400;
+}
+.sec-head h2 em {
+  font-style: italic; font-weight: 400;
+  letter-spacing: -0.025em;
+  color: var(--muted);
+  font-size: 0.6em;
+}
+.sec-head .sec-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.14em;
+  color: var(--muted);
+  text-transform: uppercase;
+  align-self: start;
+  padding-top: 12px;
+}
+
+/* ---------- Footer ---------- */
+.foot {
+  border-top: 1px solid var(--rule);
+  padding: 28px var(--pad-x);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700;
+}
+.foot em { font-style: italic; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 14px; color: var(--ink-2); }
+.foot .links { display: flex; gap: 20px; }
+.foot .links a:hover { color: var(--ink); }
+
+/* ---------- Page header (used by sub-pages) ---------- */
+.page-head {
+  padding-top: clamp(48px, 7vw, 120px);
+  padding-bottom: clamp(36px, 5vw, 80px);
+}
+.eyebrow {
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.36em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 36px;
+}
+.eyebrow::before {
+  content: ""; width: 28px; height: 1px; background: var(--ink);
+}
+.page-title {
+  font-family: var(--display);
+  font-size: clamp(56px, 9vw, 156px);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--ink);
+  font-weight: 400;
+}
+.page-title em {
+  font-style: italic; font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+}
+.page-strap {
+  margin-top: 28px;
+  max-width: 52ch;
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.4vw, 21px);
+  line-height: 1.55;
+  color: var(--ink-2);
+  font-style: italic;
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; font-weight: 700;
+  color: var(--muted);
+  padding: 6px 0;
+  margin-bottom: 28px;
+  transition: color .15s ease;
+}
+.back-link:hover { color: var(--ink); }
+.back-link .arrow { font-family: var(--serif); font-style: italic; }

@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Resources — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Resources index ---------- */
+  .resources {
+    display: flex; flex-direction: column;
+    gap: clamp(48px, 6vw, 96px);
+  }
+
+  .resource {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(24px, 4vw, 72px);
+    align-items: stretch;
+    padding-top: 36px;
+    border-top: 2px solid var(--ink);
+  }
+  @media (max-width: 900px) { .resource { grid-template-columns: 1fr; } }
+
+  .resource-img {
+    position: relative;
+    aspect-ratio: 5/4;
+    background: var(--paper-2);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .resource-img::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg,
+      transparent 0 14px,
+      color-mix(in oklab, var(--ink) 6%, transparent) 14px 15px);
+  }
+  .resource-img .tag {
+    position: absolute; top: 16px; left: 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--paper);
+    padding: 6px 10px; border: 1px solid var(--rule);
+  }
+  .resource-img .num {
+    position: absolute; top: 16px; right: 16px;
+    font-family: var(--display); font-style: italic;
+    font-size: 18px;
+    background: var(--ink); color: var(--paper);
+    padding: 4px 12px;
+  }
+  .resource-img .ph-caption {
+    position: absolute; left: 16px; right: 16px; bottom: 16px;
+    font-family: ui-monospace, monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-2); opacity: 0.7;
+  }
+
+  .resource-body { display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+  .resource-eyebrow {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.36em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+  }
+  .resource-body h3 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(36px, 4.5vw, 64px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+  }
+  .resource-body h3 em { font-style: italic; color: var(--accent); }
+  .resource-body p {
+    margin: 0;
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.55; color: var(--ink-2);
+    max-width: 44ch;
+  }
+  .resource-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+
+  .resource-meta {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding-top: 22px;
+    margin-top: 8px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+  }
+  .resource-meta strong {
+    display: block;
+    font-family: var(--display); font-weight: 400; font-style: italic;
+    font-size: 22px; letter-spacing: -0.01em; color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  /* Forthcoming row */
+  .forthcoming {
+    padding-top: 36px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+  @media (max-width: 720px) { .forthcoming { grid-template-columns: 1fr; } }
+  .forthcoming .label {
+    font-family: ui-monospace, monospace; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    padding-top: 6px;
+  }
+  .forthcoming-list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+  }
+  .forthcoming-list li {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--display);
+    font-size: clamp(22px, 2vw, 30px);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    color: var(--muted);
+  }
+  .forthcoming-list li .idx {
+    font-style: italic; color: var(--accent);
+    font-size: 0.7em;
+  }
+  .forthcoming-list li .when {
+    font-family: var(--sans); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html">Art</a>
+    <a href="music.html">Music</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <h1 class="page-title">
+    Resources <em>for the road.</em>
+  </h1>
+</header>
+
+<main class="wrap section" style="padding-top: 0;">
+  <div class="resources">
+
+    <article class="resource">
+      <a class="resource-img" href="family-prayer.html" aria-label="Open the Seven Days of Family Prayer guide">
+        <div class="tag">GUIDE · PRINTABLE</div>
+        <div class="num">01</div>
+        <div class="ph-caption">/// hand-set type, open book, ribbon marker</div>
+      </a>
+      <div class="resource-body">
+        <div class="resource-eyebrow">A Family Prayer Guide</div>
+        <h3>Seven Days <em>of Prayer</em></h3>
+        <p>
+          A seven-day guide designed to lead your family in focused, intentional
+          prayer through the week — for your home, your church, your leaders,
+          and the world.
+        </p>
+        <div class="resource-actions">
+          <a class="btn-primary" href="family-prayer.html">Open the Guide →</a>
+          <a class="btn-ghost" href="family-prayer.html#print">Print Edition</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="resource">
+      <a class="resource-img" href="worthy-books.html" aria-label="Open Worthy Books">
+        <div class="tag">READING LIST</div>
+        <div class="num">02</div>
+        <div class="ph-caption">/// shelf of bound volumes, lamp, leather</div>
+      </a>
+      <div class="resource-body">
+        <div class="resource-eyebrow">A Reading List</div>
+        <h3>Worthy <em>Books.</em></h3>
+        <p>
+          A curated shelf of the books we hand to brothers — Scripture
+          first, then the great men of the faith, then the rest. For the
+          father, the worker, and the man under orders.
+        </p>
+        <div class="resource-actions">
+          <a class="btn-primary" href="worthy-books.html">Open the List →</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="resource">
+      <a class="resource-img" href="worth-a-follow.html" aria-label="Open Worth a Follow">
+        <div class="tag">DIRECTORY</div>
+        <div class="num">03</div>
+        <div class="ph-caption">/// portraits / contact sheet / brothers</div>
+      </a>
+      <div class="resource-body">
+        <div class="resource-eyebrow">A Directory</div>
+        <h3>Worth <em>a Follow.</em></h3>
+        <p>
+          Men and ministries worth your attention on Instagram —
+          pastors, fathers, builders, and craftsmen serving the Crown
+          in public. Steady voices to fill the feed.
+        </p>
+        <div class="resource-actions">
+          <a class="btn-primary" href="worth-a-follow.html">Open the Directory →</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  // sticky-nav scrolled state
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

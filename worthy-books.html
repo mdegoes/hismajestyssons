@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Worthy Books — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Worthy Books ---------- */
+  .shelf {
+    border-top: 2px solid var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .book {
+    display: grid;
+    grid-template-columns: 96px 60px 1fr auto;
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 32px);
+    padding: clamp(20px, 2.5vw, 32px) 0;
+    border-bottom: 1px solid var(--rule);
+    transition: padding-left .2s ease;
+  }
+  .book:hover { padding-left: 8px; }
+  @media (max-width: 720px) {
+    .book {
+      grid-template-columns: 64px 1fr;
+      gap: 16px;
+      row-gap: 6px;
+    }
+    .book .idx { grid-column: 1; grid-row: 2; }
+    .book .body { grid-column: 2; grid-row: 1 / 3; }
+    .book .meta { grid-column: 2; grid-row: 3; justify-self: start; }
+  }
+
+  .book-cover {
+    position: relative;
+    aspect-ratio: 3/4;
+    background: var(--paper-2);
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 1px 1px 0 var(--rule);
+  }
+  .book-cover::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg,
+      transparent 0 8px,
+      color-mix(in oklab, var(--ink) 7%, transparent) 8px 9px);
+  }
+  .book-cover .spine {
+    position: absolute; inset: 0; left: auto; width: 8px;
+    background: color-mix(in oklab, var(--ink) 12%, transparent);
+    border-left: 1px solid var(--rule);
+  }
+
+  .book .idx {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(28px, 3vw, 40px);
+    color: var(--accent);
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  .book .body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .book .title {
+    font-family: var(--display);
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+    margin: 0;
+  }
+  .book .by {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+  .book .by .author {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-style: normal;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+  .book .meta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Section dividers within the shelf */
+  .shelf-section {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    align-items: baseline;
+    padding-top: clamp(40px, 5vw, 72px);
+    padding-bottom: 18px;
+  }
+  @media (max-width: 720px) { .shelf-section { grid-template-columns: 1fr; gap: 8px; } }
+  .shelf-section:first-child { padding-top: 0; }
+  .shelf-section .roman {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(40px, 5vw, 72px);
+    color: var(--accent);
+    line-height: 0.9;
+  }
+  .shelf-section h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(28px, 2.6vw, 40px);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    font-weight: 400;
+  }
+  .shelf-section .blurb {
+    grid-column: 2;
+    font-family: var(--serif); font-style: italic;
+    font-size: 15px; line-height: 1.5;
+    color: var(--muted);
+    margin: 6px 0 0;
+    max-width: 56ch;
+  }
+  @media (max-width: 720px) { .shelf-section .blurb { grid-column: 1; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html">Art</a>
+    <a href="music.html">Music</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <a class="back-link" href="resources.html">
+    <span class="arrow">←</span> Back to Resources
+  </a>
+  <h1 class="page-title">
+    Worthy <em>Books.</em>
+  </h1>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
+
+  <section class="shelf-section">
+    <div class="roman">I</div>
+    <h2>Scripture &amp; The Faith</h2>
+  </section>
+  <div class="shelf">
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">01</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">02</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">03</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+  </div>
+
+  <section class="shelf-section">
+    <div class="roman">II</div>
+    <h2>Fatherhood &amp; the Home</h2>
+  </section>
+  <div class="shelf">
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">04</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">05</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">06</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+  </div>
+
+  <section class="shelf-section">
+    <div class="roman">III</div>
+    <h2>Work, Calling &amp; The World</h2>
+  </section>
+  <div class="shelf">
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">07</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">08</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+    <article class="book">
+      <div class="book-cover"><div class="spine"></div></div>
+      <div class="idx">09</div>
+      <div class="body">
+        <h3 class="title">/// title of the volume</h3>
+        <div class="by">by <span class="author">/// author</span></div>
+      </div>
+      <div class="meta">Forthcoming</div>
+    </article>
+  </div>
+
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

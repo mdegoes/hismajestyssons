@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Art — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Collection plate ---------- */
+  .collection-plate {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: clamp(20px, 3vw, 56px);
+    align-items: baseline;
+    padding-top: clamp(12px, 2vw, 24px);
+    padding-bottom: clamp(28px, 3.5vw, 44px);
+    border-top: 2px solid var(--ink);
+  }
+  @media (max-width: 720px) { .collection-plate { grid-template-columns: 1fr; gap: 8px; } }
+  .collection-plate .roman {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 0.9;
+    color: var(--accent);
+  }
+  .collection-plate h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(36px, 4vw, 60px);
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    font-weight: 400;
+  }
+  .collection-plate h2 em { font-style: italic; }
+  .collection-plate .strap {
+    grid-column: 2;
+    font-family: var(--serif); font-style: italic;
+    font-size: 15px; line-height: 1.5;
+    color: var(--muted);
+    margin: 8px 0 0;
+    max-width: 56ch;
+  }
+  @media (max-width: 720px) { .collection-plate .strap { grid-column: 1; } }
+
+  /* ---------- Art grid ---------- */
+  .art-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(32px, 4vw, 64px) clamp(20px, 3vw, 48px);
+  }
+  @media (max-width: 720px) { .art-grid { grid-template-columns: 1fr; } }
+
+  .piece {
+    display: flex; flex-direction: column;
+    gap: 18px;
+  }
+
+  .piece-img {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--paper-2);
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 1px 1px 0 var(--rule);
+  }
+  .piece-img img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+  }
+  .piece:hover .piece-img img { transform: scale(1.025); }
+  .piece-img .num {
+    position: absolute; top: 14px; left: 14px;
+    font-family: var(--display); font-style: italic;
+    font-size: 18px;
+    background: var(--ink); color: var(--paper);
+    padding: 4px 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .piece-body { display: flex; flex-direction: column; gap: 8px; }
+  .piece-title {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(24px, 2.2vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .piece-title em { font-style: italic; }
+  .piece-desc {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 44ch;
+  }
+
+  .piece-actions {
+    display: flex; flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .piece-actions .btn-download,
+  .piece-actions .btn-buy {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 1px solid var(--ink);
+    transition: background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .piece-actions .btn-download {
+    background: transparent; color: var(--ink);
+  }
+  .piece-actions .btn-download:hover {
+    background: var(--ink); color: var(--paper); transform: translateY(-1px);
+  }
+  .piece-actions .btn-buy {
+    background: var(--ink); color: var(--paper);
+  }
+  .piece-actions .btn-buy:hover {
+    background: var(--accent); border-color: var(--accent); color: var(--on-accent);
+    transform: translateY(-1px);
+  }
+  .piece-actions .arrow { font-family: var(--sans); letter-spacing: 0; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html" aria-current="page">Art</a>
+    <a href="music.html">Music</a>
+    <a href="resources.html">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <h1 class="page-title">
+    Art<em>.</em>
+  </h1>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
+
+  <section class="collection-plate">
+    <span class="roman">I</span>
+    <h2>God's <em>Perspective</em></h2>
+    <p class="strap">/// short collection description goes here.</p>
+  </section>
+
+  <section class="art-grid">
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">01</span>
+        <img src="https://crownandcalling.org/_assets/v11/82b5723583b3a0501d21db21ba5890074e30e90f.png" alt="The Church — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">The <em>Church</em></h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">02</span>
+        <img src="https://crownandcalling.org/_assets/v11/bd698be459cb475de35fee888504880d1d548bf0.png" alt="Poster II — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">03</span>
+        <img src="https://crownandcalling.org/_assets/v11/9ef938e30ea2b3b3972251cc78589b7dc59eb7a7.png" alt="Poster III — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">04</span>
+        <img src="https://crownandcalling.org/_assets/v11/918478d8f83241a8219bfa8936d14427be3ea1ca.png" alt="Poster IV — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">05</span>
+        <img src="https://crownandcalling.org/_assets/v11/0254830f5c81534ce7a015ab031cd9003e35d6ce.png" alt="Poster V — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">06</span>
+        <img src="https://crownandcalling.org/_assets/v11/d066830776975101ff851646c3869aec4f3c5eee.png" alt="Poster VI — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">07</span>
+        <img src="https://crownandcalling.org/_assets/v11/6b500612f515ffc25351ec583c4a6b813ead5b7f.png" alt="Poster VII — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">08</span>
+        <img src="https://crownandcalling.org/_assets/v11/f1a00bdded0ecee35f1269762b41a8718f843628.png" alt="Poster VIII — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">09</span>
+        <img src="https://crownandcalling.org/_assets/v11/c34652953f2d3ea1317f0557d44c392d95b9d099.png" alt="Poster IX — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">10</span>
+        <img src="https://crownandcalling.org/_assets/v11/b55b47a07f0055aed61bf3bbc0856066ddd0bfbf.png" alt="Poster X — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">11</span>
+        <img src="https://crownandcalling.org/_assets/v11/cc45dddcd9d699485691979d07247390c5b3b9a6.png" alt="Poster XI — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">12</span>
+        <img src="https://crownandcalling.org/_assets/v11/03aabda526f8c1f73e6f3d29e197b56b25893c90.png" alt="Poster XII — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <article class="piece">
+      <div class="piece-img">
+        <span class="num">13</span>
+        <img src="https://crownandcalling.org/_assets/v11/65555f9b64b1256563c72112d858f34ff2b83558.png" alt="Poster XIII — God's Perspective" loading="lazy" />
+      </div>
+      <div class="piece-body">
+        <h3 class="piece-title">/// title</h3>
+        <p class="piece-desc">/// short description of the piece.</p>
+        <div class="piece-actions">
+          <a class="btn-download" href="#" download>Download Free <span class="arrow">↓</span></a>
+          <a class="btn-buy" href="#">Buy a Copy <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

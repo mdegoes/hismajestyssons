@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en" data-scheme="ink">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Music — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Album hero ---------- */
+  .album-hero {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    padding-top: clamp(28px, 4vw, 48px);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 900px) { .album-hero { grid-template-columns: 1fr; } }
+
+  .album-cover {
+    position: relative;
+    aspect-ratio: 1/1;
+    background: var(--paper-2);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .album-cover::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg,
+      transparent 0 16px,
+      color-mix(in oklab, var(--ink) 8%, transparent) 16px 17px);
+  }
+  .album-cover .photo-tag {
+    position: absolute; top: 16px; left: 16px;
+    font-family: ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--paper);
+    padding: 6px 10px; border: 1px solid var(--rule);
+  }
+  .cover-caption {
+    position: absolute; left: 16px; bottom: 16px; right: 16px;
+    font-family: ui-monospace, monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .album-info { display: flex; flex-direction: column; gap: 22px; }
+  .album-eyebrow {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.36em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700;
+  }
+  .album-title {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .album-desc {
+    margin: 0;
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 38ch;
+  }
+  .album-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+
+  .platform {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--ink);
+    transition: background .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .platform:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); transform: translateY(-1px); }
+  .platform svg { display: block; }
+  .platform .arrow { font-family: var(--sans); letter-spacing: 0; }
+
+  /* ---------- Tracks ---------- */
+  .tracks-head {
+    display: flex; align-items: baseline; gap: 18px;
+    padding-top: clamp(40px, 5vw, 64px);
+    padding-bottom: 6px;
+  }
+  .tracks-head .roman {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(36px, 4vw, 56px);
+    color: var(--accent);
+    line-height: 0.9;
+  }
+  .tracks-head h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(26px, 2.4vw, 36px);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    font-weight: 400;
+  }
+  .tracks-head .count {
+    margin-left: auto;
+    font-family: ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .tracks {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+  .track {
+    display: grid;
+    grid-template-columns: 56px 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule);
+    transition: padding-left .2s ease;
+  }
+  .track:hover { padding-left: 8px; }
+  .track .idx {
+    font-family: var(--display); font-style: italic;
+    font-size: 24px; color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .track .title {
+    font-family: var(--display);
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .track .duration {
+    font-family: ui-monospace, monospace; font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .track-links { display: flex; gap: 8px; }
+  .goto {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--sans); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700;
+    padding: 8px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    color: var(--ink-2);
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .goto .arrow { font-family: var(--sans); letter-spacing: 0; font-size: 11px; }
+  .goto:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  @media (max-width: 720px) {
+    .track { grid-template-columns: 40px 1fr; row-gap: 10px; }
+    .track .duration { grid-column: 2; justify-self: start; }
+    .track-links { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html">Art</a>
+    <a href="music.html" aria-current="page">Music</a>
+    <a href="resources.html">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <h1 class="page-title">
+    Music<em>.</em>
+  </h1>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
+
+  <section class="album-hero">
+    <div class="album-cover">
+      <div class="photo-tag">ALBUM ART · 1:1</div>
+      <div class="cover-caption">/// album art / illuminated manuscript</div>
+    </div>
+    <div class="album-info">
+      <div class="album-eyebrow">An Album</div>
+      <h2 class="album-title">Christus Dominus</h2>
+      <p class="album-desc">A Christian collection of war songs to inspire.</p>
+      <div class="album-links">
+        <a class="platform" href="#" aria-label="Listen on Spotify">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4c-.2.3-.6.4-.9.2-2.4-1.5-5.4-1.8-9-1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 3.9-.9 7.2-.5 9.9 1.1.3.2.4.6.3 1zm1.2-2.7c-.3.4-.7.5-1.1.3-2.7-1.7-6.9-2.2-10.1-1.2-.5.1-.9-.1-1.1-.6-.1-.4.1-.9.6-1 3.6-1.1 8.2-.5 11.3 1.4.4.2.6.7.4 1.1zm.1-2.9c-3.3-2-8.7-2.1-11.8-1.2-.5.2-1.1-.1-1.2-.7-.2-.5.1-1.1.7-1.2 3.6-1.1 9.6-.9 13.3 1.4.5.3.7 1 .4 1.5-.3.4-.9.6-1.4.2z"/></svg>
+          Spotify
+          <span class="arrow">↗</span>
+        </a>
+        <a class="platform" href="https://www.youtube.com/playlist?list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ" target="_blank" rel="noopener" aria-label="Listen on YouTube Music">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18.2c-4.5 0-8.2-3.7-8.2-8.2S7.5 3.8 12 3.8s8.2 3.7 8.2 8.2-3.7 8.2-8.2 8.2zM10 7.8v8.4L17 12 10 7.8z"/></svg>
+          YouTube Music
+          <span class="arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="tracks-head">
+    <span class="roman">I</span>
+    <h2>The Tracks</h2>
+    <span class="count">VIII songs</span>
+  </div>
+
+  <ol class="tracks">
+    <li class="track">
+      <span class="idx">01</span>
+      <div class="title">Warsong</div>
+      <div class="duration">3:42</div>
+      <div class="track-links">
+        <a class="goto" href="#" aria-label="Warsong on Spotify">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=dmaTJF-rhoI&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=2" target="_blank" rel="noopener" aria-label="Warsong on YouTube Music">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">02</span>
+      <div class="title">Watchman's Ballad</div>
+      <div class="duration">4:08</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=29kKMzOEfY0&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=3" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">03</span>
+      <div class="title">A Mighty Fortress Is Our God</div>
+      <div class="duration">4:51</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=EqL9xErc14A&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=4" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">04</span>
+      <div class="title">Canticle Of Turning</div>
+      <div class="duration">5:14</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=9KLHnEUF6U4&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=5" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">05</span>
+      <div class="title">King Alfred's War Song</div>
+      <div class="duration">4:33</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=LkfWtr9RY3I&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=6" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">06</span>
+      <div class="title">Rise Again Ye Lion Hearted</div>
+      <div class="duration">3:57</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=ivNX7Szx_dc&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=7" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">07</span>
+      <div class="title">The Son Of God Goes Forth To War</div>
+      <div class="duration">4:22</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=OczaJ4k1CME&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=8" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">08</span>
+      <div class="title">Am I A Soldier Of The Cross</div>
+      <div class="duration">5:06</div>
+      <div class="track-links">
+        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=nNxMImITOZg&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+  </ol>
+
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

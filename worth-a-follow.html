@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Worth a Follow — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+
+<style>
+  /* ---------- Worth a Follow ---------- */
+  .follows {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 2.5vw, 32px);
+    border-top: 2px solid var(--ink);
+    padding-top: clamp(28px, 3vw, 44px);
+  }
+  @media (max-width: 900px) { .follows { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .follows { grid-template-columns: 1fr; } }
+
+  .follow {
+    display: flex; flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: color-mix(in oklab, var(--paper) 96%, var(--ink));
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  .follow:hover { transform: translateY(-2px); border-color: var(--ink); }
+
+  .follow-head {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .avatar {
+    position: relative;
+    width: 56px; height: 56px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid var(--rule);
+  }
+  .avatar::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg,
+      transparent 0 6px,
+      color-mix(in oklab, var(--ink) 8%, transparent) 6px 7px);
+  }
+
+  .follow-id { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .follow-name {
+    font-family: var(--display);
+    font-size: 20px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+    margin: 0;
+  }
+  .follow-handle {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .follow-blurb {
+    margin: 0;
+    font-family: var(--serif); font-style: italic;
+    font-size: 14.5px; line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .follow-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); font-weight: 700;
+  }
+  .follow-tag {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .follow-go { color: var(--ink); }
+
+  /* Category bands */
+  .band {
+    display: flex; align-items: baseline; gap: 18px;
+    padding-top: clamp(40px, 5vw, 72px);
+    padding-bottom: 6px;
+  }
+  .band:first-of-type { padding-top: 0; }
+  .band .roman {
+    font-family: var(--display); font-style: italic;
+    font-size: clamp(36px, 4.5vw, 56px);
+    color: var(--accent);
+    line-height: 0.9;
+  }
+  .band h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(26px, 2.4vw, 36px);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    font-weight: 400;
+  }
+  .band .blurb {
+    margin-left: auto;
+    font-family: ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  @media (max-width: 720px) { .band .blurb { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#manifesto">Mission</a>
+    <a href="art.html">Art</a>
+    <a href="music.html">Music</a>
+    <a href="resources.html" aria-current="page">Resources</a>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <a class="back-link" href="resources.html">
+    <span class="arrow">←</span> Back to Resources
+  </a>
+  <h1 class="page-title">
+    Worth <em>a Follow.</em>
+  </h1>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
+
+  <div class="band">
+    <span class="roman">I</span>
+    <h2>Pastors &amp; Teachers</h2>
+  </div>
+  <section class="follows">
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Pastor</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Teacher</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Theologian</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="band">
+    <span class="roman">II</span>
+    <h2>Fathers &amp; Builders</h2>
+  </div>
+  <section class="follows">
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Father</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Builder</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Homestead</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="band">
+    <span class="roman">III</span>
+    <h2>Craftsmen &amp; Workers</h2>
+  </div>
+  <section class="follows">
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Craftsman</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Worker</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+    <article class="follow">
+      <div class="follow-head">
+        <div class="avatar"></div>
+        <div class="follow-id">
+          <h3 class="follow-name">/// name</h3>
+          <span class="follow-handle">@handle</span>
+        </div>
+      </div>
+      <p class="follow-blurb">/// one-line description of why they're worth a follow.</p>
+      <div class="follow-foot">
+        <span class="follow-tag">Artisan</span>
+        <span class="follow-go">Follow ↗</span>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>
