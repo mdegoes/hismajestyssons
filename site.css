@@ -195,3 +195,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .back-link:hover { color: var(--ink); }
 .back-link .arrow { font-family: var(--serif); font-style: italic; }
+
+/* ---------- Nav end (links + toggle wrapper) ---------- */
+.nav-end {
+  display: flex; align-items: center; gap: 20px;
+}
+
+/* ---------- Theme toggle ---------- */
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  transition: border-color .15s ease;
+}
+.theme-toggle:hover { border-color: var(--ink); }
+.theme-toggle svg { display: block; }
+/* Light mode: show moon (hint: click to go dark) */
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+/* Dark mode: show sun (hint: click to go light) */
+[data-scheme="ink"] .theme-toggle .icon-sun  { display: block; }
+[data-scheme="ink"] .theme-toggle .icon-moon { display: none; }

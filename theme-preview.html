@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Theme Preview — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="site.css">
+
+<style>
+  .preview-hero {
+    padding-top: clamp(56px, 7vw, 100px);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: clamp(48px, 6vw, 96px);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .preview-label {
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.36em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .preview-label::before { content: ""; width: 28px; height: 1px; background: var(--ink); }
+  .preview-h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(56px, 9vw, 140px);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+  }
+  .preview-h1 em { font-style: italic; color: var(--accent); }
+
+  .preview-meta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  .preview-section {
+    margin-bottom: clamp(48px, 6vw, 96px);
+  }
+  .preview-section-title {
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--muted); font-weight: 700;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Side-by-side theme panels */
+  .theme-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: clamp(48px, 6vw, 96px);
+  }
+  @media (max-width: 720px) { .theme-panels { grid-template-columns: 1fr; } }
+
+  .theme-panel {
+    padding: clamp(28px, 3.5vw, 52px);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .theme-panel-light { background: #F1ECE0; color: #0E0E0C; }
+  .theme-panel-dark  { background: #0E0E0C; color: #F1ECE0; }
+
+  .panel-label {
+    font-family: ui-monospace, monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.5;
+  }
+  .panel-heading {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(32px, 4vw, 56px);
+    line-height: 1.0; letter-spacing: -0.025em;
+    font-weight: 400; margin: 0;
+  }
+  .panel-heading em { font-style: italic; color: #8C2A1F; }
+  .panel-body {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-style: italic; font-size: 16px; line-height: 1.55;
+    opacity: 0.72;
+    max-width: 36ch;
+  }
+  .panel-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .panel-btn {
+    display: inline-flex; align-items: center;
+    padding: 12px 20px; border-radius: 999px;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; font-weight: 700;
+    border: 1.5px solid;
+    cursor: default;
+  }
+  .panel-btn-primary-light { background: #0E0E0C; color: #F1ECE0; border-color: #0E0E0C; }
+  .panel-btn-ghost-light   { background: transparent; color: #0E0E0C; border-color: rgba(14,14,12,.2); }
+  .panel-btn-primary-dark  { background: #F1ECE0; color: #0E0E0C; border-color: #F1ECE0; }
+  .panel-btn-ghost-dark    { background: transparent; color: #F1ECE0; border-color: rgba(241,236,224,.2); }
+
+  .panel-rule { border: none; border-top: 1px solid; opacity: 0.15; margin: 0; }
+  .panel-track {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid;
+  }
+  .panel-track-light { border-color: rgba(14,14,12,.12); }
+  .panel-track-dark  { border-color: rgba(241,236,224,.12); }
+  .panel-track-idx {
+    font-family: "Libre Baskerville", Georgia, serif; font-style: italic;
+    font-size: 20px; color: #8C2A1F; min-width: 32px;
+  }
+  .panel-track-title {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 18px; letter-spacing: -0.01em;
+  }
+  .panel-track-dur {
+    margin-left: auto;
+    font-family: ui-monospace, monospace; font-size: 11px;
+    opacity: 0.5;
+  }
+
+  /* Live component samples (respect current theme) */
+  .samples { display: flex; flex-direction: column; gap: 40px; }
+
+  .sample-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  .swatch-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .swatch {
+    display: flex; flex-direction: column; gap: 6px; align-items: center;
+  }
+  .swatch-block {
+    width: 64px; height: 40px; border-radius: 4px;
+    border: 1px solid var(--rule);
+  }
+  .swatch-name {
+    font-family: ui-monospace, monospace; font-size: 9px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  }
+
+  .type-scale { display: flex; flex-direction: column; gap: 8px; }
+  .type-scale > * { margin: 0; }
+
+  .track-sample {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--rule);
+  }
+  .track-sample li {
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    align-items: center; gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .track-sample .idx { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--accent); }
+  .track-sample .title { font-family: var(--display); font-size: clamp(18px, 1.8vw, 24px); letter-spacing: -0.02em; }
+  .track-sample .dur  { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-end">
+    <div class="nav-links">
+      <a href="index.html#manifesto">Mission</a>
+      <a href="art.html">Art</a>
+      <a href="music.html">Music</a>
+      <a href="resources.html">Resources</a>
+    </div>
+    <button class="theme-toggle" aria-label="Toggle theme" onclick="window.CC.toggleScheme()">
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- Hero -->
+  <header class="preview-hero">
+    <div class="preview-label">Internal · Theme Reference</div>
+    <h1 class="preview-h1">Theme <em>Preview.</em></h1>
+    <p class="preview-meta">Toggle the ☀/🌙 button in the nav to switch. Preference is saved across pages.</p>
+  </header>
+
+  <!-- Side-by-side static panels -->
+  <div class="preview-section">
+    <div class="preview-section-title">Both themes — static reference</div>
+    <div class="theme-panels">
+
+      <!-- Light panel -->
+      <div class="theme-panel theme-panel-light">
+        <div class="panel-label">Light — Paper</div>
+        <h2 class="panel-heading">Serve the <em>Crown.</em></h2>
+        <p class="panel-body">Crown &amp; Calling equips men to live as kings under The King — at the altar, the desk, in the field.</p>
+        <div class="panel-btns">
+          <div class="panel-btn panel-btn-primary-light">Read the Mission →</div>
+          <div class="panel-btn panel-btn-ghost-light">Learn More</div>
+        </div>
+        <hr class="panel-rule" style="border-color:#0E0E0C">
+        <div class="panel-track panel-track-light">
+          <span class="panel-track-idx">01</span>
+          <span class="panel-track-title">Warsong</span>
+          <span class="panel-track-dur">3:42</span>
+        </div>
+        <div class="panel-track panel-track-light">
+          <span class="panel-track-idx">02</span>
+          <span class="panel-track-title">Watchman's Ballad</span>
+          <span class="panel-track-dur">4:08</span>
+        </div>
+      </div>
+
+      <!-- Dark panel -->
+      <div class="theme-panel theme-panel-dark">
+        <div class="panel-label">Dark — Ink</div>
+        <h2 class="panel-heading">Rise to your <em>Calling.</em></h2>
+        <p class="panel-body" style="color:#D8D2C2">A fellowship of men learning what it means to bow low before Christ and stand tall in the world He made.</p>
+        <div class="panel-btns">
+          <div class="panel-btn panel-btn-primary-dark">Read the Mission →</div>
+          <div class="panel-btn panel-btn-ghost-dark">Learn More</div>
+        </div>
+        <hr class="panel-rule" style="border-color:#F1ECE0">
+        <div class="panel-track panel-track-dark">
+          <span class="panel-track-idx">01</span>
+          <span class="panel-track-title" style="color:#F1ECE0">Warsong</span>
+          <span class="panel-track-dur" style="color:#8A857A">3:42</span>
+        </div>
+        <div class="panel-track panel-track-dark">
+          <span class="panel-track-idx">02</span>
+          <span class="panel-track-title" style="color:#F1ECE0">Watchman's Ballad</span>
+          <span class="panel-track-dur" style="color:#8A857A">4:08</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Live samples — respond to current theme -->
+  <div class="preview-section samples">
+
+    <div>
+      <div class="preview-section-title">Color tokens (current theme)</div>
+      <div class="swatch-row">
+        <div class="swatch"><div class="swatch-block" style="background:var(--paper)"></div><span class="swatch-name">paper</span></div>
+        <div class="swatch"><div class="swatch-block" style="background:var(--paper-2)"></div><span class="swatch-name">paper-2</span></div>
+        <div class="swatch"><div class="swatch-block" style="background:var(--ink)"></div><span class="swatch-name">ink</span></div>
+        <div class="swatch"><div class="swatch-block" style="background:var(--ink-2)"></div><span class="swatch-name">ink-2</span></div>
+        <div class="swatch"><div class="swatch-block" style="background:var(--muted)"></div><span class="swatch-name">muted</span></div>
+        <div class="swatch"><div class="swatch-block" style="background:var(--accent)"></div><span class="swatch-name">accent</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="preview-section-title">Type scale</div>
+      <div class="type-scale">
+        <h1 class="page-title" style="font-size:clamp(40px,5vw,72px)">Page Title <em>Italic</em></h1>
+        <h2 style="font-family:var(--display);font-size:clamp(28px,3vw,44px);letter-spacing:-0.025em;font-weight:400;margin:0">Section Heading</h2>
+        <h3 style="font-family:var(--display);font-size:clamp(22px,2.2vw,32px);letter-spacing:-0.02em;font-weight:400;margin:0">Card Title</h3>
+        <p style="font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.55;color:var(--ink-2);margin:0">Body copy in italic serif — <em>Crown &amp; Calling</em> equips men to live as kings under The King, at the altar, the desk, and in the field.</p>
+        <p style="font-family:var(--sans);font-size:11px;letter-spacing:0.28em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0">Eyebrow label · small caps</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="preview-section-title">Buttons</div>
+      <div class="sample-row">
+        <a class="btn-primary" href="#">Read the Mission →</a>
+        <a class="btn-ghost" href="#">Learn More</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="preview-section-title">Track list</div>
+      <ol class="track-sample">
+        <li><span class="idx">01</span><span class="title">Warsong</span><span class="dur">3:42</span></li>
+        <li><span class="idx">02</span><span class="title">Watchman's Ballad</span><span class="dur">4:08</span></li>
+        <li><span class="idx">03</span><span class="title">A Mighty Fortress Is Our God</span><span class="dur">4:51</span></li>
+      </ol>
+    </div>
+
+  </div>
+
+</div>
+
+<footer class="foot" style="margin-top: clamp(64px, 8vw, 120px);">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>
