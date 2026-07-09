@@ -76,8 +76,15 @@ function Sigil({ size = 130 }) {
 }
 
 function ThemeToggle({ onToggle }) {
+  const [scheme, setScheme] = useState(window.CC.getScheme());
+  useEffect(() => {
+    const handler = (e) => setScheme(e.detail);
+    window.addEventListener('cc-schemechange', handler);
+    return () => window.removeEventListener('cc-schemechange', handler);
+  }, []);
+  const label = scheme === 'ink' ? 'Switch to light' : 'Switch to dark';
   return (
-    <button className="theme-toggle" aria-label="Toggle theme" onClick={onToggle}>
+    <button className="theme-toggle" aria-label={label} data-tooltip={label} onClick={onToggle}>
       <svg className="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="5"/>
         <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
@@ -325,19 +332,7 @@ function Foot() {
 
 // ---------- App ----------
 function App() {
-  const [t, setTweak] = window.useTweaks(window.TWEAK_DEFAULTS);
-
-  const onToggleScheme = () => {
-    const next = t.scheme === 'ink' ? 'paper' : 'ink';
-    setTweak('scheme', next);
-    localStorage.setItem('cc-scheme', next);
-  };
-
-  useEffect(() => {
-    document.documentElement.style.setProperty("--accent", t.accent);
-    document.documentElement.setAttribute("data-density", t.density);
-    document.documentElement.setAttribute("data-scheme", t.scheme);
-  }, [t.accent, t.density, t.scheme]);
+  const onToggleScheme = () => window.CC.toggleScheme();
 
   const onJump = (id) => {
     const el = id === "top" ? document.body : document.getElementById(id);
@@ -346,35 +341,12 @@ function App() {
     window.scrollTo({ top: y, behavior: "smooth" });
   };
 
-  // (reveal-on-scroll removed — caused visibility issues)
-
   return (
     <>
       <Nav onJump={onJump} onToggleScheme={onToggleScheme} />
       <Hero />
       <Manifesto />
       <Foot />
-
-      <window.TweaksPanel title="Tweaks">
-        <window.TweakSection label="Accent" />
-        <window.TweakColor
-          label="Accent color"
-          value={t.accent}
-          options={["#8C2A1F", "#B89968", "#1F3A2E", "#0E0E0C"]}
-          onChange={(v) => setTweak("accent", v)} />
-        <window.TweakSection label="Scheme" />
-        <window.TweakRadio
-          label="Mode"
-          value={t.scheme}
-          options={["paper", "ink"]}
-          onChange={(v) => setTweak("scheme", v)} />
-        <window.TweakSection label="Density" />
-        <window.TweakRadio
-          label="Spacing"
-          value={t.density}
-          options={["comfortable", "compact"]}
-          onChange={(v) => setTweak("density", v)} />
-      </window.TweaksPanel>
     </>
   );
 }

@@ -9,18 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
 <script src="theme.js"></script>
-<script>
-  window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-    "accent": "#8C2A1F",
-    "density": "comfortable",
-    "scheme": "ink"
-  }/*EDITMODE-END*/;
-  // Sync initial scheme from localStorage (theme.js already set data-scheme on <html>)
-  (function () {
-    var s = localStorage.getItem('cc-scheme');
-    if (s !== null) window.TWEAK_DEFAULTS.scheme = s || 'paper';
-  })();
-</script>
 
 <style>
   :root {
@@ -119,6 +107,7 @@
   .nav-end { display: flex; align-items: center; gap: 20px; }
 
   .theme-toggle {
+    position: relative;
     display: inline-flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; flex-shrink: 0;
     border-radius: 999px;
@@ -132,6 +121,33 @@
   .theme-toggle .icon-moon { display: block; }
   [data-scheme="ink"] .theme-toggle .icon-sun  { display: block; }
   [data-scheme="ink"] .theme-toggle .icon-moon { display: none; }
+
+  .theme-toggle[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    white-space: nowrap;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 5px 9px;
+    border-radius: 2px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .theme-toggle[data-tooltip]:hover::after { opacity: 1; }
+
+  html.theme-ready body,
+  html.theme-ready .nav,
+  html.theme-ready .theme-toggle {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -702,7 +718,6 @@
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-  <script type="text/babel" src="tweaks-panel.jsx"></script>
   <script type="text/babel" src="app.jsx"></script>
 </body>
 </html>

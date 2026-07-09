@@ -203,6 +203,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* ---------- Theme toggle ---------- */
 .theme-toggle {
+  position: relative;
   display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; flex-shrink: 0;
   border-radius: 999px;
@@ -218,3 +219,33 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* Dark mode: show sun (hint: click to go light) */
 [data-scheme="ink"] .theme-toggle .icon-sun  { display: block; }
 [data-scheme="ink"] .theme-toggle .icon-moon { display: none; }
+
+/* Tooltip */
+.theme-toggle[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 5px 9px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.theme-toggle[data-tooltip]:hover::after { opacity: 1; }
+
+/* ---------- Smooth theme transitions (enabled after first paint) ---------- */
+html.theme-ready body,
+html.theme-ready .nav,
+html.theme-ready .foot,
+html.theme-ready .theme-toggle {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
