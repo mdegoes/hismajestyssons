@@ -64,7 +64,7 @@
     <div class="ds-group">
       <div class="ds-group-head">
         <h3>Color</h3>
-        <p>Six shared custom properties, redefined under <code>[data-scheme="ink"]</code>. The site ships dark (<code>ink</code>) by default.</p>
+        <p>Six shared custom properties, redefined under <code>[data-scheme="ink"]</code>. First-time visitors get their OS <code>prefers-color-scheme</code> (falling back to dark/<code>ink</code> if unsupported); the toggle then persists to <code>localStorage</code> and overrides the OS going forward. This toggle is the site's <em>only</em> user-facing theme control — there's no accent or density picker.</p>
       </div>
       <div class="ds-swatches">
         <div class="ds-swatch">
@@ -107,17 +107,6 @@
           <span class="ds-swatch-name">--on-accent</span>
           <span class="ds-swatch-value">#F1ECE0 (both schemes)</span>
         </div>
-      </div>
-
-      <div class="ds-group-head" style="margin-top: 32px;">
-        <h3>Accent options</h3>
-        <p>User-selectable alternates, defined in <code>app.jsx</code>'s tweaks panel. Same 4 values should be offered anywhere accent is configurable.</p>
-      </div>
-      <div class="ds-swatches">
-        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#8C2A1F;"></div><span class="ds-swatch-name">Brand red</span><span class="ds-swatch-value">#8C2A1F · default</span></div>
-        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#B89968;"></div><span class="ds-swatch-name">Brass</span><span class="ds-swatch-value">#B89968</span></div>
-        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#1F3A2E;"></div><span class="ds-swatch-name">Forest</span><span class="ds-swatch-value">#1F3A2E</span></div>
-        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#0E0E0C; border:1px solid var(--rule);"></div><span class="ds-swatch-name">Ink</span><span class="ds-swatch-value">#0E0E0C</span></div>
       </div>
     </div>
 
@@ -169,7 +158,7 @@
     <div class="ds-group">
       <div class="ds-group-head">
         <h3>Spacing</h3>
-        <p><code>--pad-x</code> / <code>--pad-y</code> drive page gutters and section rhythm; density swaps <code>--pad-y</code> to a tighter clamp. Everything smaller is a fixed gap.</p>
+        <p><code>--pad-x</code> / <code>--pad-y</code> drive page gutters and section rhythm. Everything smaller is a fixed gap. The <code>[data-density="compact"]</code> variant below still exists in CSS but nothing sets <code>data-density</code> anymore (that control lived in the now-removed Tweaks Panel) — it's currently unreachable dead CSS.</p>
       </div>
       <div class="ds-ruler">
         <div class="ds-ruler-row"><span class="ds-t-micro">--pad-x</span><div class="ds-ruler-bar" style="width: 72px;"></div><span class="ds-t-micro">clamp(20px, 4vw, 72px)</span></div>
@@ -231,8 +220,8 @@
           <span class="sigil" style="width: 70px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
         </div>
       </div>
-      <div class="ds-spec"><span class="ds-spec-tag">site.css → .theme-toggle</span>
-        <button class="theme-toggle" aria-label="Toggle theme" onclick="window.CC.toggleScheme()">
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .theme-toggle (+ theme.js tooltip)</span>
+        <button class="theme-toggle" aria-label="Toggle theme" data-tooltip="Toggle theme" onclick="window.CC.toggleScheme()">
           <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
@@ -533,12 +522,16 @@
     <div class="ds-group-head">
       <p>
         <code>tweaks-panel.jsx</code> ships its own complete, self-contained control kit
-        (slider, segmented radio, toggle, color chips, number stepper, text field, buttons)
-        used by the floating panel on the home page. It's deliberately unthemed — its
-        colors, blur, and shadow values are hardcoded rather than drawn from
-        <code>--paper</code>/<code>--ink</code>/<code>--accent</code>, so it looks the same
-        regardless of site scheme. Treat it as a portable dev tool, not a component to
-        theme-match or extend for public pages.
+        (slider, segmented radio, toggle, color chips, number stepper, text field, buttons).
+        It used to power a floating accent/density/scheme panel on the home page, but that
+        panel — along with the <code>useTweaks</code>/<code>TweaksPanel</code> wiring in
+        <code>app.jsx</code> and its <code>&lt;script&gt;</code> tag in <code>index.html</code> —
+        has been removed now that theme is a first-class, OS-aware feature rather than a
+        dev-mode tweak. The file still lives in the repo but is <strong>no longer loaded by
+        any page</strong>. It's deliberately unthemed — its colors, blur, and shadow values
+        are hardcoded rather than drawn from <code>--paper</code>/<code>--ink</code>/
+        <code>--accent</code>. Keep it around as a reference control kit, not as something
+        to re-wire or theme-match for public pages.
       </p>
     </div>
   </section>

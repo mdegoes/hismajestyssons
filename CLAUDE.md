@@ -18,7 +18,7 @@ Open `http://localhost:8000`. An internet connection is required for full fideli
 
 ### Two rendering strategies, split by page
 
-- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `tweaks-panel.jsx` and `app.jsx` as in-browser-compiled `text/babel` scripts (no bundler — Babel transforms JSX at page load). `app.jsx` defines the Nav/Hero/Manifesto/Work/Music/CTA/Footer components and mounts `<App />` into `#root`.
+- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines the Nav/Hero/Manifesto/Work/Music/CTA/Footer components, but `App()` only mounts Nav/Hero/Manifesto/Foot — see dead code note below.
 - **Every other page** (`art.html`, `music.html`, `family-prayer.html`, `resources.html`, `worthy-books.html`, `worth-a-follow.html`, `theme-preview.html`) **is plain static HTML** with a small vanilla `<script>` at the bottom that just toggles the `.nav`'s `data-scrolled` attribute on scroll. No React on these pages.
 
 Don't assume a change to `app.jsx` affects any page besides `index.html`.
@@ -31,9 +31,14 @@ Don't assume a change to `app.jsx` affects any page besides `index.html`.
 
 ### Theming (light/dark)
 
-- `theme.js` runs synchronously in `<head>` (before first paint, to avoid FOUC) and sets `data-scheme` (`"ink"` or `"paper"`) on `<html>` from `localStorage['cc-scheme']`, defaulting to `"ink"`.
-- `window.CC.toggleScheme()` flips the scheme, persists it, and fires a `cc-schemechange` event.
-- On `index.html`, the React app additionally reads/writes scheme (and `accent` color, `density`) through a `useTweaks`/`TweaksPanel` mechanism (from `tweaks-panel.jsx`) that syncs into the same `data-scheme`/`data-density`/`--accent` attributes/properties, and mirrors scheme changes into `localStorage['cc-scheme']` so it stays consistent with `theme.js` on other pages.
+Theme is a first-class, user-facing feature (not a dev tool) — there is no accent-color or density picker anywhere on the site anymore; the only user control is the light/dark toggle.
+
+- `theme.js` runs synchronously in `<head>` (before first paint, to avoid FOUC) and sets `data-scheme` (`"ink"` or `"paper"`) on `<html>`. On first visit (no `localStorage['cc-scheme']` yet) it follows the OS `prefers-color-scheme` media query, falling back to `"ink"` if that's unsupported/unset; once a visitor manually toggles, that choice is saved to `localStorage['cc-scheme']` and wins from then on.
+- If no manual preference is saved, `theme.js` also listens for OS `prefers-color-scheme` **changes** and live-updates `data-scheme` accordingly.
+- `window.CC.toggleScheme()` flips the scheme, persists it, updates the toggle button's tooltip/`aria-label` (via `_ccUpdateTooltips`), and fires a `cc-schemechange` event.
+- `theme.js` adds `html.theme-ready` one frame after load (via `requestAnimationFrame`), which is what enables the `0.25s` background/color/border-color transitions in `site.css`/`index.html` — this ordering matters: transitions must stay off until after first paint or you get a FOUC-adjacent flash.
+- On `index.html`, `app.jsx`'s `ThemeToggle` no longer holds its own state — it just reads `window.CC.getScheme()` and re-renders on `cc-schemechange`, calling `window.CC.toggleScheme()` directly on click. There is no more `useTweaks`/`TweaksPanel` wiring on the home page.
+- `tweaks-panel.jsx` (the accent/density/scheme dev-tool control kit) is **no longer loaded by any page** — it used to be script-tagged in `index.html` alongside `app.jsx`; that `<script>` tag and the `useTweaks`/`TweaksPanel` usage in `app.jsx` were removed. The file is still in the repo but is fully orphaned; don't assume it's live anywhere.
 
 ### Content structure
 
@@ -50,9 +55,10 @@ Don't assume a change to `app.jsx` affects any page besides `index.html`.
 - It also **introduces two new canonical classes that don't exist elsewhere yet**: `.divider` (consolidates the 4 near-duplicate "roman numeral + heading" dividers — `.collection-plate` in art.html, `.shelf-section` in worthy-books.html, `.tracks-head` in music.html, `.band` in worth-a-follow.html) and `.list-row` (consolidates the 3 near-duplicate "indexed row" patterns — `.track`, `.book`, `.forthcoming-list li`). Existing pages still use their own original classes; only adopt `.divider`/`.list-row` on a page if actually asked to migrate it.
 - Known drift already documented there: `.album-title` differs between `index.html` (84px max, but part of dead/unrendered CSS — see below) and `music.html` (96px max, the live page) — treat music.html's value as correct.
 - `app.jsx` defines `Work()`, `Music()`, and `CTA()` components (with matching CSS in `index.html`'s `<style>`) that `App()` never mounts, and index.html also has an explicitly-commented `/* legacy */` `.pillars`/`.pillar` block with no matching markup. This dead code is called out on the design-system page; be aware it's not visible on the live homepage before "fixing" something that reads it.
+- The design-system page's Dev Tool section documents `tweaks-panel.jsx` as an orphaned file (see Theming above) — it's kept there for reference only, not because anything on the site still loads it.
+- `--accent` is now a fixed single value (`#8C2A1F`) with no user-facing picker — the design-system page no longer shows alternate accent swatches, since that picker was removed along with the rest of the Tweaks Panel.
 
 ## Working conventions
 
 - Adding a new sub-page: copy the structure of an existing static page (`<link rel="stylesheet" href="site.css">`, `<script src="theme.js"></script>` in `<head>`, the scroll listener script before `</body>`) rather than the React pattern used by `index.html`.
-- Keep `--accent` options in `app.jsx`'s `TweakColor` list (`#8C2A1F`, `#B89968`, `#1F3A2E`, `#0E0E0C`) in sync with any palette changes made elsewhere.
 - `.mark .sigil img { width: 100%; height: auto; }` in `site.css` only applies inside `.mark` — a bare `.sigil` (as used standalone on the design-system page) needs its own sizing rule or the logo SVG renders at native/huge size.
