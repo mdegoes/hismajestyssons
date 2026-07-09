@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Design System — Crown &amp; Calling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="../theme.js"></script>
+<link rel="stylesheet" href="../site.css">
+<link rel="stylesheet" href="design-system.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a class="mark" href="../index.html" aria-label="Crown &amp; Calling — home">
+    <span class="sigil" style="width: 130px;">
+      <img src="../assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </a>
+  <div class="nav-end">
+    <div class="nav-links">
+      <a href="../index.html#manifesto">Mission</a>
+      <a href="../art.html">Art</a>
+      <a href="../music.html">Music</a>
+      <a href="../resources.html">Resources</a>
+    </div>
+    <button class="theme-toggle" aria-label="Toggle theme" onclick="window.CC.toggleScheme()">
+      <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="wrap page-head">
+  <div class="eyebrow">Internal Reference · Un-indexed</div>
+  <h1 class="page-title">Design <em>System.</em></h1>
+  <p class="page-strap">
+    Every color, type style, spacing value, and component pattern in use across
+    Crown &amp; Calling, cataloged from the live CSS and consolidated into one
+    canonical spec. Toggle the theme above — every specimen on this page is
+    built from the real tokens, not screenshots.
+  </p>
+  <nav class="ds-toc" aria-label="Sections">
+    <a href="#tokens">01 · Tokens</a>
+    <a href="#atoms">02 · Atoms</a>
+    <a href="#molecules">03 · Molecules</a>
+    <a href="#organisms">04 · Organisms</a>
+    <a href="#devtool">05 · Dev Tool</a>
+  </nav>
+</header>
+
+<main class="wrap" style="padding-bottom: clamp(64px, 8vw, 120px);">
+
+  <!-- ==================== TOKENS ==================== -->
+  <section class="ds-section" id="tokens">
+    <div class="sec-head">
+      <h2>Tokens</h2>
+      <span class="sec-num">01 / Foundations</span>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Color</h3>
+        <p>Six shared custom properties, redefined under <code>[data-scheme="ink"]</code>. The site ships dark (<code>ink</code>) by default.</p>
+      </div>
+      <div class="ds-swatches">
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--paper);"></div>
+          <span class="ds-swatch-name">--paper</span>
+          <span class="ds-swatch-value">#F1ECE0 light · #0E0E0C dark</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--paper-2);"></div>
+          <span class="ds-swatch-name">--paper-2</span>
+          <span class="ds-swatch-value">#E7E1D2 light · #1A1916 dark</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--ink);"></div>
+          <span class="ds-swatch-name">--ink</span>
+          <span class="ds-swatch-value">#0E0E0C light · #F1ECE0 dark</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--ink-2);"></div>
+          <span class="ds-swatch-name">--ink-2</span>
+          <span class="ds-swatch-value">#2A2925 light · #D8D2C2 dark</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--muted);"></div>
+          <span class="ds-swatch-name">--muted</span>
+          <span class="ds-swatch-value">#6E685D light · #8A857A dark</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--paper-2); border-style: dashed;"></div>
+          <span class="ds-swatch-name">--rule</span>
+          <span class="ds-swatch-value">ink 18% · paper 18%</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--accent);"></div>
+          <span class="ds-swatch-name">--accent</span>
+          <span class="ds-swatch-value">#8C2A1F (default, both schemes)</span>
+        </div>
+        <div class="ds-swatch">
+          <div class="ds-swatch-fill" style="background: var(--on-accent);"></div>
+          <span class="ds-swatch-name">--on-accent</span>
+          <span class="ds-swatch-value">#F1ECE0 (both schemes)</span>
+        </div>
+      </div>
+
+      <div class="ds-group-head" style="margin-top: 32px;">
+        <h3>Accent options</h3>
+        <p>User-selectable alternates, defined in <code>app.jsx</code>'s tweaks panel. Same 4 values should be offered anywhere accent is configurable.</p>
+      </div>
+      <div class="ds-swatches">
+        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#8C2A1F;"></div><span class="ds-swatch-name">Brand red</span><span class="ds-swatch-value">#8C2A1F · default</span></div>
+        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#B89968;"></div><span class="ds-swatch-name">Brass</span><span class="ds-swatch-value">#B89968</span></div>
+        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#1F3A2E;"></div><span class="ds-swatch-name">Forest</span><span class="ds-swatch-value">#1F3A2E</span></div>
+        <div class="ds-swatch"><div class="ds-swatch-fill" style="background:#0E0E0C; border:1px solid var(--rule);"></div><span class="ds-swatch-name">Ink</span><span class="ds-swatch-value">#0E0E0C</span></div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Typography</h3>
+        <p>One physical stack — <code>"Baskerville", "Libre Baskerville", Georgia, serif</code> — aliased to <code>--display</code>/<code>--serif</code>/<code>--sans</code>. Role comes from size, weight, and tracking, not typeface. Weight is only ever 400 or 700.</p>
+      </div>
+      <div class="ds-type-table">
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Display — Hero</b>clamp(56px, 9vw, 156px)<br>400 · -0.03em · 0.96</div>
+          <div class="ds-type-specimen ds-t-display-hero">Serve the <em>Crown.</em></div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Display — Section</b>clamp(40px, 5.5vw, 80px)<br>400 · -0.025em · 0.96</div>
+          <div class="ds-type-specimen ds-t-display-section">The Work</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Heading — Sub</b>clamp(26px, 2.4vw, 36px)<br>400 · -0.02em · 1.0</div>
+          <div class="ds-type-specimen ds-t-heading-sub">Pastors &amp; Teachers</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Heading — Card</b>clamp(22px, 2vw, 30px)<br>400 · -0.02em · 1.1</div>
+          <div class="ds-type-specimen ds-t-heading-card">Warsong</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Body — Lede</b>clamp(18px, 1.5vw, 22px)<br>400 italic serif · 1.5</div>
+          <div class="ds-type-specimen ds-t-body-lede">A fellowship of men learning what it means to bow low before Christ.</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Body — Copy</b>clamp(17px, 1.4vw, 21px)<br>400 italic serif · 1.55</div>
+          <div class="ds-type-specimen ds-t-body-copy">A seven-day guide designed to lead your family in focused prayer.</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Label — Nav/Button</b>11px fixed<br>700 · 0.24em uppercase</div>
+          <div class="ds-type-specimen ds-t-label">Read the Mission</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Label — Eyebrow</b>11px fixed<br>700 · 0.36em uppercase</div>
+          <div class="ds-type-specimen ds-t-eyebrow">An Album</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="ds-type-meta"><b>Micro — Tag/Meta</b>10px fixed, monospace<br>700 · 0.12em uppercase</div>
+          <div class="ds-type-specimen ds-t-micro">/// photo · 4:5</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Spacing</h3>
+        <p><code>--pad-x</code> / <code>--pad-y</code> drive page gutters and section rhythm; density swaps <code>--pad-y</code> to a tighter clamp. Everything smaller is a fixed gap.</p>
+      </div>
+      <div class="ds-ruler">
+        <div class="ds-ruler-row"><span class="ds-t-micro">--pad-x</span><div class="ds-ruler-bar" style="width: 72px;"></div><span class="ds-t-micro">clamp(20px, 4vw, 72px)</span></div>
+        <div class="ds-ruler-row"><span class="ds-t-micro">--pad-y</span><div class="ds-ruler-bar" style="width: 120px;"></div><span class="ds-t-micro">clamp(48px, 7vw, 120px)</span></div>
+        <div class="ds-ruler-row"><span class="ds-t-micro">--pad-y (compact)</span><div class="ds-ruler-bar" style="width: 80px;"></div><span class="ds-t-micro">clamp(32px, 5vw, 80px)</span></div>
+        <div class="ds-ruler-row"><span class="ds-t-micro">gap — tight</span><div class="ds-ruler-bar" style="width: 8px;"></div><span class="ds-t-micro">8px</span></div>
+        <div class="ds-ruler-row"><span class="ds-t-micro">gap — component</span><div class="ds-ruler-bar" style="width: 16px;"></div><span class="ds-t-micro">16px</span></div>
+        <div class="ds-ruler-row"><span class="ds-t-micro">gap — card</span><div class="ds-ruler-bar" style="width: 24px;"></div><span class="ds-t-micro">24px</span></div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Radius, borders &amp; shadow</h3></div>
+      <div class="ds-row" style="gap: 32px;">
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--pill">999px</div><span class="ds-t-micro">Pill — buttons/tags</span></div>
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--soft">2px</div><span class="ds-t-micro">Soft — images/cards</span></div>
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--rule">rule</div><span class="ds-t-micro">--rule hairline</span></div>
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--heavy">2px ink</div><span class="ds-t-micro">Structural divider</span></div>
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--accent-rule">accent</div><span class="ds-t-micro">Blockquote rule</span></div>
+        <div class="ds-stack" style="align-items:center;"><div class="ds-demo-box ds-demo-box--shadow">1/1/0</div><span class="ds-t-micro">Flat offset shadow</span></div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Motion &amp; effects</h3>
+        <p>Hover a chip to feel its duration. The frosted nav above is the live <code>backdrop-filter: blur(10px)</code> specimen — scroll to see its border-on-scroll transition.</p>
+      </div>
+      <div class="ds-row">
+        <span class="ds-motion-chip dur-15">.15s ease</span>
+        <span class="ds-motion-chip dur-2">.2s ease</span>
+        <span class="ds-motion-chip dur-25">.25s ease</span>
+        <span class="ds-motion-chip dur-3">.3s ease</span>
+        <div class="ds-stack" style="align-items:center;">
+          <div class="ds-zoom-box"></div>
+          <span class="ds-t-micro">cubic-bezier(.16,1,.3,1) — gallery zoom</span>
+        </div>
+      </div>
+      <div class="ds-row" style="margin-top: 24px;">
+        <div class="ds-stack" style="align-items:center;">
+          <div class="ds-hatch" style="width: 140px; height: 100px;"></div>
+          <span class="ds-t-micro">color-mix() hatch — photo placeholder recipe</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ATOMS ==================== -->
+  <section class="ds-section" id="atoms">
+    <div class="sec-head">
+      <h2>Atoms</h2>
+      <span class="sec-num">02 / Building blocks</span>
+    </div>
+
+    <div class="ds-grid-3">
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .mark .sigil</span>
+        <div class="ds-row">
+          <span class="sigil" style="width: 36px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+          <span class="sigil" style="width: 70px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+        </div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .theme-toggle</span>
+        <button class="theme-toggle" aria-label="Toggle theme" onclick="window.CC.toggleScheme()">
+          <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .btn-primary / .btn-ghost</span>
+        <div class="ds-row">
+          <a class="btn-primary" href="#">Enlist →</a>
+          <a class="btn-ghost" href="#">Read More</a>
+        </div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .goto (pill link)</span>
+        <div class="ds-row">
+          <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        </div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .eyebrow (canonical)</span>
+        <div class="eyebrow" style="margin-bottom:0;">An Album</div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .photo-tag / .num-badge</span>
+        <div class="ds-row">
+          <span class="photo-tag">PHOTO · 4:5</span>
+          <span class="num-badge">01</span>
+        </div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .roman-mark</span>
+        <span class="roman-mark">III</span>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .back-link</span>
+        <a class="back-link" href="#" style="margin-bottom:0;"><span class="arrow">←</span> Back to Resources</a>
+      </div>
+      <div class="ds-spec" style="grid-column: span 2;"><span class="ds-spec-tag">design-system.css → .ds-hatch (image placeholder)</span>
+        <div class="ds-hatch" style="height: 90px;"></div>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">index.html → .form input (pill text input)</span>
+        <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+          <input type="email" placeholder="your@inbox.com" style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MOLECULES ==================== -->
+  <section class="ds-section" id="molecules">
+    <div class="sec-head">
+      <h2>Molecules</h2>
+      <span class="sec-num">03 / Composed patterns</span>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Nav bar</h3></div>
+      <div class="ds-spec" style="padding-top:24px;"><span class="ds-spec-tag">site.css → .nav</span>
+        <nav class="nav ds-mock-nav">
+          <a class="mark" href="#" aria-label="Crown &amp; Calling — home">
+            <span class="sigil" style="width: 100px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+          </a>
+          <div class="nav-end">
+            <div class="nav-links">
+              <a href="#">Mission</a>
+              <a href="#">Art</a>
+              <a href="#" aria-current="page">Music</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Section header</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .sec-head</span>
+        <div class="sec-head" style="margin-bottom:0;">
+          <h2>The Work <em>— what we are building</em></h2>
+          <span class="sec-num">01 / III</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Section divider <em>(new)</em></h3>
+        <p>Consolidates <code>.collection-plate</code>, <code>.shelf-section</code>, <code>.tracks-head</code> and <code>.band</code> — same numeral+heading idea, four different grids and numeral sizes. Use this one going forward.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .divider</span>
+        <div class="divider">
+          <span class="roman-mark">II</span>
+          <h2>Fatherhood <em>&amp; the Home</em></h2>
+          <p class="strap">A curated shelf of the books we hand to brothers — Scripture first, then the great men of the faith.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Indexed list row <em>(new)</em></h3>
+        <p>Consolidates <code>.track</code>, <code>.book</code> and <code>.forthcoming-list li</code> — index + title + meta with a hover nudge.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .list-row</span>
+        <div style="border-top: 1px solid var(--rule);">
+          <div class="list-row">
+            <span class="idx">01</span>
+            <div class="title">Warsong<span class="sub">Track 01</span></div>
+            <span class="meta">3:42</span>
+          </div>
+          <div class="list-row">
+            <span class="idx">02</span>
+            <div class="title">Watchman's Ballad<span class="sub">Track 02</span></div>
+            <span class="meta">4:08</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Card image overlay</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → tag + num-badge on .ds-hatch</span>
+        <div class="ds-hatch" style="height: 140px; position: relative;">
+          <span class="photo-tag" style="position:absolute; top:12px; left:12px;">FILM</span>
+          <span class="num-badge" style="position:absolute; top:12px; right:12px;">01</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Email signup form</h3></div>
+      <div class="ds-grid-2">
+        <div class="ds-spec"><span class="ds-spec-tag">index.html → .form</span>
+          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+            <input placeholder="your@inbox.com" style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
+            <button style="background:var(--ink); color:var(--paper); padding:13px 24px; border-radius:999px; font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlist →</button>
+          </div>
+        </div>
+        <div class="ds-spec"><span class="ds-spec-tag">index.html → .form.success</span>
+          <div style="display:flex; align-items:center; gap:6px; padding:6px 6px 6px 22px; border:1.5px solid var(--ink); border-radius:999px;">
+            <input value="you@inbox.com" readonly style="flex:1; border:0; background:transparent; font:inherit; font-family:var(--sans); font-style:italic; font-size:15px; color:var(--ink); padding:10px 0; outline:none;" />
+            <button style="background:var(--accent); color:var(--on-accent); padding:13px 24px; border-radius:999px; font-family:var(--sans); font-size:11px; letter-spacing:0.24em; text-transform:uppercase; font-weight:700;">Enlisted ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Footer</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .foot</span>
+        <footer class="foot ds-mock-foot">
+          <div class="mark"><span class="sigil" style="width: 36px;"><img src="../assets/logo-vertical.svg" alt="" /></span></div>
+          <div class="links"><a href="#">Instagram</a><a href="#">YouTube</a></div>
+          <div><em>Deus vult</em></div>
+        </footer>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ORGANISMS ==================== -->
+  <section class="ds-section" id="organisms">
+    <div class="sec-head">
+      <h2>Organisms</h2>
+      <span class="sec-num">04 / Full sections</span>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Hero</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">index.html → .hero</span>
+        <div class="ds-grid-2" style="align-items:end;">
+          <div>
+            <div class="eyebrow" style="margin-bottom:20px;">Est. MMXXVI</div>
+            <div class="ds-t-display-hero" style="font-size: clamp(40px, 6vw, 88px);">Serve the <em>Crown.</em></div>
+            <p class="ds-t-body-lede" style="margin-top:20px;">A fellowship of men learning what it means to bow low before Christ.</p>
+          </div>
+          <div class="ds-hatch" style="aspect-ratio: 4/5; position:relative;">
+            <span class="photo-tag" style="position:absolute; top:16px; left:16px;">PHOTO · 4:5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Page header</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">site.css → .page-head + .page-title + .page-strap</span>
+        <div class="eyebrow" style="margin-bottom:20px;">A Reading List</div>
+        <h2 class="page-title" style="font-size: clamp(36px, 6vw, 72px);">Worthy <em>Books.</em></h2>
+        <p class="page-strap">A curated shelf of the books we hand to brothers — Scripture first.</p>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Statement / manifesto block</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">index.html → .manifesto-v2</span>
+        <div class="ds-grid-2">
+          <div class="ds-t-eyebrow" style="display:flex; align-items:center; gap:12px;"><span style="width:28px;height:1px;background:var(--ink);display:inline-block;"></span>The Mission</div>
+          <div class="ds-stack">
+            <div class="ds-t-display-hero" style="font-size: clamp(28px, 4vw, 48px);">Equipping men to live as <em>kings</em> under <em>The King.</em></div>
+            <p class="ds-t-body-lede">No neutral ground. No compromise. Christ claims it all — now claim it for Him.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Card grid</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">index.html → .work-grid (currently unrendered on the live homepage)</span>
+        <div class="ds-grid-3">
+          <div class="ds-stack">
+            <div class="ds-hatch" style="aspect-ratio:4/5; position:relative;"><span class="photo-tag" style="position:absolute; top:10px; left:10px;">FILM</span><span class="num-badge" style="position:absolute; top:10px; right:10px; font-size:14px;">01</span></div>
+            <div class="ds-t-heading-card" style="font-size:22px;">No Neutral Ground</div>
+          </div>
+          <div class="ds-stack">
+            <div class="ds-hatch" style="aspect-ratio:4/5; position:relative;"><span class="photo-tag" style="position:absolute; top:10px; left:10px;">COHORT</span><span class="num-badge" style="position:absolute; top:10px; right:10px; font-size:14px;">02</span></div>
+            <div class="ds-t-heading-card" style="font-size:22px;">The King's Table</div>
+          </div>
+          <div class="ds-stack">
+            <div class="ds-hatch" style="aspect-ratio:4/5; position:relative;"><span class="photo-tag" style="position:absolute; top:10px; left:10px;">ESSAY</span><span class="num-badge" style="position:absolute; top:10px; right:10px; font-size:14px;">03</span></div>
+            <div class="ds-t-heading-card" style="font-size:22px;">Home Is the First Kingdom</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head">
+        <h3>Album hero</h3>
+        <p>Canonicalized to <code>music.html</code>'s scale (title clamp(48px,6vw,96px)) — <code>index.html</code>'s unrendered dead-code copy uses a smaller 84px max and should be deleted rather than followed.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">music.html → .album-hero</span>
+        <div class="ds-grid-2" style="align-items:center;">
+          <div class="ds-hatch" style="aspect-ratio:1/1; position:relative;"><span class="photo-tag" style="position:absolute; top:16px; left:16px;">ALBUM ART · 1:1</span></div>
+          <div class="ds-stack">
+            <div class="ds-t-eyebrow" style="color:var(--accent);">An Album</div>
+            <div class="ds-t-display-section" style="font-size:clamp(32px,5vw,56px);">Christus Dominus</div>
+            <p class="ds-t-body-lede">A Christian collection of war songs to inspire.</p>
+            <div class="ds-row"><a class="goto" href="#">Spotify <span class="arrow">↗</span></a><a class="goto" href="#">YouTube Music <span class="arrow">↗</span></a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Directory / profile card</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">worth-a-follow.html → .follow (as .follow-card)</span>
+        <div class="ds-grid-3">
+          <article class="follow-card">
+            <div class="head">
+              <div class="avatar ds-hatch"></div>
+              <div>
+                <h4 class="name">/// name</h4>
+                <span class="handle">@handle</span>
+              </div>
+            </div>
+            <p class="blurb">One-line description of why they're worth a follow.</p>
+            <div class="foot"><span class="tag">Pastor</span><span>Follow ↗</span></div>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Resource card</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">resources.html → .resource</span>
+        <div class="ds-grid-2">
+          <div class="ds-hatch" style="aspect-ratio:5/4; position:relative;">
+            <span class="photo-tag" style="position:absolute; top:16px; left:16px;">GUIDE · PRINTABLE</span>
+            <span class="num-badge" style="position:absolute; top:16px; right:16px; font-size:14px;">01</span>
+          </div>
+          <div class="ds-stack">
+            <div class="ds-t-eyebrow" style="color:var(--accent);">A Family Prayer Guide</div>
+            <div class="ds-t-display-section" style="font-size:clamp(28px,4vw,48px);">Seven Days <em>of Prayer</em></div>
+            <p class="ds-t-body-copy">A seven-day guide designed to lead your family in focused, intentional prayer through the week.</p>
+            <div class="ds-row"><a class="btn-primary" href="#">Open the Guide →</a><a class="btn-ghost" href="#">Print Edition</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group">
+      <div class="ds-group-head"><h3>Gallery piece card</h3></div>
+      <div class="ds-spec"><span class="ds-spec-tag">art.html → .piece (as .piece-card)</span>
+        <div class="ds-grid-3">
+          <article class="piece-card">
+            <div class="frame ds-hatch">
+              <span class="num-badge" style="position:absolute; top:14px; left:14px; font-size:16px;">01</span>
+            </div>
+            <h4 class="title">The <em>Church</em></h4>
+            <p class="desc">"…the church of the living God, a pillar and buttress of the truth." — 1 Timothy 3:15</p>
+            <div class="actions">
+              <a class="goto" href="#">Download Free ↓</a>
+              <a class="goto" href="#">Buy a Copy ↗</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== DEV TOOL ==================== -->
+  <section class="ds-section" id="devtool">
+    <div class="sec-head">
+      <h2>Dev Tool <em>— not part of the system</em></h2>
+      <span class="sec-num">05 / Reference only</span>
+    </div>
+    <div class="ds-group-head">
+      <p>
+        <code>tweaks-panel.jsx</code> ships its own complete, self-contained control kit
+        (slider, segmented radio, toggle, color chips, number stepper, text field, buttons)
+        used by the floating panel on the home page. It's deliberately unthemed — its
+        colors, blur, and shadow values are hardcoded rather than drawn from
+        <code>--paper</code>/<code>--ink</code>/<code>--accent</code>, so it looks the same
+        regardless of site scheme. Treat it as a portable dev tool, not a component to
+        theme-match or extend for public pages.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="mark">
+    <span class="sigil" style="width: 36px;">
+      <img src="../assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    </span>
+  </div>
+  <div class="links">
+    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+  </div>
+  <div><em>Deus vult</em></div>
+</footer>
+
+<script>
+  const nav = document.querySelector('.nav:not(.ds-mock-nav)');
+  const onScroll = () => nav.setAttribute('data-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>
+</body>
+</html>

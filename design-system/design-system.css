@@ -1,0 +1,360 @@
+/* Crown & Calling — Design System reference page.
+   Structural "ds-" helpers document the catalog; everything else (`.divider`,
+   `.list-row`, `.photo-tag`, `.goto`, `.follow`, `.piece`, …) is the real,
+   canonical component CSS — copy these rules into a page verbatim rather
+   than re-deriving page-specific variants. */
+
+/* ---------- Contents strip ---------- */
+.ds-toc {
+  display: flex; flex-wrap: wrap; gap: 28px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--rule);
+}
+.ds-toc a {
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; font-weight: 700;
+  color: var(--muted);
+  transition: color .15s ease;
+}
+.ds-toc a:hover { color: var(--ink); }
+
+/* ---------- Section / group scaffolding ---------- */
+.ds-section { padding-top: clamp(56px, 7vw, 100px); }
+.ds-group { margin-top: clamp(40px, 5vw, 64px); }
+.ds-group:first-child { margin-top: clamp(28px, 3.5vw, 44px); }
+
+.ds-group-head {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 16px; margin-bottom: 24px;
+}
+.ds-group-head h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(22px, 2vw, 30px);
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+.ds-group-head h3 em { font-style: italic; color: var(--accent); }
+.ds-group-head p {
+  margin: 0;
+  font-family: var(--serif); font-style: italic;
+  font-size: 14.5px; line-height: 1.5;
+  color: var(--muted);
+  max-width: 56ch;
+}
+
+/* ---------- Spec box (annotated demo wrapper) ---------- */
+.ds-spec {
+  position: relative;
+  border: 1px dashed var(--rule);
+  border-radius: 4px;
+  padding: 36px 24px 24px;
+}
+.ds-spec-tag {
+  position: absolute; top: -11px; left: 16px;
+  background: var(--paper);
+  padding: 2px 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+}
+.ds-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.ds-stack { display: flex; flex-direction: column; gap: 16px; }
+
+.ds-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.ds-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 900px) { .ds-grid-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 720px) { .ds-grid-2, .ds-grid-3 { grid-template-columns: 1fr; } }
+
+/* ---------- Color swatches ---------- */
+.ds-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+.ds-swatch { display: flex; flex-direction: column; gap: 8px; }
+.ds-swatch-fill {
+  height: 64px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+.ds-swatch-name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; letter-spacing: 0.05em;
+  color: var(--ink);
+}
+.ds-swatch-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ---------- Type scale ---------- */
+.ds-type-table { display: flex; flex-direction: column; }
+.ds-type-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+}
+@media (max-width: 720px) { .ds-type-row { grid-template-columns: 1fr; gap: 6px; } }
+.ds-type-meta {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.06em; line-height: 1.6;
+  color: var(--muted);
+}
+.ds-type-meta b {
+  display: block;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink); font-weight: 700;
+  margin-bottom: 4px;
+}
+.ds-type-specimen { color: var(--ink); overflow-wrap: anywhere; }
+
+.ds-t-display-hero { font-family: var(--display); font-size: clamp(56px, 9vw, 156px); line-height: 0.96; letter-spacing: -0.03em; font-weight: 400; }
+.ds-t-display-section { font-family: var(--display); font-size: clamp(40px, 5.5vw, 80px); line-height: 0.96; letter-spacing: -0.025em; font-weight: 400; }
+.ds-t-heading-sub { font-family: var(--display); font-size: clamp(26px, 2.4vw, 36px); line-height: 1.0; letter-spacing: -0.02em; font-weight: 400; }
+.ds-t-heading-card { font-family: var(--display); font-size: clamp(22px, 2vw, 30px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 400; }
+.ds-t-body-lede { font-family: var(--serif); font-style: italic; font-size: clamp(18px, 1.5vw, 22px); line-height: 1.5; color: var(--ink-2); }
+.ds-t-body-copy { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.4vw, 21px); line-height: 1.55; color: var(--ink-2); }
+.ds-t-label { font-family: var(--sans); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; font-weight: 700; color: var(--ink); }
+.ds-t-eyebrow { font-family: var(--sans); font-size: 11px; letter-spacing: 0.36em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.ds-t-micro { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.ds-t-display-hero em, .ds-t-display-section em, .ds-t-heading-sub em, .ds-t-heading-card em { font-style: italic; color: var(--accent); }
+
+/* ---------- Spacing ruler ---------- */
+.ds-ruler { display: flex; flex-direction: column; gap: 14px; }
+.ds-ruler-row { display: flex; align-items: center; gap: 18px; }
+.ds-ruler-bar { height: 10px; border-radius: 2px; background: var(--accent); flex-shrink: 0; }
+.ds-ruler-row .ds-t-micro { min-width: 220px; }
+
+/* ---------- Radius / border / shadow demo boxes ---------- */
+.ds-demo-box {
+  width: 96px; height: 96px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper-2);
+  color: var(--muted);
+  font-family: ui-monospace, monospace; font-size: 10px;
+}
+.ds-demo-box--pill { border-radius: 999px; border: 1.5px solid var(--ink); }
+.ds-demo-box--soft { border-radius: 2px; border: 1px solid var(--rule); }
+.ds-demo-box--rule { border-radius: 2px; border: 1px solid var(--rule); }
+.ds-demo-box--heavy { border-radius: 0; border-top: 2px solid var(--ink); }
+.ds-demo-box--accent-rule { border-radius: 0; border-left: 2px solid var(--accent); }
+.ds-demo-box--shadow { border-radius: 2px; box-shadow: 1px 1px 0 var(--rule); background: var(--paper-2); border: none; }
+
+/* ---------- Motion chips ---------- */
+.ds-motion-chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 12px 20px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; font-weight: 700;
+  cursor: default;
+}
+.ds-motion-chip.dur-15 { transition: transform .15s ease, background .15s ease, color .15s ease; }
+.ds-motion-chip.dur-2  { transition: transform .2s ease, background .2s ease, color .2s ease; }
+.ds-motion-chip.dur-25 { transition: transform .25s ease, background .25s ease, color .25s ease; }
+.ds-motion-chip.dur-3  { transition: transform .3s ease, background .3s ease, color .3s ease; }
+.ds-motion-chip:hover { transform: translateY(-3px); background: var(--ink); color: var(--paper); }
+
+.ds-zoom-box {
+  width: 140px; height: 105px;
+  border-radius: 2px; overflow: hidden;
+  background: var(--paper-2);
+  position: relative;
+}
+.ds-zoom-box::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg,
+    transparent 0 14px,
+    color-mix(in oklab, var(--ink) 6%, transparent) 14px 15px);
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+}
+.ds-zoom-box:hover::before { transform: scale(1.06); }
+
+/* ---------- Hatch placeholder recipe ---------- */
+.ds-hatch {
+  position: relative;
+  background: var(--paper-2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ds-hatch::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg,
+    transparent 0 14px,
+    color-mix(in oklab, var(--ink) 6%, transparent) 14px 15px);
+}
+
+/* ==========================================================================
+   Canonical shared components (proposed / consolidated)
+   ========================================================================== */
+
+/* ---------- Tag / badge (photo-tag) ---------- */
+.photo-tag {
+  position: relative; display: inline-flex;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink); background: var(--paper);
+  padding: 6px 10px; border: 1px solid var(--rule);
+}
+.num-badge {
+  position: relative; display: inline-flex;
+  font-family: var(--display); font-style: italic;
+  font-size: 18px;
+  background: var(--ink); color: var(--paper);
+  padding: 4px 12px;
+}
+
+/* ---------- Pill link (goto / platform) ---------- */
+.goto {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--sans); font-size: 11px;
+  letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700;
+  padding: 10px 18px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-2);
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.goto .arrow { font-family: var(--sans); letter-spacing: 0; }
+.goto:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+
+/* ---------- Roman numeral marker ---------- */
+.roman-mark {
+  display: inline-block;
+  font-family: var(--display); font-style: italic;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 0.9;
+  color: var(--accent);
+}
+
+/* ---------- Section divider — consolidates .collection-plate /
+   .shelf-section / .tracks-head / .band into one canonical component ---------- */
+.divider {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: clamp(20px, 3vw, 56px);
+  align-items: baseline;
+}
+@media (max-width: 720px) { .divider { grid-template-columns: 1fr; gap: 8px; } }
+.divider h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(26px, 2.4vw, 36px);
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  font-weight: 400;
+}
+.divider h2 em { font-style: italic; color: var(--accent); }
+.divider .count {
+  margin-left: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted);
+}
+.divider .strap {
+  grid-column: 2;
+  font-family: var(--serif); font-style: italic;
+  font-size: 15px; line-height: 1.5;
+  color: var(--muted);
+  margin: 8px 0 0;
+  max-width: 56ch;
+}
+@media (max-width: 720px) { .divider .strap { grid-column: 1; } }
+.divider--ruled { border-top: 2px solid var(--ink); padding-top: clamp(20px, 3vw, 32px); }
+
+/* ---------- Indexed list row — consolidates .track / .book /
+   .forthcoming-list li into one canonical component ---------- */
+.list-row {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: padding-left .2s ease;
+}
+.list-row:hover { padding-left: 8px; }
+.list-row .idx {
+  font-family: var(--display); font-style: italic;
+  font-size: clamp(24px, 2.4vw, 32px);
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.list-row .title {
+  font-family: var(--display);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--ink);
+}
+.list-row .title .sub {
+  display: block;
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px; letter-spacing: 0; color: var(--muted);
+  margin-top: 3px;
+}
+.list-row .meta {
+  font-family: ui-monospace, monospace; font-size: 11px;
+  color: var(--muted); letter-spacing: 0.04em;
+  text-align: right;
+}
+@media (max-width: 720px) {
+  .list-row { grid-template-columns: 36px 1fr; row-gap: 6px; }
+  .list-row .meta { grid-column: 2; text-align: left; }
+}
+
+/* ---------- Follow / directory card ---------- */
+.follow-card {
+  display: flex; flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--paper) 96%, var(--ink));
+  transition: transform .2s ease, border-color .2s ease;
+}
+.follow-card:hover { transform: translateY(-2px); border-color: var(--ink); }
+.follow-card .head { display: flex; align-items: center; gap: 14px; }
+.follow-card .avatar {
+  position: relative; width: 56px; height: 56px; flex-shrink: 0;
+  border-radius: 999px; overflow: hidden; border: 1px solid var(--rule);
+}
+.follow-card .name { font-family: var(--display); font-size: 20px; letter-spacing: -0.01em; margin: 0; }
+.follow-card .handle { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
+.follow-card .blurb { margin: 0; font-family: var(--serif); font-style: italic; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
+.follow-card .foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--rule);
+  font-family: var(--sans); font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted); font-weight: 700;
+}
+.follow-card .tag { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; }
+
+/* ---------- Gallery piece card ---------- */
+.piece-card { display: flex; flex-direction: column; gap: 18px; }
+.piece-card .frame {
+  position: relative; aspect-ratio: 4/3;
+  border-radius: 2px; overflow: hidden;
+  box-shadow: 1px 1px 0 var(--rule);
+}
+.piece-card .title { margin: 0; font-family: var(--display); font-size: clamp(24px, 2.2vw, 34px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 400; }
+.piece-card .title em { font-style: italic; }
+.piece-card .desc { margin: 0; font-family: var(--serif); font-style: italic; font-size: 15.5px; line-height: 1.55; color: var(--ink-2); }
+.piece-card .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* ---------- Sigil, standalone (site.css only sizes it inside .mark) ---------- */
+.sigil { display: inline-block; line-height: 0; }
+.sigil img { width: 100%; height: auto; display: block; }
+
+/* ---------- Nav / footer mockups (static position, real markup) ---------- */
+.ds-mock-nav { position: static !important; }
+.ds-mock-foot { border-top: none !important; padding: 0 !important; }

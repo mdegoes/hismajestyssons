@@ -123,7 +123,7 @@
   }
   .track {
     display: grid;
-    grid-template-columns: 56px 1fr auto auto;
+    grid-template-columns: 56px 1fr auto;
     align-items: center;
     gap: 24px;
     padding: 22px 0;
@@ -144,11 +144,6 @@
     font-weight: 400;
     color: var(--ink);
   }
-  .track .duration {
-    font-family: ui-monospace, monospace; font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.04em;
-  }
   .track-links { display: flex; gap: 8px; }
   .goto {
     display: inline-flex; align-items: center; gap: 6px;
@@ -164,7 +159,6 @@
   .goto:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
   @media (max-width: 720px) {
     .track { grid-template-columns: 40px 1fr; row-gap: 10px; }
-    .track .duration { grid-column: 2; justify-self: start; }
     .track-links { grid-column: 1 / -1; }
   }
 </style>
@@ -209,7 +203,7 @@
       <h2 class="album-title">Christus Dominus</h2>
       <p class="album-desc">A Christian collection of war songs to inspire.</p>
       <div class="album-links">
-        <a class="platform" href="#" aria-label="Listen on Spotify">
+        <a class="platform" href="https://open.spotify.com/album/0zCKsgF5mHLeM2U5B4XFb7" target="_blank" rel="noopener" aria-label="Listen on Spotify">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4c-.2.3-.6.4-.9.2-2.4-1.5-5.4-1.8-9-1-.4.1-.7-.1-.8-.5-.1-.4.1-.7.5-.8 3.9-.9 7.2-.5 9.9 1.1.3.2.4.6.3 1zm1.2-2.7c-.3.4-.7.5-1.1.3-2.7-1.7-6.9-2.2-10.1-1.2-.5.1-.9-.1-1.1-.6-.1-.4.1-.9.6-1 3.6-1.1 8.2-.5 11.3 1.4.4.2.6.7.4 1.1zm.1-2.9c-3.3-2-8.7-2.1-11.8-1.2-.5.2-1.1-.1-1.2-.7-.2-.5.1-1.1.7-1.2 3.6-1.1 9.6-.9 13.3 1.4.5.3.7 1 .4 1.5-.3.4-.9.6-1.4.2z"/></svg>
           Spotify
           <span class="arrow">↗</span>
@@ -232,74 +226,65 @@
   <ol class="tracks">
     <li class="track">
       <span class="idx">01</span>
-      <div class="title">Warsong</div>
-      <div class="duration">3:42</div>
+      <div class="title">War Song</div>
       <div class="track-links">
-        <a class="goto" href="#" aria-label="Warsong on Spotify">Spotify <span class="arrow">↗</span></a>
-        <a class="goto" href="https://www.youtube.com/watch?v=dmaTJF-rhoI&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=2" target="_blank" rel="noopener" aria-label="Warsong on YouTube Music">YouTube <span class="arrow">↗</span></a>
+        <a class="goto" href="https://open.spotify.com/track/7yxHwwwYfZi9ZZTVkueJRm" target="_blank" rel="noopener" aria-label="War Song on Spotify">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=dmaTJF-rhoI&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=2" target="_blank" rel="noopener" aria-label="War Song on YouTube Music">YouTube <span class="arrow">↗</span></a>
       </div>
     </li>
     <li class="track">
       <span class="idx">02</span>
-      <div class="title">Watchman's Ballad</div>
-      <div class="duration">4:08</div>
-      <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
-        <a class="goto" href="https://www.youtube.com/watch?v=29kKMzOEfY0&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=3" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
-      </div>
-    </li>
-    <li class="track">
-      <span class="idx">03</span>
-      <div class="title">A Mighty Fortress Is Our God</div>
-      <div class="duration">4:51</div>
-      <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
-        <a class="goto" href="https://www.youtube.com/watch?v=EqL9xErc14A&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=4" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
-      </div>
-    </li>
-    <li class="track">
-      <span class="idx">04</span>
-      <div class="title">Canticle Of Turning</div>
-      <div class="duration">5:14</div>
-      <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
-        <a class="goto" href="https://www.youtube.com/watch?v=9KLHnEUF6U4&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=5" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
-      </div>
-    </li>
-    <li class="track">
-      <span class="idx">05</span>
       <div class="title">King Alfred's War Song</div>
-      <div class="duration">4:33</div>
       <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://open.spotify.com/track/3nDQYpQ5ESZikakY85eKKz" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
         <a class="goto" href="https://www.youtube.com/watch?v=LkfWtr9RY3I&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=6" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
       </div>
     </li>
     <li class="track">
-      <span class="idx">06</span>
-      <div class="title">Rise Again Ye Lion Hearted</div>
-      <div class="duration">3:57</div>
+      <span class="idx">03</span>
+      <div class="title">Am I a Soldier of the Cross?</div>
       <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://open.spotify.com/track/4Lb8koYJHidQB9l2acNwwJ" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=nNxMImITOZg&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">04</span>
+      <div class="title">Rise Again Ye Lion-Hearted</div>
+      <div class="track-links">
+        <a class="goto" href="https://open.spotify.com/track/5KtjOyeMdNenGggFVBVbGB" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
         <a class="goto" href="https://www.youtube.com/watch?v=ivNX7Szx_dc&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=7" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
       </div>
     </li>
     <li class="track">
-      <span class="idx">07</span>
-      <div class="title">The Son Of God Goes Forth To War</div>
-      <div class="duration">4:22</div>
+      <span class="idx">05</span>
+      <div class="title">The Son of God Goes Forth to War</div>
       <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://open.spotify.com/track/0cfi0kE8pQlSEWtFc5WmuQ" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
         <a class="goto" href="https://www.youtube.com/watch?v=OczaJ4k1CME&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=8" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
       </div>
     </li>
     <li class="track">
-      <span class="idx">08</span>
-      <div class="title">Am I A Soldier Of The Cross</div>
-      <div class="duration">5:06</div>
+      <span class="idx">06</span>
+      <div class="title">A Mighty Fortress Is Our God</div>
       <div class="track-links">
-        <a class="goto" href="#">Spotify <span class="arrow">↗</span></a>
-        <a class="goto" href="https://www.youtube.com/watch?v=nNxMImITOZg&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+        <a class="goto" href="https://open.spotify.com/track/065HKdNhsvPERn3qusurtP" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=EqL9xErc14A&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=4" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">07</span>
+      <div class="title">Canticle Of Turning</div>
+      <div class="track-links">
+        <a class="goto" href="https://www.youtube.com/watch?v=9KLHnEUF6U4&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=5" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
+      </div>
+    </li>
+    <li class="track">
+      <span class="idx">08</span>
+      <div class="title">Watchman's Ballad</div>
+      <div class="track-links">
+        <a class="goto" href="https://open.spotify.com/track/0B5NN1RSWx2W5MW5zt8ILk" target="_blank" rel="noopener">Spotify <span class="arrow">↗</span></a>
+        <a class="goto" href="https://www.youtube.com/watch?v=29kKMzOEfY0&list=PLOltgNu-DKEh3_heg_96HTAAkUvu1FPUJ&index=3" target="_blank" rel="noopener">YouTube <span class="arrow">↗</span></a>
       </div>
     </li>
   </ol>
