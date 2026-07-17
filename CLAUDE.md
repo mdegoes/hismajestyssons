@@ -18,7 +18,7 @@ Open `http://localhost:8000`. An internet connection is required for full fideli
 
 ### Two rendering strategies, split by page
 
-- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines the Nav/Hero/Manifesto/Work/Music/CTA/Footer components, but `App()` only mounts Nav/Hero/Manifesto/Foot — see dead code note below.
+- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines and `App()` mounts Nav/Hero/Manifesto/Foot — that's the whole homepage.
 - **Every other page** (`art.html`, `music.html`, `family-prayer.html`, `resources.html`, `worthy-books.html`, `worth-a-follow.html`, `theme-preview.html`) **is plain static HTML** with a small vanilla `<script>` at the bottom that just toggles the `.nav`'s `data-scrolled` attribute on scroll. No React on these pages.
 
 Don't assume a change to `app.jsx` affects any page besides `index.html`.
@@ -38,7 +38,7 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 - `window.CC.toggleScheme()` flips the scheme, persists it, updates the toggle button's tooltip/`aria-label` (via `_ccUpdateTooltips`), and fires a `cc-schemechange` event.
 - `theme.js` adds `html.theme-ready` one frame after load (via `requestAnimationFrame`), which is what enables the `0.25s` background/color/border-color transitions in `site.css`/`index.html` — this ordering matters: transitions must stay off until after first paint or you get a FOUC-adjacent flash.
 - On `index.html`, `app.jsx`'s `ThemeToggle` no longer holds its own state — it just reads `window.CC.getScheme()` and re-renders on `cc-schemechange`, calling `window.CC.toggleScheme()` directly on click. There is no more `useTweaks`/`TweaksPanel` wiring on the home page.
-- `tweaks-panel.jsx` (the accent/density/scheme dev-tool control kit) is **no longer loaded by any page** — it used to be script-tagged in `index.html` alongside `app.jsx`; that `<script>` tag and the `useTweaks`/`TweaksPanel` usage in `app.jsx` were removed. The file is still in the repo but is fully orphaned; don't assume it's live anywhere.
+- `tweaks-panel.jsx` (the old accent/density/scheme dev-tool control kit) has been deleted along with its design-system Dev Tool section — it was fully orphaned (no page loaded it) and kept no reference value once theme became a first-class OS-aware feature.
 
 ### Content structure
 
@@ -53,9 +53,8 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 - `design-system/index.html` + `design-system/design-system.css` — a live, un-indexed catalog (`<meta name="robots" content="noindex, nofollow">`, not linked from any nav) of every color, type style, spacing value, and component pattern in use across the site, organized as tokens → atoms → molecules → organisms. It's the canonical reference: **when adding or changing a component pattern, check here first, and update this page too so it doesn't drift from reality.**
 - It reuses real classes from `site.css` directly (`.btn-primary`, `.eyebrow`, `.back-link`, etc.) so those specimens can't silently go stale. Page-specific patterns that don't have a shared class yet (`.photo-tag`, `.goto`, follow/piece cards) get their CSS copied into `design-system.css` as the documented spec.
 - It also **introduces two new canonical classes that don't exist elsewhere yet**: `.divider` (consolidates the 4 near-duplicate "roman numeral + heading" dividers — `.collection-plate` in art.html, `.shelf-section` in worthy-books.html, `.tracks-head` in music.html, `.band` in worth-a-follow.html) and `.list-row` (consolidates the 3 near-duplicate "indexed row" patterns — `.track`, `.book`, `.forthcoming-list li`). Existing pages still use their own original classes; only adopt `.divider`/`.list-row` on a page if actually asked to migrate it.
-- Known drift already documented there: `.album-title` differs between `index.html` (84px max, but part of dead/unrendered CSS — see below) and `music.html` (96px max, the live page) — treat music.html's value as correct.
-- `app.jsx` defines `Work()`, `Music()`, and `CTA()` components (with matching CSS in `index.html`'s `<style>`) that `App()` never mounts, and index.html also has an explicitly-commented `/* legacy */` `.pillars`/`.pillar` block with no matching markup. This dead code is called out on the design-system page; be aware it's not visible on the live homepage before "fixing" something that reads it.
-- The design-system page's Dev Tool section documents `tweaks-panel.jsx` as an orphaned file (see Theming above) — it's kept there for reference only, not because anything on the site still loads it.
+- `.album-title` lives only in `music.html` now (96px max) — its old, smaller (84px) dead-code copy in `index.html` was deleted, so there's no drift to reconcile anymore.
+- The formerly-dead `Work()`/`Music()`/`CTA()` components (and their matching CSS, and the legacy `.pillars`/`.pillar` block) have been deleted from `app.jsx`/`index.html` — they were never mounted by `App()`. The "Card grid" and "Album hero" specimens on the design-system page are now the only surviving reference for those patterns; `music.html`'s `.album-hero` is the one live copy (96px title max — treat it as correct if anything else claims otherwise).
 - `--accent` is now a fixed single value (`#8C2A1F`) with no user-facing picker — the design-system page no longer shows alternate accent swatches, since that picker was removed along with the rest of the Tweaks Panel.
 
 ## Working conventions
