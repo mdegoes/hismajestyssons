@@ -31,24 +31,11 @@
     overflow: hidden;
     border-radius: 2px;
   }
-  .album-cover::before {
-    content: ""; position: absolute; inset: 0;
-    background: repeating-linear-gradient(135deg,
-      transparent 0 16px,
-      color-mix(in oklab, var(--ink) 8%, transparent) 16px 17px);
-  }
-  .album-cover .photo-tag {
-    position: absolute; top: 16px; left: 16px;
-    font-family: ui-monospace, monospace;
-    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--ink); background: var(--paper);
-    padding: 6px 10px; border: 1px solid var(--rule);
-  }
-  .cover-caption {
-    position: absolute; left: 16px; bottom: 16px; right: 16px;
-    font-family: ui-monospace, monospace; font-size: 11px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--muted);
+  .album-cover img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .album-info { display: flex; flex-direction: column; gap: 22px; }
@@ -198,8 +185,7 @@
 
   <section class="album-hero">
     <div class="album-cover">
-      <div class="photo-tag">ALBUM ART · 1:1</div>
-      <div class="cover-caption">/// album art / illuminated manuscript</div>
+      <img src="assets/images/album_cover.png" alt="Christus Dominus album art: a pencil-sketch dragon slain by a sword outside a besieged city, with a lone knight approaching" loading="lazy" />
     </div>
     <div class="album-info">
       <div class="album-eyebrow">An Album</div>

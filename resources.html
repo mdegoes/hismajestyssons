@@ -34,12 +34,6 @@
     overflow: hidden;
     border-radius: 2px;
   }
-  .resource-img::before {
-    content: ""; position: absolute; inset: 0;
-    background: repeating-linear-gradient(135deg,
-      transparent 0 14px,
-      color-mix(in oklab, var(--ink) 6%, transparent) 14px 15px);
-  }
   .resource-img .tag {
     position: absolute; top: 16px; left: 16px;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -54,11 +48,11 @@
     background: var(--ink); color: var(--paper);
     padding: 4px 12px;
   }
-  .resource-img .ph-caption {
-    position: absolute; left: 16px; right: 16px; bottom: 16px;
-    font-family: ui-monospace, monospace; font-size: 10px;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ink-2); opacity: 0.7;
+  .resource-img img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .resource-body { display: flex; flex-direction: column; gap: 22px; justify-content: center; }
@@ -179,9 +173,9 @@
 
     <article class="resource">
       <a class="resource-img" href="family-prayer.html" aria-label="Open the Seven Days of Family Prayer guide">
+        <img src="assets/images/7_days_of_prayer.png" alt="A family kneeling together in prayer in their living room" loading="lazy" />
         <div class="tag">GUIDE · PRINTABLE</div>
         <div class="num">01</div>
-        <div class="ph-caption">/// hand-set type, open book, ribbon marker</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Family Prayer Guide</div>
@@ -200,9 +194,9 @@
 
     <article class="resource">
       <a class="resource-img" href="worthy-books.html" aria-label="Open Worthy Books">
+        <img src="assets/images/worth_a_read.png" alt="A wood-paneled home library lined with leather-bound books" loading="lazy" />
         <div class="tag">READING LIST</div>
         <div class="num">02</div>
-        <div class="ph-caption">/// shelf of bound volumes, lamp, leather</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Reading List</div>
@@ -220,9 +214,9 @@
 
     <article class="resource">
       <a class="resource-img" href="worth-a-follow.html" aria-label="Open Worth a Follow">
+        <img src="assets/images/worth_a_follow.png" alt="A podcast microphone and Bible on a desk in a study, with a cross and rifle mounted on the wall behind" loading="lazy" />
         <div class="tag">DIRECTORY</div>
         <div class="num">03</div>
-        <div class="ph-caption">/// portraits / contact sheet / brothers</div>
       </a>
       <div class="resource-body">
         <div class="resource-eyebrow">A Directory</div>

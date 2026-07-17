@@ -91,7 +91,7 @@ function Hero() {
 
       <div className="hero-right">
         <div className="hero-photo">
-          <div className="photo-tag">PHOTO · 4:5 · MEN AT THE ALTAR</div>
+          <img src="assets/images/home_page.png" alt="A father reading Scripture in the living room while his family gathers in the kitchen behind him" loading="lazy" />
           <div className="photo-caption">"Be strong, and show yourself a man." — 1 Kings 2:2</div>
         </div>
       </div>
