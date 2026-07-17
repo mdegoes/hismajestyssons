@@ -19,7 +19,7 @@ Open `http://localhost:8000`. An internet connection is required for full fideli
 ### Two rendering strategies, split by page
 
 - **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines and `App()` mounts Nav/Hero/Manifesto/Foot — that's the whole homepage.
-- **Every other page** (`art.html`, `music.html`, `family-prayer.html`, `resources.html`, `worthy-books.html`, `worth-a-follow.html`, `theme-preview.html`) **is plain static HTML** with a small vanilla `<script>` at the bottom that just toggles the `.nav`'s `data-scrolled` attribute on scroll. No React on these pages.
+- **Every other page** (`art.html`, `music.html`, `family-prayer.html`, `resources.html`, `worthy-books.html`, `worth-a-follow.html`, `theme-preview.html`) **is plain static HTML** with a small vanilla `<script>` at the bottom that toggles the `.nav`'s `data-scrolled` attribute on scroll and wires up the mobile hamburger menu (see Mobile nav below). No React on these pages.
 
 Don't assume a change to `app.jsx` affects any page besides `index.html`.
 
@@ -40,6 +40,13 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 - On `index.html`, `app.jsx`'s `ThemeToggle` no longer holds its own state — it just reads `window.CC.getScheme()` and re-renders on `cc-schemechange`, calling `window.CC.toggleScheme()` directly on click. There is no more `useTweaks`/`TweaksPanel` wiring on the home page.
 - `tweaks-panel.jsx` (the old accent/density/scheme dev-tool control kit) has been deleted along with its design-system Dev Tool section — it was fully orphaned (no page loaded it) and kept no reference value once theme became a first-class OS-aware feature.
 
+### Mobile nav (hamburger menu)
+
+- Below 720px, `.nav-links` hides itself and a `.nav-toggle` hamburger button (in `.nav-end`, next to the theme toggle) becomes the only way to reach nav links. Clicking it sets `data-menu-open="true"` on `.nav`, which drops `.nav-links` into an absolutely-positioned panel below the bar; the CSS lives in `site.css` for static pages and is duplicated in `index.html`'s inline `<style>` — same drift risk as any other shared token, keep both in sync.
+- On static pages, each trailing `<script>` queries `.nav-toggle`, toggles `data-menu-open` on click, and closes the menu when a `.nav-links a` is clicked. It also flips the button's `aria-expanded` **and** `aria-label` (`"Open menu"` / `"Close menu"`) — don't drop the `aria-label` update when touching this script, it's easy to regress into a static label that never reflects state.
+- On `index.html`, `app.jsx`'s `Nav` component holds `menuOpen` in React state instead and does the equivalent (`data-menu-open`, `aria-expanded`, `aria-label` all derived from state); it also closes the menu on nav-link click via a wrapped `jump()` handler.
+- There's no click-outside-to-close or Escape-to-close handling anywhere (static pages or React) — closing only happens via the toggle button itself or clicking a link. That's consistent site-wide, not an oversight to "fix" on just one page.
+
 ### Content structure
 
 - `assets/` — brand assets (e.g. `logo-vertical.svg`, inverted via CSS filter in dark mode).
@@ -59,5 +66,5 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 
 ## Working conventions
 
-- Adding a new sub-page: copy the structure of an existing static page (`<link rel="stylesheet" href="site.css">`, `<script src="theme.js"></script>` in `<head>`, the scroll listener script before `</body>`) rather than the React pattern used by `index.html`.
+- Adding a new sub-page: copy the structure of an existing static page (`<link rel="stylesheet" href="site.css">`, `<script src="theme.js"></script>` in `<head>`, the `.nav-toggle` button and `id="nav-links"` in the nav markup, the scroll-listener + hamburger-menu script before `</body>`) rather than the React pattern used by `index.html`.
 - `.mark .sigil img { width: 100%; height: auto; }` in `site.css` only applies inside `.mark` — a bare `.sigil` (as used standalone on the design-system page) needs its own sizing rule or the logo SVG renders at native/huge size.
