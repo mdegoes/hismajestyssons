@@ -1,1 +1,5 @@
 .DS_Store
+stripe-setup/node_modules/
+stripe-setup/.env
+stripe-setup/payment-links.json
+stripe-setup/live-payment-links.json

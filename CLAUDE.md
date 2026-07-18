@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-There is no build step, package manager, or test suite — this is a static site.
+There is no build step, package manager, or test suite for the site itself — this is a static site. (The one exception is `stripe-setup/`, a standalone Node tooling directory with its own `package.json` used only to provision Stripe objects — see Art print shop below. It isn't loaded by any page and isn't a build step for the site.)
 
 ```bash
 # Serve locally (either works)
@@ -73,6 +73,7 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 - `uploads/` — source images supplied by the user (raw material, not necessarily used directly on-site).
 - `screenshots/` — design exploration captures, reference only, not loaded by any page.
 - `CNAME` — GitHub Pages custom domain (`crownandcalling.org`); this repo deploys via GitHub Pages directly from static files. Pages are normally plain files at the repo root; a page needs its own folder with an `index.html` only if it wants a clean, extension-less URL (see `design-system/` below).
+- `assets/favicon.ico` (multi-size: 16/32/48/64px), `assets/favicon-16x16.png`, `assets/favicon-32x32.png`, `assets/apple-touch-icon.png` (180×180, for iOS) — the site favicon, generated from a single source crown-mark PNG. Linked via `<link rel="icon">`/`<link rel="apple-touch-icon">` in every page's `<head>` (root pages reference `assets/...`; `design-system/index.html` uses `../assets/...`). The source image has an opaque white background (not transparent), so the favicon renders as a white square with a black crown rather than blending into dark browser chrome — that's a known cosmetic tradeoff, not a bug, unless someone supplies a transparent-background version. There's no web manifest / Android/PWA icon sizes, just the standard favicon + apple-touch-icon set.
 
 ### Design system reference (`/design-system`)
 
@@ -84,6 +85,17 @@ Theme is a first-class, user-facing feature (not a dev tool) — there is no acc
 - `.album-title` lives only in `music.html` now (96px max) — its old, smaller (84px) dead-code copy in `index.html` was deleted, so there's no drift to reconcile anymore.
 - The formerly-dead `Work()`/`Music()`/`CTA()` components (and their matching CSS, and the legacy `.pillars`/`.pillar` block) have been deleted from `app.jsx`/`index.html` — they were never mounted by `App()`. The "Card grid" and "Album hero" specimens on the design-system page are now the only surviving reference for those patterns; `music.html`'s `.album-hero` is the one live copy (96px title max — treat it as correct if anything else claims otherwise).
 - `--accent` is now a fixed single value (`#8C2A1F`) with no user-facing picker — the design-system page no longer shows alternate accent swatches, since that picker was removed along with the rest of the Tweaks Panel.
+
+### Art print shop (Stripe)
+
+- Each of the 12 prints on `art.html` has a "Buy a Copy" button (`.btn-buy`) linking directly to a Stripe **Payment Link** (`https://buy.stripe.com/...`), opened in a new tab (`target="_blank" rel="noopener"`, same convention as the external buy links on `worthy-books.html`). Payment Links are Stripe-hosted checkout pages — there's no backend involved, which is why this approach was chosen for a static, no-build-step site instead of server-created Checkout Sessions.
+- `stripe-setup/` is a standalone Node tooling directory (own `package.json`; `node_modules/` and `.env` are gitignored) used only to provision Stripe objects. It is **not** part of the deployed site and nothing on any page loads it.
+  - `.env` (gitignored, never committed) holds `STRIPE_SECRET_KEY` / `STRIPE_PUBLISHABLE_KEY`; `.env.example` documents the expected shape with placeholder values only. The publishable key isn't actually used by anything yet — Payment Links need only the secret key server/script-side. It'd only matter if the site ever embeds client-side Stripe.js/Elements directly instead of redirecting to `buy.stripe.com`.
+  - `npm run test-connection` — sanity-checks `STRIPE_SECRET_KEY` via `stripe.balance.retrieve()` and reports whether it's a TEST or LIVE key.
+  - `npm run create-payment-links` — provisioning script: for each of the 12 prints, creates (or reuses, matched via a `cc_slug` metadata tag on the Stripe Product) a Product + Price ($12.95 flat, USD) + Payment Link (adjustable quantity 1–10, US-only shipping address collection), plus one shared Shipping Rate ($6.95 flat, reused across all 12). It's safe to re-run: it searches for existing objects by metadata before creating anything, so it won't create duplicates. Results are written to a gitignored `payment-links.json`. Whichever key is in `.env` at run time determines whether this creates test or live objects — test and live are fully separate object graphs in Stripe.
+  - `npm run find-live-payment-links` — read-only lookup script (creates nothing) that searches live-mode Stripe for the 12 `cc_slug`-tagged Products/Payment Links. This exists because the live objects here were provisioned by using Stripe Dashboard's "copy to live mode" feature on the test-mode objects, not by re-running `create-payment-links.js` with a live key — this script's only job is finding the resulting live Payment Link URLs so they can be pasted into `art.html`.
+- Stripe Product images point at `https://crownandcalling.org/crown-n-calling-art/<slug>.jpg` (the live domain's full-size JPGs, not the `-sm` thumbnails used on the page itself) — Stripe requires a publicly reachable URL, so these only resolve once the matching `art.html`/`crown-n-calling-art/` state is actually deployed.
+- Test-mode Payment Link URLs contain a `test_` segment (e.g. `buy.stripe.com/test_...`); live ones don't — that's the only way to tell which mode a URL in `art.html` belongs to just by looking at it.
 
 ## Working conventions
 
