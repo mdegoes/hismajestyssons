@@ -1,4 +1,6 @@
 .DS_Store
+.server.pid
+.server.log
 stripe-setup/node_modules/
 stripe-setup/.env
 stripe-setup/payment-links.json
