@@ -1,4 +1,4 @@
-/* Crown & Calling — Design System reference page.
+/* His Majesty’s Sons — Design System reference page.
    Structural "ds-" helpers document the catalog; everything else (`.divider`,
    `.list-row`, `.photo-tag`, `.goto`, `.follow`, `.piece`, …) is the real,
    canonical component CSS — copy these rules into a page verbatim rather
@@ -383,11 +383,52 @@
 .person-tags span.tag:not(:last-child)::after { content: " · "; }
 .person-links { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
-/* ---------- Two-layer filter chips (worth-a-follow.html → .filters-wrap) ----------
-   Two independent .person-filters rows (Follow For / Trust Score), each its own
-   .filter-group — a person must match the active chip in BOTH groups (AND). */
-.filters-wrap { display: flex; flex-direction: column; gap: 20px; }
-.filter-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+/* ---------- Two-layer filter dropdowns (worthy-men.html → .filters-wrap) ----------
+   Two independent .filter-select-wrap selects (Follow For / Trust Score), each its
+   own .filter-group — a person must match the selected option in BOTH groups (AND).
+   Was a wrapping row of .chip buttons; switched to native <select> once Follow For
+   grew past ~20 options and a chip row stopped being usable. Styled like the pill
+   email input on index.html (site precedent for skinning native form controls),
+   not a custom-built listbox — full native keyboard/screen-reader/mobile support
+   for free, at the cost of the native <option> list using OS chrome instead of the
+   site's own type styles. */
+.filters-wrap { display: flex; flex-flow: row wrap; align-items: flex-start; gap: 28px; }
+.filter-group { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 340px; }
+.filter-label { font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.filter-select-wrap { position: relative; width: 100%; }
+.filter-select {
+  width: 100%;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  padding: 12px 42px 12px 20px;
+  border-radius: 999px;
+  border: 1.5px solid var(--rule);
+  background: transparent;
+  font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.filter-select:hover, .filter-select:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
+.filter-select-wrap::after {
+  content: "";
+  position: absolute; top: 50%; right: 18px;
+  width: 10px; height: 10px;
+  transform: translateY(-50%);
+  background-color: var(--ink-2);
+  /* Same chevron glyph as .nav-drop-trigger .chevron, reused here as a mask so it can
+     take a CSS color instead of the fixed stroke a background-image would need. */
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;
+  mask-size: contain; -webkit-mask-size: contain;
+  pointer-events: none;
+  transition: background-color .15s ease;
+}
+.filter-select-wrap:hover::after { background-color: var(--ink); }
+.filter-select-wrap:has(.filter-select:focus-visible)::after { background-color: var(--ink); }
+.filter-select-wrap.is-active .filter-select { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.filter-select-wrap.is-active::after { background-color: var(--paper); }
 
 /* ---------- Trust score legend (worth-a-follow.html → .trust-legend) ----------
    One shared 5-tier scale. Never shown as a standalone block near the top —

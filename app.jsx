@@ -1,10 +1,10 @@
 const { useState, useEffect, useRef } = React;
 
 // ---------- Components ----------
-function Sigil({ size = 130 }) {
+function Sigil({ size = 190, src = "assets/logo-long.svg" }) {
   return (
     <span className="sigil" style={{ width: size }}>
-      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+      <img src={src} alt="His Majesty’s Sons" />
     </span>
   );
 }
@@ -51,8 +51,8 @@ function Nav({ onJump, onToggleScheme }) {
   });
   return (
     <nav className="nav" data-scrolled={scrolled} data-menu-open={menuOpen}>
-      <a className="mark" href="#top" onClick={(e) => { e.preventDefault(); jump("top"); }} aria-label="Crown &amp; Calling — home">
-        <Sigil size={130} />
+      <a className="mark" href="#top" onClick={(e) => { e.preventDefault(); jump("top"); }} aria-label="His Majesty’s Sons — home">
+        <Sigil size={190} />
       </a>
       <div className="nav-end">
         <div className="nav-links" id="nav-links">
@@ -112,7 +112,7 @@ function Hero() {
           <span className="row world">Rise to your <em>Calling.</em></span>
         </h1>
         <p className="hero-strap">
-          Crown &amp; Calling is a fellowship of men learning what it means to bow
+          His Majesty’s Sons is a fellowship of men learning what it means to bow
           low before Christ and stand tall in the world He made — at the altar,
           at the desk, in the field, and at the door of our homes.
         </p>
@@ -162,7 +162,7 @@ function Foot({ onJump }) {
   return (
     <footer className="foot">
       <div className="foot-brand">
-        <Sigil size={72} />
+        <Sigil size={160} src="assets/logo-vertical.svg" />
         <em>Deus vult</em>
       </div>
       <nav className="foot-links" aria-label="Site">
@@ -175,8 +175,8 @@ function Foot({ onJump }) {
         <a href="worthy-men.html" className="foot-sub">Worthy Men</a>
       </nav>
       <div className="foot-social">
-        <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
       </div>
     </footer>
   );

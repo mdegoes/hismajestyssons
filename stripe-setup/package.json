@@ -1,5 +1,5 @@
 {
-  "name": "crown-and-calling-stripe-setup",
+  "name": "hms-stripe-setup",
   "private": true,
   "version": "1.0.0",
   "description": "One-time scripts for provisioning Stripe Products/Prices/Payment Links for the art.html print shop. Not part of the deployed static site.",
@@ -7,7 +7,9 @@
   "scripts": {
     "test-connection": "node test-connection.js",
     "create-payment-links": "node create-payment-links.js",
-    "find-live-payment-links": "node find-live-payment-links.js"
+    "find-live-payment-links": "node find-live-payment-links.js",
+    "update-product-images": "node update-product-images.js",
+    "update-product-descriptions": "node update-product-descriptions.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

@@ -9,7 +9,7 @@ if (!secretKey) {
 
 const stripe = new Stripe(secretKey);
 
-const SITE_ORIGIN = 'https://crownandcalling.org';
+const SITE_ORIGIN = 'https://hismajestyssons.com';
 const UNIT_AMOUNT = 1295; // $12.95
 const CURRENCY = 'usd';
 const SHIPPING_AMOUNT = 695; // $6.95
@@ -70,8 +70,8 @@ async function main() {
     if (!product) {
       product = await stripe.products.create({
         name: `${piece.title} — 18×24 Print`,
-        description: `Crown & Calling art print. ${piece.scripture}`,
-        images: [`${SITE_ORIGIN}/crown-n-calling-art/${piece.slug}.jpg`],
+        description: `His Majesty’s Sons art print. ${piece.scripture}`,
+        images: [`${SITE_ORIGIN}/hms-art/${piece.slug}.jpg`],
         metadata: { cc_slug: piece.slug },
       });
       console.log(`Created product for ${piece.slug}: ${product.id}`);

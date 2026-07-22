@@ -1,4 +1,4 @@
-# Crown & Calling
+# His Majesty’s Sons
 
 *Equipping men to live as kings under The King.*
 

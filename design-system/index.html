@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Design System — Crown &amp; Calling</title>
+<title>Design System — His Majesty’s Sons</title>
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="../assets/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="../assets/favicon-16x16.png" sizes="16x16">
@@ -19,9 +19,9 @@
 <body>
 
 <nav class="nav">
-  <a class="mark" href="../index.html" aria-label="Crown &amp; Calling — home">
-    <span class="sigil" style="width: 130px;">
-      <img src="../assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+  <a class="mark" href="../index.html" aria-label="His Majesty’s Sons — home">
+    <span class="sigil" style="width: 190px;">
+      <img src="../assets/logo-long.svg" alt="His Majesty’s Sons" />
     </span>
   </a>
   <div class="nav-end">
@@ -60,7 +60,7 @@
   <h1 class="page-title">Design <em>System.</em></h1>
   <p class="page-strap">
     Every color, type style, spacing value, and component pattern in use across
-    Crown &amp; Calling, cataloged from the live CSS and consolidated into one
+    His Majesty’s Sons, cataloged from the live CSS and consolidated into one
     canonical spec. Toggle the theme above — every specimen on this page is
     built from the real tokens, not screenshots.
   </p>
@@ -236,8 +236,8 @@
     <div class="ds-grid-3">
       <div class="ds-spec"><span class="ds-spec-tag">site.css → .mark .sigil</span>
         <div class="ds-row">
-          <span class="sigil" style="width: 36px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
-          <span class="sigil" style="width: 70px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+          <span class="sigil" style="width: 53px;"><img src="../assets/logo-long.svg" alt="" /></span>
+          <span class="sigil" style="width: 103px;"><img src="../assets/logo-long.svg" alt="" /></span>
         </div>
       </div>
       <div class="ds-spec"><span class="ds-spec-tag">site.css → .theme-toggle (+ theme.js tooltip)</span>
@@ -305,8 +305,8 @@
       <div class="ds-group-head"><h3>Nav bar</h3></div>
       <div class="ds-spec" style="padding-top:24px;"><span class="ds-spec-tag">site.css → .nav</span>
         <nav class="nav ds-mock-nav">
-          <a class="mark" href="#" aria-label="Crown &amp; Calling — home">
-            <span class="sigil" style="width: 100px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+          <a class="mark" href="#" aria-label="His Majesty’s Sons — home">
+            <span class="sigil" style="width: 147px;"><img src="../assets/logo-long.svg" alt="" /></span>
           </a>
           <div class="nav-end">
             <div class="nav-links">
@@ -427,7 +427,7 @@
       <div class="ds-spec"><span class="ds-spec-tag">site.css → .foot</span>
         <footer class="foot ds-mock-foot">
           <div class="foot-brand">
-            <span class="sigil" style="width: 72px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
+            <span class="sigil" style="width: 160px;"><img src="../assets/logo-vertical.svg" alt="" /></span>
             <em>Deus vult</em>
           </div>
           <nav class="foot-links" aria-label="Site">
@@ -547,18 +547,22 @@
 
     <div class="ds-group">
       <div class="ds-group-head">
-        <h3>Two-layer filter chips <em>(new)</em></h3>
-        <p>Two independent <code>.person-filters</code> rows share the <code>.chip</code> atom above, but a roster row must match the active chip in <em>both</em> groups at once (AND) — not a single shared filter variable like the book shelf.</p>
+        <h3>Two-layer filter dropdowns <em>(new)</em></h3>
+        <p>Two independent <code>&lt;select&gt;</code>s, but a roster row must still match the chosen option in <em>both</em> groups at once (AND) — not a single shared filter variable like the book shelf. Was a wrapping row of <code>.chip</code> buttons; switched to a styled native select once "Follow For" grew past ~20 options and a chip row stopped being usable. The chevron reuses <code>.nav-drop-trigger</code>'s glyph via a CSS mask (not a background-image) so its color can follow <code>currentColor</code>-style state instead of being baked into the SVG.</p>
       </div>
-      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .filters-wrap / .filter-label</span>
+      <div class="ds-spec"><span class="ds-spec-tag">design-system.css → .filters-wrap / .filter-select</span>
         <div class="filters-wrap">
           <div class="filter-group">
             <div class="filter-label">Follow For</div>
-            <div class="person-filters"><button class="chip is-active" type="button">All</button><button class="chip" type="button">Sermons</button><button class="chip" type="button">Education</button></div>
+            <div class="filter-select-wrap">
+              <select class="filter-select"><option>All</option><option>Sermons</option><option>Education</option></select>
+            </div>
           </div>
           <div class="filter-group">
             <div class="filter-label">Trust Score</div>
-            <div class="person-filters"><button class="chip is-active" type="button">All</button><button class="chip" type="button">The Full Thanksgiving Meal</button></div>
+            <div class="filter-select-wrap is-active">
+              <select class="filter-select"><option>The Full Thanksgiving Meal</option><option>All</option></select>
+            </div>
           </div>
         </div>
       </div>
@@ -640,8 +644,8 @@
 
 <footer class="foot">
   <div class="foot-brand">
-    <span class="sigil" style="width: 72px;">
-      <img src="../assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    <span class="sigil" style="width: 160px;">
+      <img src="../assets/logo-vertical.svg" alt="His Majesty’s Sons" />
     </span>
     <em>Deus vult</em>
   </div>
@@ -655,8 +659,8 @@
     <a href="../worthy-men.html" class="foot-sub">Worthy Men</a>
   </nav>
   <div class="foot-social">
-    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
-    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
 </footer>
 

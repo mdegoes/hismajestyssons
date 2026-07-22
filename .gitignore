@@ -5,3 +5,5 @@ stripe-setup/node_modules/
 stripe-setup/.env
 stripe-setup/payment-links.json
 stripe-setup/live-payment-links.json
+stripe-setup/update-product-images-results.json
+stripe-setup/update-product-descriptions-results.json

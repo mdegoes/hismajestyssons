@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Worthy Men — Crown &amp; Calling</title>
+<title>Worthy Men — His Majesty’s Sons</title>
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="assets/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="assets/favicon-16x16.png" sizes="16x16">
@@ -47,36 +47,61 @@
     font-size: 15px; color: var(--muted);
   }
 
-  /* ---------- Category + trust-score filter chips (two independent layers) ---------- */
+  /* ---------- Category + trust-score filter dropdowns (two independent layers) ---------- */
   .filters-wrap {
-    display: flex; flex-direction: column;
-    gap: 20px;
+    display: flex; flex-flow: row wrap;
+    align-items: flex-start;
+    gap: 28px;
     padding-bottom: clamp(28px, 4vw, 48px);
     margin-bottom: clamp(28px, 4vw, 48px);
     border-bottom: 1px solid var(--rule);
+  }
+  .filter-group {
+    display: flex; flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 340px;
   }
   .filter-label {
     font-family: var(--sans); font-size: 10px; letter-spacing: 0.2em;
     text-transform: uppercase; font-weight: 700;
     color: var(--muted);
-    margin-bottom: 10px;
   }
-  .person-filters {
-    display: flex; flex-wrap: wrap; gap: 10px;
-  }
-  .chip {
-    display: inline-flex; align-items: center;
-    padding: 10px 18px;
+  .filter-select-wrap { position: relative; width: 100%; }
+  .filter-select {
+    width: 100%;
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    padding: 12px 42px 12px 20px;
     border-radius: 999px;
     border: 1.5px solid var(--rule);
     background: transparent;
     font-family: var(--sans); font-size: 11px; letter-spacing: 0.18em;
     text-transform: uppercase; font-weight: 700;
     color: var(--ink-2);
+    cursor: pointer;
     transition: border-color .15s ease, color .15s ease, background .15s ease;
   }
-  .chip:hover { border-color: var(--ink); color: var(--ink); }
-  .chip.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .filter-select:hover,
+  .filter-select:focus-visible { border-color: var(--ink); color: var(--ink); outline: none; }
+  .filter-select-wrap::after {
+    content: "";
+    position: absolute; top: 50%; right: 18px;
+    width: 10px; height: 10px;
+    transform: translateY(-50%);
+    background-color: var(--ink-2);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat;
+    mask-size: contain; -webkit-mask-size: contain;
+    pointer-events: none;
+    transition: background-color .15s ease;
+  }
+  .filter-select-wrap:hover::after { background-color: var(--ink); }
+  .filter-select-wrap:has(.filter-select:focus-visible)::after { background-color: var(--ink); }
+  .filter-select-wrap.is-active .filter-select {
+    background: var(--ink); border-color: var(--ink); color: var(--paper);
+  }
+  .filter-select-wrap.is-active::after { background-color: var(--paper); }
 
   /* ---------- Roster list ---------- */
   .roster {
@@ -214,9 +239,9 @@
 <body>
 
 <nav class="nav">
-  <a class="mark" href="index.html" aria-label="Crown &amp; Calling — home">
-    <span class="sigil" style="width: 130px;">
-      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+  <a class="mark" href="index.html" aria-label="His Majesty’s Sons — home">
+    <span class="sigil" style="width: 190px;">
+      <img src="assets/logo-long.svg" alt="His Majesty’s Sons" />
     </span>
   </a>
   <div class="nav-end">
@@ -264,40 +289,44 @@
   <div class="filters-wrap">
     <div class="filter-group">
       <div class="filter-label">Follow For</div>
-      <div class="person-filters" role="group" aria-label="Filter by follow-for category" data-filter-group="follow">
-        <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
-        <button class="chip" data-filter="apologetics" aria-pressed="false">Apologetics</button>
-        <button class="chip" data-filter="textual-criticism" aria-pressed="false">Textual Criticism</button>
-        <button class="chip" data-filter="debate-rhetoric" aria-pressed="false">Debate &amp; Rhetoric</button>
-        <button class="chip" data-filter="self-defense-firearms" aria-pressed="false">Self-Defense &amp; Firearms</button>
-        <button class="chip" data-filter="biblical-masculinity" aria-pressed="false">Biblical Masculinity</button>
-        <button class="chip" data-filter="homesteading" aria-pressed="false">Homesteading</button>
-        <button class="chip" data-filter="pastoral-counsel" aria-pressed="false">Pastoral Counsel</button>
-        <button class="chip" data-filter="classical-education" aria-pressed="false">Classical Education</button>
-        <button class="chip" data-filter="postmillennialism" aria-pressed="false">Postmillennialism</button>
-        <button class="chip" data-filter="culture-commentary" aria-pressed="false">Culture Commentary</button>
-        <button class="chip" data-filter="headship-patriarchy" aria-pressed="false">Headship &amp; Patriarchy</button>
-        <button class="chip" data-filter="music" aria-pressed="false">Music</button>
-        <button class="chip" data-filter="unseen-world" aria-pressed="false">The Unseen World</button>
-        <button class="chip" data-filter="reformed-theology" aria-pressed="false">Reformed Theology</button>
-        <button class="chip" data-filter="fatherhood" aria-pressed="false">Fatherhood</button>
-        <button class="chip" data-filter="christian-nationalism" aria-pressed="false">Christian Nationalism</button>
-        <button class="chip" data-filter="politics" aria-pressed="false">Politics</button>
-        <button class="chip" data-filter="second-amendment" aria-pressed="false">Second Amendment</button>
-        <button class="chip" data-filter="military-service" aria-pressed="false">Military Service</button>
-        <button class="chip" data-filter="deconstruction-evangelicalism" aria-pressed="false">Deconstruction from Evangelicalism</button>
-        <button class="chip" data-filter="american-christian-history" aria-pressed="false">American Christian History</button>
+      <div class="filter-select-wrap" data-filter-group="follow">
+        <select class="filter-select" aria-label="Filter by follow-for category">
+          <option value="all">All</option>
+          <option value="apologetics">Apologetics</option>
+          <option value="textual-criticism">Textual Criticism</option>
+          <option value="debate-rhetoric">Debate &amp; Rhetoric</option>
+          <option value="self-defense-firearms">Self-Defense &amp; Firearms</option>
+          <option value="biblical-masculinity">Biblical Masculinity</option>
+          <option value="homesteading">Homesteading</option>
+          <option value="pastoral-counsel">Pastoral Counsel</option>
+          <option value="classical-education">Classical Education</option>
+          <option value="postmillennialism">Postmillennialism</option>
+          <option value="culture-commentary">Culture Commentary</option>
+          <option value="headship-patriarchy">Headship &amp; Patriarchy</option>
+          <option value="music">Music</option>
+          <option value="unseen-world">The Unseen World</option>
+          <option value="reformed-theology">Reformed Theology</option>
+          <option value="fatherhood">Fatherhood</option>
+          <option value="christian-nationalism">Christian Nationalism</option>
+          <option value="politics">Politics</option>
+          <option value="second-amendment">Second Amendment</option>
+          <option value="military-service">Military Service</option>
+          <option value="deconstruction-evangelicalism">Deconstruction from Evangelicalism</option>
+          <option value="american-christian-history">American Christian History</option>
+        </select>
       </div>
     </div>
     <div class="filter-group">
       <div class="filter-label">Trust Score</div>
-      <div class="person-filters" role="group" aria-label="Filter by trust score" data-filter-group="tier">
-        <button class="chip is-active" data-filter="all" aria-pressed="true">All</button>
-        <button class="chip" data-filter="tier-1" aria-pressed="false">Caribbean Death Apple</button>
-        <button class="chip" data-filter="tier-2" aria-pressed="false">Rambutan Pit</button>
-        <button class="chip" data-filter="tier-3" aria-pressed="false">Chicken Dinner</button>
-        <button class="chip" data-filter="tier-4" aria-pressed="false">Steak, Eggs and a Salad</button>
-        <button class="chip" data-filter="tier-5" aria-pressed="false">The Full Thanksgiving Meal</button>
+      <div class="filter-select-wrap" data-filter-group="tier">
+        <select class="filter-select" aria-label="Filter by trust score">
+          <option value="all">All</option>
+          <option value="tier-1">Caribbean Death Apple</option>
+          <option value="tier-2">Rambutan Pit</option>
+          <option value="tier-3">Chicken Dinner</option>
+          <option value="tier-4">Steak, Eggs and a Salad</option>
+          <option value="tier-5">The Full Thanksgiving Meal</option>
+        </select>
       </div>
     </div>
   </div>
@@ -730,8 +759,8 @@
 
 <footer class="foot">
   <div class="foot-brand">
-    <span class="sigil" style="width: 72px;">
-      <img src="assets/logo-vertical.svg" alt="Crown &amp; Calling" />
+    <span class="sigil" style="width: 160px;">
+      <img src="assets/logo-vertical.svg" alt="His Majesty’s Sons" />
     </span>
     <em>Deus vult</em>
   </div>
@@ -745,8 +774,8 @@
     <a href="worthy-men.html" class="foot-sub">Worthy Men</a>
   </nav>
   <div class="foot-social">
-    <a href="https://www.instagram.com/crown_n_calling" target="_blank" rel="noopener">Instagram</a>
-    <a href="https://www.youtube.com/@crown-and-calling" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
 </footer>
 
@@ -793,17 +822,13 @@
     });
   };
 
-  document.querySelectorAll('.person-filters').forEach((group) => {
-    const groupName = group.dataset.filterGroup;
-    const chips = group.querySelectorAll('.chip');
-    chips.forEach((chip) => {
-      chip.addEventListener('click', () => {
-        chips.forEach((c) => { c.classList.remove('is-active'); c.setAttribute('aria-pressed', 'false'); });
-        chip.classList.add('is-active');
-        chip.setAttribute('aria-pressed', 'true');
-        activeFilters[groupName] = chip.dataset.filter;
-        applyFilters();
-      });
+  document.querySelectorAll('.filter-select-wrap').forEach((wrap) => {
+    const groupName = wrap.dataset.filterGroup;
+    const select = wrap.querySelector('.filter-select');
+    select.addEventListener('change', () => {
+      activeFilters[groupName] = select.value;
+      wrap.classList.toggle('is-active', select.value !== 'all');
+      applyFilters();
     });
   });
 </script>
