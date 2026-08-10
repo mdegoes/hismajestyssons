@@ -1,0 +1,25 @@
+{
+  "name": "hms-social-engine",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Generates on-brand social video assets (HMS logo + user text, optional music) for Instagram and X. Not part of the deployed static site.",
+  "type": "module",
+  "scripts": {
+    "sync-tracks": "node scripts/generate-tracks.js",
+    "prestudio": "npm run sync-tracks",
+    "studio": "remotion studio src/index.jsx",
+    "prerender:square": "npm run sync-tracks",
+    "render:square": "remotion render src/index.jsx Square out/square.mp4",
+    "prerender:vertical": "npm run sync-tracks",
+    "render:vertical": "remotion render src/index.jsx Vertical out/vertical.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.503",
+    "@remotion/google-fonts": "4.0.503",
+    "@remotion/zod-types": "4.0.503",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.503",
+    "zod": "4.4.3"
+  }
+}
