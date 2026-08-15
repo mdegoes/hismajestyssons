@@ -120,14 +120,21 @@
   }
   /* mastery-dots: 2 dots = the 2 correct passes a verse needs to master.
      Shown wherever a verse appears (card rows, map sheet, drill modal) so
-     the requirement and current progress toward it are never hidden. */
-  .mastery-dots { display: inline-flex; align-items: center; gap: 5px; margin: 4px 0 0; }
-  .mastery-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--hairline-strong); flex-shrink: 0; }
-  .mastery-dots.is-complete .mastery-dot { background: var(--t1); }
-  .mastery-dots:not(.is-complete) .mastery-dot.is-filled { background: var(--t2); }
-  .mastery-label { font-family: var(--hud); font-size: 9.5px; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
-  .mastery-dots.is-complete .mastery-label { color: var(--t1); font-weight: 700; }
-  .drill-mastery-row { margin-bottom: 6px; }
+     progress toward it is never hidden — deliberately icon-only, no label
+     text (a "1 of 2 correct passes" caption read as UI noise); the
+     explanation lives in the title tooltip instead. */
+  .mastery-dots { display: inline-flex; align-items: center; gap: 5px; margin: 6px 0 0; }
+  .mastery-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    border: 1.5px solid var(--hairline-strong); background: transparent;
+  }
+  .mastery-dots.is-complete .mastery-dot { background: var(--t1); border-color: var(--t1); }
+  .mastery-dots:not(.is-complete) .mastery-dot.is-filled { background: var(--t2); border-color: var(--t2); }
+  .drill-mastery-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .drill-mastery-row .mastery-dots { margin: 0; }
+  .drill-mastery-label {
+    font-family: var(--hud); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
 
   .expand-btn {
     width: 100%; display: flex; align-items: center; justify-content: space-between;

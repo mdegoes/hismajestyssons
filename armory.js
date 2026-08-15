@@ -189,8 +189,8 @@
     for (var i = 0; i < MASTERY_PASSES_NEEDED; i++) {
       dots += '<span class="mastery-dot' + (i < filled ? ' is-filled' : '') + '"></span>';
     }
-    var label = mastered ? 'Mastered' : (filled > 0 ? filled + ' of ' + MASTERY_PASSES_NEEDED + ' correct passes' : 'Needs ' + MASTERY_PASSES_NEEDED + ' correct passes in a row');
-    return '<span class="mastery-dots' + (mastered ? ' is-complete' : '') + '">' + dots + '<span class="mastery-label">' + label + '</span></span>';
+    var title = mastered ? 'Mastered' : (filled > 0 ? filled + ' of ' + MASTERY_PASSES_NEEDED + ' correct passes' : 'Needs ' + MASTERY_PASSES_NEEDED + ' correct passes in a row to master');
+    return '<span class="mastery-dots' + (mastered ? ' is-complete' : '') + '" title="' + title + '">' + dots + '</span>';
   }
 
   function renderVerseRowHTML(verse) {
@@ -198,8 +198,9 @@
     var mastered = state.status === 'mastered';
     return '<div class="verse-row" data-verse-id="' + verse.id + '">'
       + '<div><div class="verse-ref">' + escapeHTML(verse.ref) + '</div>'
+      + '<p class="verse-text">' + escapeHTML(verse.text) + '</p>'
       + masteryDotsHTML(state)
-      + '<p class="verse-text">' + escapeHTML(verse.text) + '</p></div>'
+      + '</div>'
       + '<button type="button" class="drill-btn" data-verse-id="' + verse.id + '">' + (mastered ? 'Review' : 'Drill') + '</button>'
       + '</div>';
   }
@@ -450,7 +451,7 @@
       var trayChips = state.tray.map(function (item, i) {
         return '<button type="button" class="tray-chip" data-idx="' + i + '">' + escapeHTML(item.text) + '</button>';
       }).join('');
-      var html = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+      var html = '<div class="drill-mastery-row"><span class="drill-mastery-label">Rounds</span>' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
         + '<div class="drill-progress">TAP THE PHRASES INTO ORDER</div>'
         + '<div class="assembled-row">' + assembledSlots + '</div>'
         + '<div class="tray-row">' + trayChips + '</div>';
@@ -505,7 +506,7 @@
     function renderBody() {
       var body = document.getElementById('drillBody');
       if (!state.resultShown) {
-        body.innerHTML = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+        body.innerHTML = '<div class="drill-mastery-row"><span class="drill-mastery-label">Rounds</span>' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
           + '<div class="drill-progress">TYPE THE VERSE FROM MEMORY</div>'
           + '<textarea id="drillAnswer" class="drill-textarea" placeholder="Type ' + escapeHTML(verse.ref) + ' from memory…" autocomplete="off" spellcheck="false"></textarea>'
           + '<div class="drill-actions"><button type="button" class="btn-solid" id="drillSubmit">Check</button></div>';
@@ -522,7 +523,7 @@
         }).join(' ');
         var extrasHTML = state.match.extras.length
           ? '<p class="drill-extras">Extra words: ' + escapeHTML(state.match.extras.join(' ')) + '</p>' : '';
-        body.innerHTML = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+        body.innerHTML = '<div class="drill-mastery-row"><span class="drill-mastery-label">Rounds</span>' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
           + drillResultCardHTML(state.match.outcome, 'text', state.result)
           + '<blockquote class="drill-answer-key">' + highlighted + '</blockquote>'
           + extrasHTML
