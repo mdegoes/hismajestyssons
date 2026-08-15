@@ -247,7 +247,7 @@ function Explore() {
         id="explore-build"
         eyebrow="§ 04 · Build"
         heading={<>Build what <em>lasts.</em></>}
-        strap="Scripture-grounded prints for the wall of a home that means to stand for a hundred years."
+        strap="Adorn your castle as if it will stand for 100 years."
         image={{ src: "hms-art/01-the-church-sm.jpg", alt: "A pencil-sketch print of a church, from the His Majesty's Sons art collection", zoom: 1.15 }}
         links={[{ label: "Browse the Prints", href: "art.html" }]}
       />
