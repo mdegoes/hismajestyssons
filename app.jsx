@@ -159,8 +159,8 @@ function Manifesto() {
       </div>
       <div className="m-body">
         <p className="m-statement">
-          Equipping men to live as <em>kings</em><br />
-          under <em>The King.</em>
+          Training <em>kings</em><br />
+          for the <em>King of kings.</em>
         </p>
         <div className="m-inscription" aria-hidden="true">
           <span>Home.</span>
