@@ -216,12 +216,12 @@ function Explore() {
       <ExploreBand
         id="explore-lead"
         eyebrow="§ 01 · Lead"
-        heading={<>Lead your <em>home.</em></>}
+        heading={<>Lead your <em>family.</em></>}
         strap="Prayer at the table. Scripture on the shelf. A father who leads because someone has to, and it might as well be him."
         image={{ src: "assets/images/7_days_of_prayer.png", alt: "A father and his children kneeling together in prayer in their living room" }}
         links={[
           { label: "Worship", href: "music.html" },
-          { label: "Lead in Prayer", href: "family-prayer.html" },
+          { label: "Pray", href: "family-prayer.html" },
         ]}
       />
       <ExploreBand
@@ -231,8 +231,8 @@ function Explore() {
         strap="Books worth reading and men worth following — building a mind that can’t be moved by the next headline."
         image={{ src: "assets/images/worth_a_read.png", alt: "A quiet home library lined with leather-bound books" }}
         links={[
-          { label: "Read the List", href: "worthy-books.html" },
-          { label: "Follow Worthy Men", href: "worthy-men.html" },
+          { label: "Books", href: "worthy-books.html" },
+          { label: "Men", href: "worthy-men.html" },
         ]}
       />
       <ExploreBand
