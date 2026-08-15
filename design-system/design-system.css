@@ -465,3 +465,45 @@
 /* ---------- Nav / footer mockups (static position, real markup) ---------- */
 .ds-mock-nav { position: static !important; }
 .ds-mock-foot { border-top: none !important; padding: 0 !important; }
+
+/* ---------- The Armory (armory.html) ----------
+   Page-scoped tokens/classes copied here as the documented spec, per the
+   usual convention — armory.html owns the real, live versions. Threat-tier
+   colors run worst→best inverted from the trust-score scale above: higher
+   tier = more dangerous, not more trustworthy. */
+.ds-armory {
+  --t1: #5C6B47; --t2: #B4802A; --t3: #9C3F26; --t4: #6E1423;
+  --armory-panel: #E2DED4; --hairline-strong: rgba(20,16,6,0.32);
+  --hud: ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+}
+[data-scheme="ink"] .ds-armory {
+  --t1: #8FA06B; --t2: #D79A3C; --t3: #C05A3A; --t4: #C93A5A;
+  --armory-panel: #201808; --hairline-strong: rgba(239,237,232,0.3);
+}
+.ds-armory .badge-hex {
+  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--hud); font-weight: 800; font-size: 12px;
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0% 50%);
+  background: var(--armory-panel); border: 1.5px solid var(--badge-color, var(--t2)); color: var(--ink);
+}
+.ds-armory .drill-textarea {
+  width: 100%; min-height: 70px; font: inherit; font-size: 14px; padding: 10px; border-radius: 6px;
+  border: 1px solid var(--hairline-strong); background: var(--armory-panel); color: var(--ink); resize: none;
+}
+.ds-armory .tray-chip, .ds-armory .assembled-chip {
+  display: inline-block; padding: 7px 12px; border-radius: 6px; font-size: 13px; border: 1px solid var(--rule); background: var(--armory-panel); margin: 3px;
+}
+.ds-armory .assembled-chip { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, var(--armory-panel)); }
+.ds-armory .profile-tile {
+  border: 1px solid var(--rule); border-radius: 8px; padding: 14px 10px; text-align: center;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 6px; width: 110px;
+}
+.ds-armory .profile-tile-avatar {
+  display: inline-flex; width: 44px; height: 44px; border-radius: 50%; align-items: center; justify-content: center;
+  background: var(--armory-panel); border: 1.5px solid var(--rule); color: var(--t3);
+}
+.ds-armory .profile-tile-name { font-size: 12.5px; font-weight: 700; }
+.ds-armory .profile-tile-rank { font-family: var(--hud); font-size: 9px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.ds-armory .rank-bar-track { height: 8px; border-radius: 999px; background: var(--armory-panel); overflow: hidden; }
+.ds-armory .rank-bar-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.ds-armory .rank-bar-label { display: flex; justify-content: space-between; font-family: var(--hud); font-size: 10.5px; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }

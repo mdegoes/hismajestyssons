@@ -56,7 +56,7 @@ const NAV_DROPS = [
     key: "makeWar",
     label: "Make War",
     panelId: "nav-makewar-panel",
-    links: [{ href: "make-war.html", label: "Coming Soon" }],
+    links: [{ href: "armory.html", label: "The Armory" }],
   },
   {
     key: "build",
@@ -241,7 +241,7 @@ function Explore() {
         heading={<>Make war on the <em>enemy.</em></>}
         strap="Every man is conscripted. The only question is whether he shows up armed."
         image={{ src: "assets/images/worth_a_follow.png", alt: "A study with a Bible and a flintlock rifle mounted beneath a wooden cross" }}
-        links={[{ label: "Take Up Arms", href: "make-war.html" }]}
+        links={[{ label: "Take Up Arms", href: "armory.html" }]}
       />
       <ExploreBand
         id="explore-build"
@@ -270,7 +270,7 @@ function Foot({ onJump }) {
         <a href="worthy-books.html">Learn</a>
         <a href="worthy-books.html" className="foot-sub">Worthy Books</a>
         <a href="worthy-men.html" className="foot-sub">Worthy Men</a>
-        <a href="make-war.html">Make War</a>
+        <a href="armory.html">Make War</a>
         <a href="art.html">Build</a>
         <a href="art.html" className="foot-sub">Art</a>
       </nav>

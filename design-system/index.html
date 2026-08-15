@@ -64,7 +64,7 @@
         </button>
         <div class="nav-drop-panel" id="nav-makewar-panel">
           <div class="nav-drop-inner">
-            <a href="../make-war.html">Coming Soon</a>
+            <a href="../armory.html">The Armory</a>
           </div>
         </div>
       </div>
@@ -658,6 +658,67 @@
         </div>
       </div>
     </div>
+
+    <div class="ds-group ds-armory">
+      <div class="ds-group-head">
+        <h3>Threat-tier badge <em>(new)</em></h3>
+        <p>armory.html's hex "callsign" badge, colored by threat tier (Skirmish/Siege/Stronghold/Total War, worst→best the <em>opposite</em> direction from the trust-score scale above — higher tier means more dangerous, not more trustworthy). The tier names are deliberately not spelled out anywhere in the UI (an earlier pill-chip label was tried and removed as unhelpful noise) — color alone carries the severity cue, and the tier name only survives in each map node's `aria-label` for screen readers. It's now map-nodes-only: the dossier card dropped its copy of the badge (the 2-letter callsign read as noise with no explained meaning) and relies on the card's own tier-colored left border for the same color cue instead.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .badge-hex</span>
+        <div class="ds-row" style="gap:14px; flex-wrap:wrap;">
+          <span class="badge-hex" style="--badge-color:var(--t1)">SL</span>
+          <span class="badge-hex" style="--badge-color:var(--t2)">WR</span>
+          <span class="badge-hex" style="--badge-color:var(--t3)">LX</span>
+          <span class="badge-hex" style="--badge-color:var(--t4)">BN</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group ds-armory">
+      <div class="ds-group-head">
+        <h3>Mastery drill <em>(new)</em></h3>
+        <p>Device-adaptive: full free-text recall (typed, matched with ~15%-tolerant word-level Levenshtein distance) on a real keyboard, a tap word-order game (shuffled phrase chunks tapped into place, no typing) on a touchscreen — always manually overridable per profile. Static snapshots of both states below; the real thing is interactive.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .drill-textarea / .tray-chip / .assembled-chip</span>
+        <div class="ds-grid-2">
+          <div>
+            <p class="ds-t-micro" style="margin-bottom:8px;">Type it</p>
+            <textarea class="drill-textarea" readonly>Pride goeth before destruction, and an haughty…</textarea>
+          </div>
+          <div>
+            <p class="ds-t-micro" style="margin-bottom:8px;">Tap it</p>
+            <div><span class="assembled-chip">Pride goeth before destruction,</span><span class="tray-chip">before a fall.</span><span class="tray-chip">and an haughty spirit</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group ds-armory">
+      <div class="ds-group-head">
+        <h3>Profile switcher <em>(new)</em></h3>
+        <p>Browser-only, unsynced, no PIN — a family shares one device and picks a tile. Avatar = one of 8 hand-built line-icon sigils × 6 colors, no external art.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .profile-tile</span>
+        <div class="ds-row" style="gap:14px; flex-wrap:wrap;">
+          <div class="profile-tile"><span class="profile-tile-avatar">⚔</span><span class="profile-tile-name">Eli</span><span class="profile-tile-rank">Lv 4 · Sentinel</span></div>
+          <div class="profile-tile"><span class="profile-tile-avatar" style="color:var(--t2)">🛡</span><span class="profile-tile-name">Josiah</span><span class="profile-tile-rank">Lv 2 · Man-at-Arms</span></div>
+          <div class="profile-tile" style="border-style:dashed; color:var(--muted);"><span class="profile-tile-avatar" style="border-style:dashed;">+</span><span class="profile-tile-name">New Profile</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-group ds-armory">
+      <div class="ds-group-head">
+        <h3>XP / rank bar <em>(new)</em></h3>
+        <p>Cosmetic only — never gates content. Every verse and sin stays attemptable at any level; leveling unlocks a rank title, an avatar-frame upgrade, and (Map view only) visible cosmetic growth on the command-post mark.</p>
+      </div>
+      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .rank-bar-track / .rank-bar-fill</span>
+        <div style="max-width:320px;">
+          <div class="rank-bar-label"><span>Lv 4 · Sentinel</span><span>145 / 280 XP</span></div>
+          <div class="rank-bar-track"><div class="rank-bar-fill" style="width:52%"></div></div>
+        </div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -677,7 +738,7 @@
     <a href="../worthy-books.html">Learn</a>
     <a href="../worthy-books.html" class="foot-sub">Worthy Books</a>
     <a href="../worthy-men.html" class="foot-sub">Worthy Men</a>
-    <a href="../make-war.html">Make War</a>
+    <a href="../armory.html">Make War</a>
     <a href="../art.html">Build</a>
     <a href="../art.html" class="foot-sub">Art</a>
   </nav>
