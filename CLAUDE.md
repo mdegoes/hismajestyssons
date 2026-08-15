@@ -18,15 +18,28 @@ Open `http://localhost:8000`. An internet connection is required for full fideli
 
 ### Two rendering strategies, split by page
 
-- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines and `App()` mounts Nav/Hero/Manifesto/Foot — that's the whole homepage.
+- **`index.html` (home) is a React app.** It loads React 18 + ReactDOM + `@babel/standalone` from unpkg, then `app.jsx` as an in-browser-compiled `text/babel` script (no bundler — Babel transforms JSX at page load). `app.jsx` defines and `App()` mounts Nav/Hero/Explore/Manifesto/Foot, in that order — that's the whole homepage. See Homepage layout below for why Explore sits between Hero and Manifesto rather than the other way around.
 - **Every other page** (`art.html`, `music.html`, `family-prayer.html`, `worthy-books.html`, `worthy-men.html`, `make-war.html`, `theme-preview.html`) **is plain static HTML** with a small vanilla `<script>` at the bottom that toggles the `.nav`'s `data-scrolled` attribute on scroll and wires up the mobile hamburger menu (see Mobile nav below). No React on these pages.
 
 Don't assume a change to `app.jsx` affects any page besides `index.html`.
 
+### Homepage layout (Hero → Explore → Mission)
+
+- `index.html`'s section order is **Hero, then Explore (Lead/Learn/Make War/Build), then Mission, then Footer** — deliberately in that order so a first-time visitor sees the four category bands right after the hero, not after a full mission statement. Mission used to render directly under Hero; it was moved down to sit just above the footer so Explore isn't pushed below the fold.
+- `Hero()` is intentionally minimal now: an eyebrow, a one-line title, and a short strap — no photo, no CTA. It used to include a `hero-photo` (`assets/images/home_page.png`, now unused by any page) and a "Read the Mission ↓" button; both were removed so the hero takes as little vertical space as possible and the first Explore band is visible with little to no scrolling, especially on mobile. `home.css`'s matching `.hero-right`/`.hero-photo`/`.photo-caption`/`.hero-meta`/`.hero-actions` rules were deleted along with the markup — don't resurrect either without a real reason to bring the photo back.
+- `Explore()` (in `app.jsx`) renders four `ExploreBand` full-bleed photo sections, one per nav category, in the same Lead/Learn/Make War/Build order as the nav dropdowns:
+  - Lead → `assets/images/7_days_of_prayer.png` → CTAs "Worship" (`music.html`), "Pray" (`family-prayer.html`)
+  - Learn → `assets/images/worth_a_read.png` → CTAs "Books" (`worthy-books.html`), "Men" (`worthy-men.html`)
+  - Make War → `assets/images/worth_a_follow.png` → CTA "Take Up Arms" (`make-war.html`)
+  - Build → `hms-art/01-the-church-sm.jpg` → CTA "Browse the Prints" (`art.html`)
+  - CTA copy is deliberately short and action-oriented (verb-first or a plain plural noun), not the sub-page's own nav-dropdown label — don't reuse `NAV_DROPS`' link text here (e.g. Learn's dropdown says "Worthy Books"/"Worthy Men", Explore says "Books"/"Men").
+  - Each `ExploreBand` is a fixed-contrast, not theme-driven, dark-scrim-over-photo band: the paper-white text and the warm gold (`#C9A75D`) `em` accent are hardcoded in `home.css` rather than pulling `--ink`/`--paper`/`--accent`, since legibility here depends on the photo underneath, not the light/dark scheme. CSS lives in `home.css`'s `.explore*` rules, same "homepage-only, not promoted to `site.css`" convention as `.hero*`/`.manifesto-v2`.
+  - The Build band's image (`hms-art/01-the-church-sm.jpg`) is a real print asset with a baked-in white matte border (~2.7% of width / 3.5% of height) plus corner branding (title card, QR code) — shown at plain `object-fit: cover` it leaves a visible white sliver at the section's true edges. `ExploreBand`'s `image` prop takes an optional `zoom` factor (`1.15` here) applied as an inline `transform: scale()` on the `<img>`, which crops the border out regardless of viewport aspect ratio; `.explore-band`'s existing `overflow: hidden` clips the overage. Only this band needs `zoom` — the other three are plain photos with no border baked in.
+
 ### Styling: shared tokens, single source of truth
 
 - `site.css` defines the shared design tokens (`:root` custom properties for `--paper`, `--ink`, `--accent`, fonts, spacing, plus `--radius-pill`/`--radius-soft`/`--shadow-soft`) along with `[data-scheme="ink"]` dark-mode overrides, nav, buttons, footer, and a handful of cross-page components (`.num-badge`, `.arrow`, `.idx`/`.roman` core recipes, `.roster-list`/`.roster-row`/`.roster-photo`). **Every page links it**, including `index.html` — there is no more forked copy of the tokens anywhere.
-- `index.html` additionally links `home.css` for hero/manifesto markup that's genuinely unique to the homepage (`.hero*`, `.manifesto-v2`/`.m-*`, `.reveal`). Every other page keeps its own page-specific layout in its own inline `<style>` block (e.g. `art.html`'s `.collection-plate`) on top of the two shared stylesheets.
+- `index.html` additionally links `home.css` for hero/explore/manifesto markup that's genuinely unique to the homepage (`.hero*`, `.explore*`, `.manifesto-v2`/`.m-*`, `.reveal`). Every other page keeps its own page-specific layout in its own inline `<style>` block (e.g. `art.html`'s `.collection-plate`) on top of the two shared stylesheets.
 - Only promote a page-specific class into `site.css` when it's genuinely duplicated across ≥2 real pages (not counting `design-system.css`'s aspirational "canonical" section as a second usage) or fills a gap the design-system page already documents. Don't add tokens/classes speculatively for a single current usage.
 
 ### Theming (light/dark)
