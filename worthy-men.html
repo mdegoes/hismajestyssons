@@ -109,16 +109,11 @@
      .roster / .person / .person-photo below — kept in place since .person and
      .filter-select-wrap are queried directly by this page's filter script.
      Only person-specific bits remain here. */
+  .roster .roster-row { grid-template-columns: 96px 1fr auto; }
   @media (max-width: 720px) {
-    .person .idx { grid-column: 1; grid-row: 2; }
-    .person .body { grid-column: 2; grid-row: 1 / 3; }
-    .person .person-links { grid-column: 2; grid-row: 3; justify-self: start; }
+    .person .body { grid-column: 2; grid-row: 1; }
+    .person .person-links { grid-column: 2; grid-row: 2; justify-self: start; }
     .person-links { align-items: flex-start; }
-  }
-
-  .person .idx {
-    font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.01em; text-align: center;
-    /* font-family/style/color come from shared `.idx` in site.css */
   }
 
   .person .body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
@@ -326,20 +321,84 @@
       <div class="filter-select-wrap" data-filter-group="tier">
         <select class="filter-select" aria-label="Filter by trust score">
           <option value="all">All</option>
-          <option value="tier-1">Caribbean Death Apple</option>
-          <option value="tier-2">Rambutan Pit</option>
-          <option value="tier-3">Chicken Dinner</option>
-          <option value="tier-4">Steak, Eggs and a Salad</option>
           <option value="tier-5">The Full Thanksgiving Meal</option>
+          <option value="tier-4">Steak, Eggs and a Salad</option>
+          <option value="tier-3">Chicken Dinner</option>
+          <option value="tier-2">Rambutan Pit</option>
+          <option value="tier-1">Caribbean Death Apple</option>
         </select>
       </div>
     </div>
   </div>
 
   <div class="roster roster-list">
+    <article class="person roster-row" data-categories="pastoral-counsel classical-education postmillennialism culture-commentary" data-tier="tier-5">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/doug-wilson.jpg" alt="Doug Wilson" loading="lazy" /></div>
+      <div class="body">
+        <h3 class="name">Doug Wilson</h3>
+        <p class="desc">Godfather of classical education in America, Wilson is the grandfather you never had: witty, wise, and practical.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-03">The Full Thanksgiving Meal</button>
+          <div class="trust-popover" id="trust-popover-03" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Pastoral Counsel</span>
+          <span class="tag">Classical Education</span>
+          <span class="tag">Postmillennialism</span>
+          <span class="tag">Culture Commentary</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/douglaswils" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@blogmablog4870" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://dougwils.com/" target="_blank" rel="noopener">Read Blog &amp; Mablog ↗</a>
+      </div>
+    </article>
+
+    <article class="person roster-row" data-categories="biblical-masculinity headship-patriarchy fatherhood culture-commentary" data-tier="tier-5">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-foster.jpg" alt="Michael Foster" loading="lazy" /></div>
+      <div class="body">
+        <h3 class="name">Michael Foster</h3>
+        <p class="desc">Co-author of It's Good to Be a Man and pastor of East River Church — Foster turned a childhood of chaos into the loudest voice calling men out of passivity and into leading their households like they mean it.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-06">The Full Thanksgiving Meal</button>
+          <div class="trust-popover" id="trust-popover-06" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Biblical Masculinity</span>
+          <span class="tag">Headship &amp; Patriarchy</span>
+          <span class="tag">Fatherhood</span>
+          <span class="tag">Culture Commentary</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/thisisfoster" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/wemadepeople/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.thisisfoster.com/" target="_blank" rel="noopener">Read This Is Foster ↗</a>
+        <a class="btn-ghost person-link" href="https://eastriverchurch.org/" target="_blank" rel="noopener">Visit East River Church ↗</a>
+      </div>
+    </article>
+
     <article class="person roster-row" data-categories="apologetics textual-criticism debate-rhetoric" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/wes-huff.jpg" alt="Wes Huff" loading="lazy" /></div>
-      <div class="idx">01</div>
       <div class="body">
         <h3 class="name">Wes Huff</h3>
         <p class="desc">Canadian Reformed Baptist apologist and manuscript scholar who calmly dismantled skeptics on Rogan, Piers Morgan, and Shawn Ryan in front of tens of millions — proof that hard evidence and a steady voice still win the room.</p>
@@ -347,11 +406,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-01">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-01" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -372,7 +431,6 @@
 
     <article class="person roster-row" data-categories="self-defense-firearms biblical-masculinity homesteading" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/john-lovell.jpg" alt="John Lovell" loading="lazy" /></div>
-      <div class="idx">02</div>
       <div class="body">
         <h3 class="name">John Lovell</h3>
         <p class="desc">Former Army Ranger turned Christian missionary and firearms trainer — Lovell built Warrior Poet Society to forge men who can protect their homes with both a rifle and a right heart, rejecting the gun industry's tough-guy theater for the real thing.</p>
@@ -380,11 +438,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-02">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-02" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -402,42 +460,8 @@
       </div>
     </article>
 
-    <article class="person roster-row" data-categories="pastoral-counsel classical-education postmillennialism culture-commentary" data-tier="tier-5">
-      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/doug-wilson.jpg" alt="Doug Wilson" loading="lazy" /></div>
-      <div class="idx">03</div>
-      <div class="body">
-        <h3 class="name">Doug Wilson</h3>
-        <p class="desc">Godfather of classical education in America, Wilson is the grandfather you never had: witty, wise, and practical.</p>
-        <span class="badge-wrap">
-          <button type="button" class="person-badge" aria-describedby="trust-popover-03">The Full Thanksgiving Meal</button>
-          <div class="trust-popover" id="trust-popover-03" role="tooltip">
-            <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
-              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
-            </ol>
-          </div>
-        </span>
-        <div class="person-tags">
-          <span class="tag-label">Follow for:</span>
-          <span class="tag">Pastoral Counsel</span>
-          <span class="tag">Classical Education</span>
-          <span class="tag">Postmillennialism</span>
-          <span class="tag">Culture Commentary</span>
-        </div>
-      </div>
-      <div class="person-links">
-        <a class="btn-ghost person-link" href="https://x.com/douglaswils" target="_blank" rel="noopener">Follow on X ↗</a>
-        <a class="btn-ghost person-link" href="https://www.youtube.com/@blogmablog4870" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
-        <a class="btn-ghost person-link" href="https://dougwils.com/" target="_blank" rel="noopener">Read Blog &amp; Mablog ↗</a>
-      </div>
-    </article>
-
     <article class="person roster-row" data-categories="headship-patriarchy pastoral-counsel music unseen-world" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/brian-sauve.jpg" alt="Brian Sauvé" loading="lazy" /></div>
-      <div class="idx">04</div>
       <div class="body">
         <h3 class="name">Brian Sauvé</h3>
         <p class="desc">Ogden pastor, father of seven, and hymn-writer for the new Christendom — Sauvé makes music you'll actually sing and asks the questions Haunted Cosmos won't let you dodge.</p>
@@ -445,11 +469,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-04">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-04" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -472,7 +496,6 @@
 
     <article class="person roster-row" data-categories="pastoral-counsel culture-commentary reformed-theology" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/toby-sumpter.jpg" alt="Toby Sumpter" loading="lazy" /></div>
-      <div class="idx">05</div>
       <div class="body">
         <h3 class="name">Toby Sumpter</h3>
         <p class="desc">Christ Church associate pastor and CrossPolitic co-host — Sumpter brings Reformed exposition to bear on the muddle of American culture, teaching civics to boot.</p>
@@ -480,11 +503,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-05">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-05" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -502,43 +525,8 @@
       </div>
     </article>
 
-    <article class="person roster-row" data-categories="biblical-masculinity headship-patriarchy fatherhood culture-commentary" data-tier="tier-5">
-      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-foster.jpg" alt="Michael Foster" loading="lazy" /></div>
-      <div class="idx">06</div>
-      <div class="body">
-        <h3 class="name">Michael Foster</h3>
-        <p class="desc">Co-author of It's Good to Be a Man and pastor of East River Church — Foster turned a childhood of chaos into the loudest voice calling men out of passivity and into leading their households like they mean it.</p>
-        <span class="badge-wrap">
-          <button type="button" class="person-badge" aria-describedby="trust-popover-06">The Full Thanksgiving Meal</button>
-          <div class="trust-popover" id="trust-popover-06" role="tooltip">
-            <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
-              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
-            </ol>
-          </div>
-        </span>
-        <div class="person-tags">
-          <span class="tag-label">Follow for:</span>
-          <span class="tag">Biblical Masculinity</span>
-          <span class="tag">Headship &amp; Patriarchy</span>
-          <span class="tag">Fatherhood</span>
-          <span class="tag">Culture Commentary</span>
-        </div>
-      </div>
-      <div class="person-links">
-        <a class="btn-ghost person-link" href="https://x.com/thisisfoster" target="_blank" rel="noopener">Follow on X ↗</a>
-        <a class="btn-ghost person-link" href="https://www.instagram.com/wemadepeople/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
-        <a class="btn-ghost person-link" href="https://www.thisisfoster.com/" target="_blank" rel="noopener">Read This Is Foster ↗</a>
-        <a class="btn-ghost person-link" href="https://eastriverchurch.org/" target="_blank" rel="noopener">Visit East River Church ↗</a>
-      </div>
-    </article>
-
     <article class="person roster-row" data-categories="christian-nationalism politics" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"></div>
-      <div class="idx">07</div>
       <div class="body">
         <h3 class="name">Stephen Wolfe</h3>
         <p class="desc">Political theorist and author of The Case for Christian Nationalism — Wolfe makes the intellectual case that a nation's laws and culture should bow the knee to Christ, no apologies offered.</p>
@@ -546,11 +534,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-07">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-07" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -569,7 +557,6 @@
 
     <article class="person roster-row" data-categories="politics culture-commentary" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/auron-macintyre.jpg" alt="Auron MacIntyre" loading="lazy" /></div>
-      <div class="idx">08</div>
       <div class="body">
         <h3 class="name">Auron MacIntyre</h3>
         <p class="desc">Blaze host and author of The Total State — MacIntyre names how liberal democracies rot, and dares men to do something about it.</p>
@@ -577,11 +564,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-08">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-08" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -598,42 +585,8 @@
       </div>
     </article>
 
-    <article class="person roster-row" data-categories="reformed-theology postmillennialism deconstruction-evangelicalism" data-tier="tier-3">
-      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/josh-haymes.jpg" alt="Josh Haymes" loading="lazy" /></div>
-      <div class="idx">09</div>
-      <div class="body">
-        <h3 class="name">Josh Haymes</h3>
-        <p class="desc">Former SOMA co-pastor turned Reformation Red Pill host — Haymes chronicles his own journey out of evangelical mush into postmillennial, Kuyperian Reformed conviction, and invites men to make the same trade.</p>
-        <span class="badge-wrap">
-          <button type="button" class="person-badge" aria-describedby="trust-popover-09">Chicken Dinner</button>
-          <div class="trust-popover" id="trust-popover-09" role="tooltip">
-            <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
-              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
-            </ol>
-          </div>
-        </span>
-        <div class="person-tags">
-          <span class="tag-label">Follow for:</span>
-          <span class="tag">Reformed Theology</span>
-          <span class="tag">Postmillennialism</span>
-          <span class="tag">Deconstruction from Evangelicalism</span>
-        </div>
-      </div>
-      <div class="person-links">
-        <a class="btn-ghost person-link" href="https://x.com/haymes_joshua" target="_blank" rel="noopener">Follow on X ↗</a>
-        <a class="btn-ghost person-link" href="https://www.youtube.com/@ReformationRedPill" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
-        <a class="btn-ghost person-link" href="https://www.instagram.com/reformation.red.pill.podcast/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
-        <a class="btn-ghost person-link" href="https://reformationredpill.com/" target="_blank" rel="noopener">Visit ReformationRedPill.com ↗</a>
-      </div>
-    </article>
-
     <article class="person roster-row" data-categories="politics second-amendment military-service" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/nick-freitas.jpg" alt="Nick Freitas" loading="lazy" /></div>
-      <div class="idx">10</div>
       <div class="body">
         <h3 class="name">Nick Freitas</h3>
         <p class="desc">Green Beret with two combat tours turned Virginia state legislator — Freitas went viral defending the Second Amendment on the House floor and never softened, whether the fight is guns, God, or governance.</p>
@@ -641,11 +594,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-10">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-10" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -663,74 +616,8 @@
       </div>
     </article>
 
-    <article class="person roster-row" data-categories="politics culture-commentary debate-rhetoric" data-tier="tier-3">
-      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-knowles.jpg" alt="Michael Knowles" loading="lazy" /></div>
-      <div class="idx">11</div>
-      <div class="body">
-        <h3 class="name">Michael Knowles</h3>
-        <p class="desc">Yale-educated Daily Wire host — Knowles turns Catholic tradition and old-school rhetoric into daily ammunition against a culture that's forgotten how to argue.</p>
-        <span class="badge-wrap">
-          <button type="button" class="person-badge" aria-describedby="trust-popover-11">Chicken Dinner</button>
-          <div class="trust-popover" id="trust-popover-11" role="tooltip">
-            <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
-              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
-            </ol>
-          </div>
-        </span>
-        <div class="person-tags">
-          <span class="tag-label">Follow for:</span>
-          <span class="tag">Politics</span>
-          <span class="tag">Culture Commentary</span>
-          <span class="tag">Debate &amp; Rhetoric</span>
-        </div>
-      </div>
-      <div class="person-links">
-        <a class="btn-ghost person-link" href="https://x.com/michaeljknowles" target="_blank" rel="noopener">Follow on X ↗</a>
-        <a class="btn-ghost person-link" href="https://www.youtube.com/@MichaelKnowles" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
-        <a class="btn-ghost person-link" href="https://www.instagram.com/michaeljknowles/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
-        <a class="btn-ghost person-link" href="https://www.dailywire.com/show/the-michael-knowles-show" target="_blank" rel="noopener">Watch The Michael Knowles Show ↗</a>
-      </div>
-    </article>
-
-    <article class="person roster-row" data-categories="christian-nationalism american-christian-history" data-tier="tier-3">
-      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/david-barton.jpg" alt="Wall Builders" loading="lazy" /></div>
-      <div class="idx">12</div>
-      <div class="body">
-        <h3 class="name">Wall Builders</h3>
-        <p class="desc">David Barton's organization for reclaiming America's Christian founding — WallBuilders digs up the history the textbooks buried, arming men to defend the nation's heritage instead of apologizing for it.</p>
-        <span class="badge-wrap">
-          <button type="button" class="person-badge" aria-describedby="trust-popover-12">Chicken Dinner</button>
-          <div class="trust-popover" id="trust-popover-12" role="tooltip">
-            <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
-              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
-            </ol>
-          </div>
-        </span>
-        <div class="person-tags">
-          <span class="tag-label">Follow for:</span>
-          <span class="tag">Christian Nationalism</span>
-          <span class="tag">American Christian History</span>
-        </div>
-      </div>
-      <div class="person-links">
-        <a class="btn-ghost person-link" href="https://x.com/davidbartonwb" target="_blank" rel="noopener">Follow David Barton on X ↗</a>
-        <a class="btn-ghost person-link" href="https://www.youtube.com/@wallbuilders" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
-        <a class="btn-ghost person-link" href="https://www.instagram.com/wallbuilders/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
-        <a class="btn-ghost person-link" href="https://wallbuilders.com/" target="_blank" rel="noopener">Visit WallBuilders.com ↗</a>
-      </div>
-    </article>
-
     <article class="person roster-row" data-categories="headship-patriarchy fatherhood reformed-theology pastoral-counsel" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/cr-wiley.jpg" alt="C.R. Wiley" loading="lazy" /></div>
-      <div class="idx">13</div>
       <div class="body">
         <h3 class="name">C.R. Wiley</h3>
         <p class="desc">Presbyterian pastor, senior editor at Touchstone, and author of Man of the House — Wiley makes the case that a man's household is an economic enterprise to be built, not a hotel to be paid for, recovering a vision of domestic patriarchy most modern men were never taught.</p>
@@ -738,11 +625,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-13">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-13" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -763,7 +650,6 @@
 
     <article class="person roster-row" data-categories="fatherhood classical-education postmillennialism reformed-theology" data-tier="tier-4">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/jared-longshore.jpg" alt="Jared Longshore" loading="lazy" /></div>
-      <div class="idx">14</div>
       <div class="body">
         <h3 class="name">Jared Longshore</h3>
         <p class="desc">Minister at Christ Church in Moscow, Idaho, and Dean of New Saint Andrews College, co-host of The Right Stuff podcast, and author of The Case for the Christian Family — Longshore trains the next generation of covenantal, classically-educated men from inside the Wilson/Canon Press orbit.</p>
@@ -771,11 +657,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-14">Steak, Eggs and a Salad</button>
           <div class="trust-popover" id="trust-popover-14" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -794,9 +680,103 @@
       </div>
     </article>
 
+    <article class="person roster-row" data-categories="reformed-theology postmillennialism deconstruction-evangelicalism" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/josh-haymes.jpg" alt="Josh Haymes" loading="lazy" /></div>
+      <div class="body">
+        <h3 class="name">Josh Haymes</h3>
+        <p class="desc">Former SOMA co-pastor turned Reformation Red Pill host — Haymes chronicles his own journey out of evangelical mush into postmillennial, Kuyperian Reformed conviction, and invites men to make the same trade.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-09">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-09" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Reformed Theology</span>
+          <span class="tag">Postmillennialism</span>
+          <span class="tag">Deconstruction from Evangelicalism</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/haymes_joshua" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@ReformationRedPill" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/reformation.red.pill.podcast/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://reformationredpill.com/" target="_blank" rel="noopener">Visit ReformationRedPill.com ↗</a>
+      </div>
+    </article>
+
+    <article class="person roster-row" data-categories="politics culture-commentary debate-rhetoric" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/michael-knowles.jpg" alt="Michael Knowles" loading="lazy" /></div>
+      <div class="body">
+        <h3 class="name">Michael Knowles</h3>
+        <p class="desc">Yale-educated Daily Wire host — Knowles turns Catholic tradition and old-school rhetoric into daily ammunition against a culture that's forgotten how to argue.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-11">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-11" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Politics</span>
+          <span class="tag">Culture Commentary</span>
+          <span class="tag">Debate &amp; Rhetoric</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/michaeljknowles" target="_blank" rel="noopener">Follow on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@MichaelKnowles" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/michaeljknowles/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://www.dailywire.com/show/the-michael-knowles-show" target="_blank" rel="noopener">Watch The Michael Knowles Show ↗</a>
+      </div>
+    </article>
+
+    <article class="person roster-row" data-categories="christian-nationalism american-christian-history" data-tier="tier-3">
+      <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/david-barton.jpg" alt="Wall Builders" loading="lazy" /></div>
+      <div class="body">
+        <h3 class="name">Wall Builders</h3>
+        <p class="desc">David Barton's organization for reclaiming America's Christian founding — WallBuilders digs up the history the textbooks buried, arming men to defend the nation's heritage instead of apologizing for it.</p>
+        <span class="badge-wrap">
+          <button type="button" class="person-badge" aria-describedby="trust-popover-12">Chicken Dinner</button>
+          <div class="trust-popover" id="trust-popover-12" role="tooltip">
+            <ol class="trust-legend-list">
+              <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
+            </ol>
+          </div>
+        </span>
+        <div class="person-tags">
+          <span class="tag-label">Follow for:</span>
+          <span class="tag">Christian Nationalism</span>
+          <span class="tag">American Christian History</span>
+        </div>
+      </div>
+      <div class="person-links">
+        <a class="btn-ghost person-link" href="https://x.com/davidbartonwb" target="_blank" rel="noopener">Follow David Barton on X ↗</a>
+        <a class="btn-ghost person-link" href="https://www.youtube.com/@wallbuilders" target="_blank" rel="noopener">Subscribe on YouTube ↗</a>
+        <a class="btn-ghost person-link" href="https://www.instagram.com/wallbuilders/" target="_blank" rel="noopener">Follow on Instagram ↗</a>
+        <a class="btn-ghost person-link" href="https://wallbuilders.com/" target="_blank" rel="noopener">Visit WallBuilders.com ↗</a>
+      </div>
+    </article>
+
     <article class="person roster-row" data-categories="christian-nationalism culture-commentary pastoral-counsel" data-tier="tier-3">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/andrew-isker.jpg" alt="Andrew Isker" loading="lazy" /></div>
-      <div class="idx">15</div>
       <div class="body">
         <h3 class="name">Andrew Isker</h3>
         <p class="desc">Pastor of Whitleyville Reformation Church and author of The Boniface Option — Isker argues Christians must go on offense against a post-Christian culture rather than retreat from it.</p>
@@ -804,11 +784,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-15">Chicken Dinner</button>
           <div class="trust-popover" id="trust-popover-15" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -828,7 +808,6 @@
 
     <article class="person roster-row" data-categories="christian-nationalism politics culture-commentary" data-tier="tier-3">
       <div class="person-photo roster-photo roster-photo--circle"><img src="assets/images/follow-photos/william-wolfe.jpg" alt="William Wolfe" loading="lazy" /></div>
-      <div class="idx">16</div>
       <div class="body">
         <h3 class="name">William Wolfe</h3>
         <p class="desc">Executive Director of the Center for Baptist Leadership and former Trump administration DoD/State Department staffer — Wolfe writes on Christian nationalism, national security, and reforming the SBC from the inside.</p>
@@ -836,11 +815,11 @@
           <button type="button" class="person-badge" aria-describedby="trust-popover-16">Chicken Dinner</button>
           <div class="trust-popover" id="trust-popover-16" role="tooltip">
             <ol class="trust-legend-list">
-              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
-              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
-              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
-              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
               <li class="trust-tier"><span class="n">5</span><span class="name">The Full Thanksgiving Meal</span><span class="desc">You'll not find better.</span></li>
+              <li class="trust-tier"><span class="n">4</span><span class="name">Steak, Eggs and a Salad</span><span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span></li>
+              <li class="trust-tier"><span class="n">3</span><span class="name">Chicken Dinner</span><span class="desc">Lean protein but with a few bones. Consume with discernment.</span></li>
+              <li class="trust-tier"><span class="n">2</span><span class="name">Rambutan Pit</span><span class="desc">Eat this and you will wish you hadn't. Choking material.</span></li>
+              <li class="trust-tier"><span class="n">1</span><span class="name">Caribbean Death Apple</span><span class="desc">Consume this and you will die. Not kidding.</span></li>
             </ol>
           </div>
         </span>
@@ -863,19 +842,9 @@
     <div class="eyebrow">Trust Score</div>
     <ol class="trust-legend-list">
       <li class="trust-tier">
-        <span class="n">1</span>
-        <span class="name">Caribbean Death Apple</span>
-        <span class="desc">Consume this and you will die. Not kidding.</span>
-      </li>
-      <li class="trust-tier">
-        <span class="n">2</span>
-        <span class="name">Rambutan Pit</span>
-        <span class="desc">Eat this and you will wish you hadn't. Choking material.</span>
-      </li>
-      <li class="trust-tier">
-        <span class="n">3</span>
-        <span class="name">Chicken Dinner</span>
-        <span class="desc">Lean protein but with a few bones. Consume with discernment.</span>
+        <span class="n">5</span>
+        <span class="name">The Full Thanksgiving Meal</span>
+        <span class="desc">You'll not find better.</span>
       </li>
       <li class="trust-tier">
         <span class="n">4</span>
@@ -883,9 +852,19 @@
         <span class="desc">Everything a warrior in fighting trim needs. Fill up regularly.</span>
       </li>
       <li class="trust-tier">
-        <span class="n">5</span>
-        <span class="name">The Full Thanksgiving Meal</span>
-        <span class="desc">You'll not find better.</span>
+        <span class="n">3</span>
+        <span class="name">Chicken Dinner</span>
+        <span class="desc">Lean protein but with a few bones. Consume with discernment.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">2</span>
+        <span class="name">Rambutan Pit</span>
+        <span class="desc">Eat this and you will wish you hadn't. Choking material.</span>
+      </li>
+      <li class="trust-tier">
+        <span class="n">1</span>
+        <span class="name">Caribbean Death Apple</span>
+        <span class="desc">Consume this and you will die. Not kidding.</span>
       </li>
     </ol>
   </div>

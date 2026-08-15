@@ -177,11 +177,28 @@
   // dossier card's left border always matches its own "verses mastered" text.
   var PROGRESS_STATE_COLOR_VAR = { 'is-none': '--t4', 'is-partial': '--t2', 'is-complete': '--t1' };
 
+  // A verse masters at 2 correct passes in a row (see recordAttempt in
+  // armory-state.js) — this renders that as 2 dots so progress toward it is
+  // visible everywhere a verse shows up (card rows, map sheet, drill modal),
+  // not just discoverable after finishing a drill.
+  var MASTERY_PASSES_NEEDED = 2;
+  function masteryDotsHTML(state) {
+    var mastered = state.status === 'mastered';
+    var filled = mastered ? MASTERY_PASSES_NEEDED : Math.min(state.streak, MASTERY_PASSES_NEEDED);
+    var dots = '';
+    for (var i = 0; i < MASTERY_PASSES_NEEDED; i++) {
+      dots += '<span class="mastery-dot' + (i < filled ? ' is-filled' : '') + '"></span>';
+    }
+    var label = mastered ? 'Mastered' : (filled > 0 ? filled + ' of ' + MASTERY_PASSES_NEEDED + ' correct passes' : 'Needs ' + MASTERY_PASSES_NEEDED + ' correct passes in a row');
+    return '<span class="mastery-dots' + (mastered ? ' is-complete' : '') + '">' + dots + '<span class="mastery-label">' + label + '</span></span>';
+  }
+
   function renderVerseRowHTML(verse) {
     var state = CC.armory.getVerseState(verse.id);
     var mastered = state.status === 'mastered';
     return '<div class="verse-row" data-verse-id="' + verse.id + '">'
-      + '<div><div class="verse-ref">' + escapeHTML(verse.ref) + (mastered ? ' <span class="mastered-tag">MASTERED</span>' : '') + '</div>'
+      + '<div><div class="verse-ref">' + escapeHTML(verse.ref) + '</div>'
+      + masteryDotsHTML(state)
       + '<p class="verse-text">' + escapeHTML(verse.text) + '</p></div>'
       + '<button type="button" class="drill-btn" data-verse-id="' + verse.id + '">' + (mastered ? 'Review' : 'Drill') + '</button>'
       + '</div>';
@@ -368,15 +385,25 @@
       + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'
       + DRILL_OUTCOME_ICON_PATHS[outcome] + '</svg></span>';
   }
-  function drillOutcomeMessage(outcome, mode) {
-    if (outcome === 'exact') return mode === 'tap' ? 'Perfect order!' : 'Word for word — well done!';
-    if (outcome === 'close') return 'Close enough — well done.';
-    return mode === 'tap' ? 'Not quite — review the verse below.' : 'Not quite there yet.';
+  // A correct attempt only masters a verse once its streak hits 2 (see
+  // armory-state.js's recordAttempt) — so "correct" and "mastered" are NOT
+  // the same thing, and the drill's message/button must say so. Otherwise
+  // a first correct pass reads as "Finished" when the verse actually still
+  // needs one more correct rep before it's mastered.
+  function drillOutcomeMessage(outcome, mode, result) {
+    if (outcome === 'fail') return mode === 'tap' ? 'Not quite — review the verse below.' : 'Not quite there yet.';
+    var base = outcome === 'exact' ? (mode === 'tap' ? 'Perfect order!' : 'Word for word — well done!') : 'Close enough — well done.';
+    if (result && result.nowMastered) return base + ' Verse mastered.';
+    if (result && result.wasAlreadyMastered) return base;
+    return base + ' One more correct pass and it’s mastered.';
   }
-  function drillResultCardHTML(outcome, mode, masteredThisAttempt) {
+  function drillIsFinished(outcome, result) {
+    return outcome !== 'fail' && !!result && (result.nowMastered || result.wasAlreadyMastered);
+  }
+  function drillResultCardHTML(outcome, mode, result) {
     return '<div class="drill-result-card is-' + outcome + '">'
       + drillResultBadgeHTML(outcome)
-      + '<span class="drill-result-msg">' + drillOutcomeMessage(outcome, mode) + (masteredThisAttempt ? ' Verse mastered.' : '') + '</span>'
+      + '<span class="drill-result-msg">' + drillOutcomeMessage(outcome, mode, result) + '</span>'
       + '</div>';
   }
 
@@ -423,15 +450,16 @@
       var trayChips = state.tray.map(function (item, i) {
         return '<button type="button" class="tray-chip" data-idx="' + i + '">' + escapeHTML(item.text) + '</button>';
       }).join('');
-      var html = '<div class="drill-progress">TAP THE PHRASES INTO ORDER</div>'
+      var html = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+        + '<div class="drill-progress">TAP THE PHRASES INTO ORDER</div>'
         + '<div class="assembled-row">' + assembledSlots + '</div>'
         + '<div class="tray-row">' + trayChips + '</div>';
       if (state.resultShown) {
         var outcome = state.correct ? 'exact' : 'fail';
-        html += drillResultCardHTML(outcome, 'tap', state.result && state.result.nowMastered);
+        html += drillResultCardHTML(outcome, 'tap', state.result);
         if (outcome !== 'exact') html += '<blockquote class="drill-answer-key">' + escapeHTML(verse.text) + '</blockquote>';
         html += '<div class="drill-actions"><button type="button" class="btn-ghost2" id="drillRetry">Retry</button>'
-          + '<button type="button" class="btn-solid" id="drillClose2">' + (outcome === 'fail' ? 'Close' : 'Finished') + '</button></div>';
+          + '<button type="button" class="btn-solid" id="drillClose2">' + (drillIsFinished(outcome, state.result) ? 'Finished' : 'Close') + '</button></div>';
       }
       return html;
     }
@@ -477,7 +505,8 @@
     function renderBody() {
       var body = document.getElementById('drillBody');
       if (!state.resultShown) {
-        body.innerHTML = '<div class="drill-progress">TYPE THE VERSE FROM MEMORY</div>'
+        body.innerHTML = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+          + '<div class="drill-progress">TYPE THE VERSE FROM MEMORY</div>'
           + '<textarea id="drillAnswer" class="drill-textarea" placeholder="Type ' + escapeHTML(verse.ref) + ' from memory…" autocomplete="off" spellcheck="false"></textarea>'
           + '<div class="drill-actions"><button type="button" class="btn-solid" id="drillSubmit">Check</button></div>';
         document.getElementById('drillSubmit').addEventListener('click', function () {
@@ -493,11 +522,12 @@
         }).join(' ');
         var extrasHTML = state.match.extras.length
           ? '<p class="drill-extras">Extra words: ' + escapeHTML(state.match.extras.join(' ')) + '</p>' : '';
-        body.innerHTML = drillResultCardHTML(state.match.outcome, 'text', state.result && state.result.nowMastered)
+        body.innerHTML = '<div class="drill-mastery-row">' + masteryDotsHTML(CC.armory.getVerseState(verse.id)) + '</div>'
+          + drillResultCardHTML(state.match.outcome, 'text', state.result)
           + '<blockquote class="drill-answer-key">' + highlighted + '</blockquote>'
           + extrasHTML
           + '<div class="drill-actions"><button type="button" class="btn-ghost2" id="drillRetry">Retry</button>'
-          + '<button type="button" class="btn-solid" id="drillClose2">' + (state.match.outcome === 'fail' ? 'Close' : 'Finished') + '</button></div>';
+          + '<button type="button" class="btn-solid" id="drillClose2">' + (drillIsFinished(state.match.outcome, state.result) ? 'Finished' : 'Close') + '</button></div>';
         document.getElementById('drillRetry').addEventListener('click', function () { state.resultShown = false; renderBody(); });
         document.getElementById('drillClose2').addEventListener('click', closeDrill);
       }

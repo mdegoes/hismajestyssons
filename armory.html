@@ -118,7 +118,16 @@
     display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--t3); color: var(--on-accent);
     font-size: 9.5px; font-weight: 800; letter-spacing: .1em;
   }
-  .mastered-tag { font-size: 9px; font-weight: 800; letter-spacing: .08em; color: var(--t3); }
+  /* mastery-dots: 2 dots = the 2 correct passes a verse needs to master.
+     Shown wherever a verse appears (card rows, map sheet, drill modal) so
+     the requirement and current progress toward it are never hidden. */
+  .mastery-dots { display: inline-flex; align-items: center; gap: 5px; margin: 4px 0 0; }
+  .mastery-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--hairline-strong); flex-shrink: 0; }
+  .mastery-dots.is-complete .mastery-dot { background: var(--t1); }
+  .mastery-dots:not(.is-complete) .mastery-dot.is-filled { background: var(--t2); }
+  .mastery-label { font-family: var(--hud); font-size: 9.5px; letter-spacing: .04em; color: var(--muted); text-transform: uppercase; }
+  .mastery-dots.is-complete .mastery-label { color: var(--t1); font-weight: 700; }
+  .drill-mastery-row { margin-bottom: 6px; }
 
   .expand-btn {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
