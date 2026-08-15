@@ -241,7 +241,7 @@ function Explore() {
         heading={<>Make war on the <em>enemy.</em></>}
         strap="Every man is conscripted. The only question is whether he shows up armed."
         image={{ src: "assets/images/worth_a_follow.png", alt: "A study with a Bible and a flintlock rifle mounted beneath a wooden cross" }}
-        links={[{ label: "Answer the Call", href: "make-war.html" }]}
+        links={[{ label: "Take Up Arms", href: "make-war.html" }]}
       />
       <ExploreBand
         id="explore-build"
