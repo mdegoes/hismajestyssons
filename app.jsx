@@ -138,27 +138,15 @@ function Nav({ onJump, onToggleScheme }) {
 function Hero() {
   return (
     <header className="wrap hero" id="top">
-      <div>
-        <div className="hero-eyebrow">Est. MMXXVI</div>
-        <h1 className="hero-title">
-          <span className="row">For the <em>King.</em></span>
-        </h1>
-        <p className="hero-strap">
-          HMS is a brotherhood sworn to taking ground for the kingdom. Every day.
-          In every way. At our workbenches, in the pew, on our phones, and on
-          our streets.
-        </p>
-        <div className="hero-actions">
-          <a className="btn-ghost" href="#manifesto">Read the Mission ↓</a>
-        </div>
-      </div>
-
-      <div className="hero-right">
-        <div className="hero-photo">
-          <img src="assets/images/home_page.png" alt="A father reading Scripture in the living room while his family gathers in the kitchen behind him" loading="lazy" />
-          <div className="photo-caption">"Be strong, and show yourself a man." — 1 Kings 2:2</div>
-        </div>
-      </div>
+      <div className="hero-eyebrow">Est. MMXXVI</div>
+      <h1 className="hero-title">
+        <span className="row">For the <em>King.</em></span>
+      </h1>
+      <p className="hero-strap">
+        HMS is a brotherhood sworn to taking ground for the kingdom. Every day.
+        In every way. At our workbenches, in the pew, on our phones, and on
+        our streets.
+      </p>
     </header>
   );
 }
@@ -194,7 +182,12 @@ function ExploreBand({ id, eyebrow, heading, strap, image, links }) {
   return (
     <section className="explore-band" id={id}>
       <div className="explore-band-media">
-        <img src={image.src} alt={image.alt} loading="lazy" />
+        <img
+          src={image.src}
+          alt={image.alt}
+          loading="lazy"
+          style={image.zoom ? { transform: `scale(${image.zoom})` } : undefined}
+        />
       </div>
       <div className="explore-band-scrim" aria-hidden="true"></div>
       <div className="explore-band-content">
@@ -227,8 +220,8 @@ function Explore() {
         strap="Prayer at the table. Scripture on the shelf. A father who leads because someone has to, and it might as well be him."
         image={{ src: "assets/images/7_days_of_prayer.png", alt: "A father and his children kneeling together in prayer in their living room" }}
         links={[
-          { label: "Music", href: "music.html" },
-          { label: "Seven Days of Prayer", href: "family-prayer.html" },
+          { label: "Worship", href: "music.html" },
+          { label: "Lead in Prayer", href: "family-prayer.html" },
         ]}
       />
       <ExploreBand
@@ -238,8 +231,8 @@ function Explore() {
         strap="Books worth reading and men worth following — building a mind that can’t be moved by the next headline."
         image={{ src: "assets/images/worth_a_read.png", alt: "A quiet home library lined with leather-bound books" }}
         links={[
-          { label: "Worthy Books", href: "worthy-books.html" },
-          { label: "Worthy Men", href: "worthy-men.html" },
+          { label: "Read the List", href: "worthy-books.html" },
+          { label: "Follow Worthy Men", href: "worthy-men.html" },
         ]}
       />
       <ExploreBand
@@ -248,15 +241,15 @@ function Explore() {
         heading={<>Make war on the <em>enemy.</em></>}
         strap="Every man is conscripted. The only question is whether he shows up armed."
         image={{ src: "assets/images/worth_a_follow.png", alt: "A study with a Bible and a flintlock rifle mounted beneath a wooden cross" }}
-        links={[{ label: "Coming Soon", href: "make-war.html" }]}
+        links={[{ label: "Answer the Call", href: "make-war.html" }]}
       />
       <ExploreBand
         id="explore-build"
         eyebrow="§ 04 · Build"
         heading={<>Build what <em>lasts.</em></>}
         strap="Scripture-grounded prints for the wall of a home that means to stand for a hundred years."
-        image={{ src: "hms-art/01-the-church-sm.jpg", alt: "A pencil-sketch print of a church, from the His Majesty's Sons art collection" }}
-        links={[{ label: "Art", href: "art.html" }]}
+        image={{ src: "hms-art/01-the-church-sm.jpg", alt: "A pencil-sketch print of a church, from the His Majesty's Sons art collection", zoom: 1.15 }}
+        links={[{ label: "Browse the Prints", href: "art.html" }]}
       />
     </section>
   );
@@ -305,8 +298,8 @@ function App() {
     <>
       <Nav onJump={onJump} onToggleScheme={onToggleScheme} />
       <Hero />
-      <Manifesto />
       <Explore />
+      <Manifesto />
       <Foot onJump={onJump} />
     </>
   );
