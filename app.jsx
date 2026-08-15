@@ -191,6 +191,78 @@ function Manifesto() {
   );
 }
 
+function ExploreBand({ id, eyebrow, heading, strap, image, links }) {
+  return (
+    <section className="explore-band" id={id}>
+      <div className="explore-band-media">
+        <img src={image.src} alt={image.alt} loading="lazy" />
+      </div>
+      <div className="explore-band-scrim" aria-hidden="true"></div>
+      <div className="explore-band-content">
+        <div className="explore-eyebrow">{eyebrow}</div>
+        <h3 className="explore-heading">{heading}</h3>
+        <p className="explore-strap">{strap}</p>
+        <div className="explore-ctas">
+          {links.map((link, i) => (
+            <a
+              key={link.href}
+              className={`explore-cta${i === 0 ? " explore-cta--primary" : ""}`}
+              href={link.href}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Explore() {
+  return (
+    <section className="explore" id="explore" aria-label="Explore His Majesty’s Sons">
+      <ExploreBand
+        id="explore-lead"
+        eyebrow="§ 01 · Lead"
+        heading={<>Lead your <em>home.</em></>}
+        strap="Prayer at the table. Scripture on the shelf. A father who leads because someone has to, and it might as well be him."
+        image={{ src: "assets/images/7_days_of_prayer.png", alt: "A father and his children kneeling together in prayer in their living room" }}
+        links={[
+          { label: "Music", href: "music.html" },
+          { label: "Seven Days of Prayer", href: "family-prayer.html" },
+        ]}
+      />
+      <ExploreBand
+        id="explore-learn"
+        eyebrow="§ 02 · Learn"
+        heading={<>Learn what’s <em>true.</em></>}
+        strap="Books worth reading and men worth following — building a mind that can’t be moved by the next headline."
+        image={{ src: "assets/images/worth_a_read.png", alt: "A quiet home library lined with leather-bound books" }}
+        links={[
+          { label: "Worthy Books", href: "worthy-books.html" },
+          { label: "Worthy Men", href: "worthy-men.html" },
+        ]}
+      />
+      <ExploreBand
+        id="explore-makewar"
+        eyebrow="§ 03 · Make War"
+        heading={<>Make war on the <em>enemy.</em></>}
+        strap="Every man is conscripted. The only question is whether he shows up armed."
+        image={{ src: "assets/images/worth_a_follow.png", alt: "A study with a Bible and a flintlock rifle mounted beneath a wooden cross" }}
+        links={[{ label: "Coming Soon", href: "make-war.html" }]}
+      />
+      <ExploreBand
+        id="explore-build"
+        eyebrow="§ 04 · Build"
+        heading={<>Build what <em>lasts.</em></>}
+        strap="Scripture-grounded prints for the wall of a home that means to stand for a hundred years."
+        image={{ src: "hms-art/01-the-church-sm.jpg", alt: "A pencil-sketch print of a church, from the His Majesty's Sons art collection" }}
+        links={[{ label: "Art", href: "art.html" }]}
+      />
+    </section>
+  );
+}
+
 function Foot({ onJump }) {
   return (
     <footer className="foot">
@@ -235,6 +307,7 @@ function App() {
       <Nav onJump={onJump} onToggleScheme={onToggleScheme} />
       <Hero />
       <Manifesto />
+      <Explore />
       <Foot onJump={onJump} />
     </>
   );
