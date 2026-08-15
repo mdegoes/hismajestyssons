@@ -147,20 +147,57 @@
   <div class="nav-end">
     <div class="nav-links" id="nav-links">
       <a href="index.html#manifesto">Mission</a>
-      <a href="art.html" aria-current="page">Art</a>
-      <a href="music.html">Music</a>
+
       <div class="nav-drop" data-open="false">
         <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
-                aria-controls="nav-resources-panel" data-active="false">
-          Resources
+                aria-controls="nav-lead-panel" data-active="false">
+          Lead
           <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="nav-drop-panel" id="nav-resources-panel">
+        <div class="nav-drop-panel" id="nav-lead-panel">
           <div class="nav-drop-inner">
-            <a href="resources.html">All Resources</a>
+            <a href="music.html">Music</a>
             <a href="family-prayer.html">Seven Days of Prayer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-learn-panel" data-active="false">
+          Learn
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-learn-panel">
+          <div class="nav-drop-inner">
             <a href="worthy-books.html">Worthy Books</a>
             <a href="worthy-men.html">Worthy Men</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-makewar-panel" data-active="false">
+          Make War
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-makewar-panel">
+          <div class="nav-drop-inner">
+            <a href="make-war.html">Coming Soon</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-build-panel" data-active="true">
+          Build
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-build-panel">
+          <div class="nav-drop-inner">
+            <a href="art.html" aria-current="page">Art</a>
           </div>
         </div>
       </div>
@@ -384,12 +421,15 @@
   </div>
   <nav class="foot-links" aria-label="Site">
     <a href="index.html#manifesto">Mission</a>
-    <a href="art.html">Art</a>
-    <a href="music.html">Music</a>
-    <a href="resources.html">Resources</a>
+    <a href="music.html">Lead</a>
+    <a href="music.html" class="foot-sub">Music</a>
     <a href="family-prayer.html" class="foot-sub">Seven Days of Prayer</a>
+    <a href="worthy-books.html">Learn</a>
     <a href="worthy-books.html" class="foot-sub">Worthy Books</a>
     <a href="worthy-men.html" class="foot-sub">Worthy Men</a>
+    <a href="make-war.html">Make War</a>
+    <a href="art.html">Build</a>
+    <a href="art.html" class="foot-sub">Art</a>
   </nav>
   <div class="foot-social">
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
@@ -404,24 +444,34 @@
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  const navDrop = nav.querySelector('.nav-drop');
-  const navDropTrigger = navDrop.querySelector('.nav-drop-trigger');
-  const setDropOpen = (open) => {
-    navDrop.setAttribute('data-open', String(open));
-    navDropTrigger.setAttribute('aria-expanded', String(open));
+  const navDrops = Array.from(nav.querySelectorAll('.nav-drop'));
+  const setDropOpen = (drop, open) => {
+    drop.setAttribute('data-open', String(open));
+    drop.querySelector('.nav-drop-trigger').setAttribute('aria-expanded', String(open));
   };
-  navDropTrigger.addEventListener('click', () => {
-    setDropOpen(navDrop.getAttribute('data-open') !== 'true');
+  const closeOtherDrops = (except) => {
+    navDrops.forEach((drop) => { if (drop !== except) setDropOpen(drop, false); });
+  };
+  navDrops.forEach((drop) => {
+    const trigger = drop.querySelector('.nav-drop-trigger');
+    trigger.addEventListener('click', () => {
+      const open = drop.getAttribute('data-open') !== 'true';
+      closeOtherDrops(drop);
+      setDropOpen(drop, open);
+    });
+    drop.addEventListener('mouseenter', () => {
+      closeOtherDrops(drop);
+      setDropOpen(drop, true);
+    });
+    drop.addEventListener('mouseleave', () => setDropOpen(drop, false));
   });
-  navDrop.addEventListener('mouseenter', () => setDropOpen(true));
-  navDrop.addEventListener('mouseleave', () => setDropOpen(false));
 
   const navToggle = nav.querySelector('.nav-toggle');
   const setMenuOpen = (open) => {
     nav.setAttribute('data-menu-open', String(open));
     navToggle.setAttribute('aria-expanded', String(open));
     navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    if (!open) setDropOpen(false);
+    if (!open) closeOtherDrops(null);
   };
   const closeMenu = () => setMenuOpen(false);
   navToggle.addEventListener('click', () => {

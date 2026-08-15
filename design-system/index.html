@@ -27,20 +27,57 @@
   <div class="nav-end">
     <div class="nav-links" id="nav-links">
       <a href="../index.html#manifesto">Mission</a>
-      <a href="../art.html">Art</a>
-      <a href="../music.html">Music</a>
+
       <div class="nav-drop" data-open="false">
         <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
-                aria-controls="nav-resources-panel" data-active="false">
-          Resources
+                aria-controls="nav-lead-panel" data-active="false">
+          Lead
           <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
-        <div class="nav-drop-panel" id="nav-resources-panel">
+        <div class="nav-drop-panel" id="nav-lead-panel">
           <div class="nav-drop-inner">
-            <a href="../resources.html">All Resources</a>
+            <a href="../music.html">Music</a>
             <a href="../family-prayer.html">Seven Days of Prayer</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-learn-panel" data-active="false">
+          Learn
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-learn-panel">
+          <div class="nav-drop-inner">
             <a href="../worthy-books.html">Worthy Books</a>
             <a href="../worthy-men.html">Worthy Men</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-makewar-panel" data-active="false">
+          Make War
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-makewar-panel">
+          <div class="nav-drop-inner">
+            <a href="../make-war.html">Coming Soon</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-drop" data-open="false">
+        <button type="button" class="nav-drop-trigger" aria-haspopup="true" aria-expanded="false"
+                aria-controls="nav-build-panel" data-active="false">
+          Build
+          <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="nav-drop-panel" id="nav-build-panel">
+          <div class="nav-drop-inner">
+            <a href="../art.html">Art</a>
           </div>
         </div>
       </div>
@@ -281,7 +318,7 @@
         <span class="roman-mark">III</span>
       </div>
       <div class="ds-spec"><span class="ds-spec-tag">site.css → .back-link</span>
-        <a class="back-link" href="#" style="margin-bottom:0;"><span class="arrow">←</span> Back to Resources</a>
+        <a class="back-link" href="#" style="margin-bottom:0;"><span class="arrow">←</span> Back to Home</a>
       </div>
       <div class="ds-spec" style="grid-column: span 2;"><span class="ds-spec-tag">design-system.css → .ds-hatch (image placeholder)</span>
         <div class="ds-hatch" style="height: 90px;"></div>
@@ -310,9 +347,9 @@
           </a>
           <div class="nav-end">
             <div class="nav-links">
-              <a href="#">Mission</a>
-              <a href="#">Art</a>
-              <a href="#" aria-current="page">Music</a>
+              <a href="#" aria-current="page">Mission</a>
+              <a href="#">Lead</a>
+              <a href="#">Learn</a>
             </div>
             <button class="nav-toggle" aria-label="Open menu" style="display:inline-flex;">
               <span class="bars"><span></span><span></span><span></span></span>
@@ -325,21 +362,19 @@
 
     <div class="ds-group">
       <div class="ds-group-head">
-        <h3>Nav dropdown <em>(Resources)</em></h3>
-        <p>A single <code>data-open</code> attribute on <code>.nav-drop</code> drives two different presentations via CSS alone, no separate mechanism for each: on desktop it's an absolutely-positioned floating panel (shown forced-open below); at ≤720px — nested inside the already-open mobile menu — the same panel becomes an inline accordion using a <code>grid-template-rows: 0fr → 1fr</code> transition (auto-sizes to real content height, no hand-picked max value like <code>max-height</code> would need). The trigger is a <code>&lt;button&gt;</code>, not a link — it only toggles the panel; the panel's own first item, "All Resources," is what links to <code>resources.html</code>. Opens on click <em>or</em> hover (desktop) — the gap between trigger and panel is closed with `padding-top` rather than a `top` offset, so moving the mouse down into the panel doesn't cross a dead zone and close it early. The current-page state also splits in two: <code>data-active="true"</code> on the trigger (styled like <code>[aria-current="page"]</code>) when the visitor is anywhere in the Resources family, plus real <code>aria-current="page"</code> on whichever specific panel link matches the page.</p>
+        <h3>Nav dropdown <em>(Lead / Learn / Make War / Build)</em></h3>
+        <p>A single <code>data-open</code> attribute on <code>.nav-drop</code> drives two different presentations via CSS alone, no separate mechanism for each: on desktop it's an absolutely-positioned floating panel (shown forced-open below, using Lead as the worked example); at ≤720px — nested inside the already-open mobile menu — the same panel becomes an inline accordion using a <code>grid-template-rows: 0fr → 1fr</code> transition (auto-sizes to real content height, no hand-picked max value like <code>max-height</code> would need). The trigger is a <code>&lt;button&gt;</code>, not a link — it only toggles the panel. Opens on click <em>or</em> hover (desktop) — the gap between trigger and panel is closed with `padding-top` rather than a `top` offset, so moving the mouse down into the panel doesn't cross a dead zone and close it early. The nav has four sibling <code>.nav-drop</code>s now (Lead, Learn, Make War, Build), and only one may be open at a time: opening or hovering one closes any other that's open, both on desktop and in the mobile accordion. The current-page state splits in two: <code>data-active="true"</code> on the trigger (styled like <code>[aria-current="page"]</code>) when the visitor is anywhere in that category's family of pages, plus real <code>aria-current="page"</code> on whichever specific panel link matches the page.</p>
       </div>
       <div class="ds-spec" style="padding-top:24px; padding-bottom:56px;"><span class="ds-spec-tag">site.css → .nav-drop (forced open for reference)</span>
         <div class="nav-drop" data-open="true" style="display:inline-block;">
           <button type="button" class="nav-drop-trigger" data-active="true" aria-haspopup="true" aria-expanded="true" style="position:relative;">
-            Resources
+            Lead
             <svg class="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="nav-drop-panel">
             <div class="nav-drop-inner">
-              <a href="#" aria-current="page">All Resources</a>
+              <a href="#" aria-current="page">Music</a>
               <a href="#">Seven Days of Prayer</a>
-              <a href="#">Worthy Books</a>
-              <a href="#">Worthy Men</a>
             </div>
           </div>
         </div>
@@ -422,7 +457,7 @@
     <div class="ds-group">
       <div class="ds-group-head">
         <h3>Footer <em>(site nav)</em></h3>
-        <p>3-column grid — brand/tagline (72px logo, side by side with "Deus vult"), a real <code>&lt;nav class="foot-links"&gt;</code> covering every page (the 3 Resources sub-pages get <code>.foot-sub</code>: just a lighter <code>--ink-2</code> color, no indent — an indent reads as a layout bug rather than a hierarchy cue), and social links. Collapses to one stacked column ≤720px.</p>
+        <p>3-column grid — brand/tagline (72px logo, side by side with "Deus vult"), a real <code>&lt;nav class="foot-links"&gt;</code> covering every page, and social links. Lead/Learn/Build each carry a category link (pointing straight at their first sub-item's page, since there's no separate hub page) plus their sub-items below it as <code>.foot-sub</code>: just a lighter <code>--ink-2</code> color, no indent — an indent reads as a layout bug rather than a hierarchy cue. Make War has no sub-items, just its own single link. Collapses to one stacked column ≤720px.</p>
       </div>
       <div class="ds-spec"><span class="ds-spec-tag">site.css → .foot</span>
         <footer class="foot ds-mock-foot">
@@ -432,12 +467,15 @@
           </div>
           <nav class="foot-links" aria-label="Site">
             <a href="#">Mission</a>
-            <a href="#">Art</a>
-            <a href="#">Music</a>
-            <a href="#">Resources</a>
+            <a href="#">Lead</a>
+            <a href="#" class="foot-sub">Music</a>
             <a href="#" class="foot-sub">Seven Days of Prayer</a>
+            <a href="#">Learn</a>
             <a href="#" class="foot-sub">Worthy Books</a>
             <a href="#" class="foot-sub">Worthy Men</a>
+            <a href="#">Make War</a>
+            <a href="#">Build</a>
+            <a href="#" class="foot-sub">Art</a>
           </nav>
           <div class="foot-social">
             <a href="#">Instagram</a>
@@ -603,24 +641,6 @@
     </div>
 
     <div class="ds-group">
-      <div class="ds-group-head"><h3>Resource card</h3></div>
-      <div class="ds-spec"><span class="ds-spec-tag">resources.html → .resource</span>
-        <div class="ds-grid-2">
-          <div class="ds-hatch" style="aspect-ratio:5/4; position:relative;">
-            <span class="photo-tag" style="position:absolute; top:16px; left:16px;">GUIDE · PRINTABLE</span>
-            <span class="num-badge" style="position:absolute; top:16px; right:16px; font-size:14px;">01</span>
-          </div>
-          <div class="ds-stack">
-            <div class="ds-t-eyebrow" style="color:var(--accent);">A Family Prayer Guide</div>
-            <div class="ds-t-display-section" style="font-size:clamp(28px,4vw,48px);">Seven Days <em>of Prayer</em></div>
-            <p class="ds-t-body-copy">A seven-day guide designed to lead your family in focused, intentional prayer through the week.</p>
-            <div class="ds-row"><a class="btn-primary" href="#">Open the Guide →</a><a class="btn-ghost" href="#">Print Edition</a></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="ds-group">
       <div class="ds-group-head"><h3>Gallery piece card</h3></div>
       <div class="ds-spec"><span class="ds-spec-tag">art.html → .piece (as .piece-card)</span>
         <div class="ds-grid-3">
@@ -651,12 +671,15 @@
   </div>
   <nav class="foot-links" aria-label="Site">
     <a href="../index.html#manifesto">Mission</a>
-    <a href="../art.html">Art</a>
-    <a href="../music.html">Music</a>
-    <a href="../resources.html">Resources</a>
+    <a href="../music.html">Lead</a>
+    <a href="../music.html" class="foot-sub">Music</a>
     <a href="../family-prayer.html" class="foot-sub">Seven Days of Prayer</a>
+    <a href="../worthy-books.html">Learn</a>
     <a href="../worthy-books.html" class="foot-sub">Worthy Books</a>
     <a href="../worthy-men.html" class="foot-sub">Worthy Men</a>
+    <a href="../make-war.html">Make War</a>
+    <a href="../art.html">Build</a>
+    <a href="../art.html" class="foot-sub">Art</a>
   </nav>
   <div class="foot-social">
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
@@ -670,24 +693,34 @@
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
-  const navDrop = nav.querySelector('.nav-drop');
-  const navDropTrigger = navDrop.querySelector('.nav-drop-trigger');
-  const setDropOpen = (open) => {
-    navDrop.setAttribute('data-open', String(open));
-    navDropTrigger.setAttribute('aria-expanded', String(open));
+  const navDrops = Array.from(nav.querySelectorAll('.nav-drop'));
+  const setDropOpen = (drop, open) => {
+    drop.setAttribute('data-open', String(open));
+    drop.querySelector('.nav-drop-trigger').setAttribute('aria-expanded', String(open));
   };
-  navDropTrigger.addEventListener('click', () => {
-    setDropOpen(navDrop.getAttribute('data-open') !== 'true');
+  const closeOtherDrops = (except) => {
+    navDrops.forEach((drop) => { if (drop !== except) setDropOpen(drop, false); });
+  };
+  navDrops.forEach((drop) => {
+    const trigger = drop.querySelector('.nav-drop-trigger');
+    trigger.addEventListener('click', () => {
+      const open = drop.getAttribute('data-open') !== 'true';
+      closeOtherDrops(drop);
+      setDropOpen(drop, open);
+    });
+    drop.addEventListener('mouseenter', () => {
+      closeOtherDrops(drop);
+      setDropOpen(drop, true);
+    });
+    drop.addEventListener('mouseleave', () => setDropOpen(drop, false));
   });
-  navDrop.addEventListener('mouseenter', () => setDropOpen(true));
-  navDrop.addEventListener('mouseleave', () => setDropOpen(false));
 
   const navToggle = nav.querySelector('.nav-toggle');
   const setMenuOpen = (open) => {
     nav.setAttribute('data-menu-open', String(open));
     navToggle.setAttribute('aria-expanded', String(open));
     navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    if (!open) setDropOpen(false);
+    if (!open) closeOtherDrops(null);
   };
   const closeMenu = () => setMenuOpen(false);
   navToggle.addEventListener('click', () => {

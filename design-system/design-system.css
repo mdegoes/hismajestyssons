@@ -205,7 +205,7 @@
   padding: 6px 10px; border: 1px solid var(--rule);
 }
 /* Shipped in site.css as `.num-badge`; positioning (absolute + top/left offsets)
-   is set per page on `.piece-img .num-badge` / `.resource-img .num-badge`. */
+   is set per page on `.piece-img .num-badge`. */
 .num-badge {
   font-family: var(--display); font-style: italic;
   font-size: 18px;

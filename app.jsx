@@ -33,20 +33,53 @@ function ThemeToggle({ onToggle }) {
   );
 }
 
+const NAV_DROPS = [
+  {
+    key: "lead",
+    label: "Lead",
+    panelId: "nav-lead-panel",
+    links: [
+      { href: "music.html", label: "Music" },
+      { href: "family-prayer.html", label: "Seven Days of Prayer" },
+    ],
+  },
+  {
+    key: "learn",
+    label: "Learn",
+    panelId: "nav-learn-panel",
+    links: [
+      { href: "worthy-books.html", label: "Worthy Books" },
+      { href: "worthy-men.html", label: "Worthy Men" },
+    ],
+  },
+  {
+    key: "makeWar",
+    label: "Make War",
+    panelId: "nav-makewar-panel",
+    links: [{ href: "make-war.html", label: "Coming Soon" }],
+  },
+  {
+    key: "build",
+    label: "Build",
+    panelId: "nav-build-panel",
+    links: [{ href: "art.html", label: "Art" }],
+  },
+];
+
 function Nav({ onJump, onToggleScheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [openDrop, setOpenDrop] = useState(null);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  const jump = (id) => { setMenuOpen(false); setResourcesOpen(false); onJump(id); };
+  const jump = (id) => { setMenuOpen(false); setOpenDrop(null); onJump(id); };
   const toggleMenu = () => setMenuOpen((v) => {
     const next = !v;
-    if (!next) setResourcesOpen(false);
+    if (!next) setOpenDrop(null);
     return next;
   });
   return (
@@ -57,35 +90,35 @@ function Nav({ onJump, onToggleScheme }) {
       <div className="nav-end">
         <div className="nav-links" id="nav-links">
           <a href="#manifesto" onClick={(e) => { e.preventDefault(); jump("manifesto"); }}>Mission</a>
-          <a href="art.html">Art</a>
-          <a href="music.html">Music</a>
-          <div
-            className="nav-drop"
-            data-open={resourcesOpen}
-            onMouseEnter={() => setResourcesOpen(true)}
-            onMouseLeave={() => setResourcesOpen(false)}
-          >
-            <button
-              type="button"
-              className="nav-drop-trigger"
-              aria-haspopup="true"
-              aria-expanded={resourcesOpen}
-              aria-controls="nav-resources-panel"
-              data-active="false"
-              onClick={() => setResourcesOpen((v) => !v)}
+          {NAV_DROPS.map((drop) => (
+            <div
+              key={drop.key}
+              className="nav-drop"
+              data-open={openDrop === drop.key}
+              onMouseEnter={() => setOpenDrop(drop.key)}
+              onMouseLeave={() => setOpenDrop((v) => (v === drop.key ? null : v))}
             >
-              Resources
-              <svg className="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div className="nav-drop-panel" id="nav-resources-panel">
-              <div className="nav-drop-inner">
-                <a href="resources.html">All Resources</a>
-                <a href="family-prayer.html">Seven Days of Prayer</a>
-                <a href="worthy-books.html">Worthy Books</a>
-                <a href="worthy-men.html">Worthy Men</a>
+              <button
+                type="button"
+                className="nav-drop-trigger"
+                aria-haspopup="true"
+                aria-expanded={openDrop === drop.key}
+                aria-controls={drop.panelId}
+                data-active="false"
+                onClick={() => setOpenDrop((v) => (v === drop.key ? null : drop.key))}
+              >
+                {drop.label}
+                <svg className="chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div className="nav-drop-panel" id={drop.panelId}>
+                <div className="nav-drop-inner">
+                  {drop.links.map((link) => (
+                    <a key={link.href} href={link.href}>{link.label}</a>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
         <ThemeToggle onToggle={onToggleScheme} />
         <button
@@ -167,12 +200,15 @@ function Foot({ onJump }) {
       </div>
       <nav className="foot-links" aria-label="Site">
         <a href="#manifesto" onClick={(e) => { e.preventDefault(); onJump("manifesto"); }}>Mission</a>
-        <a href="art.html">Art</a>
-        <a href="music.html">Music</a>
-        <a href="resources.html">Resources</a>
+        <a href="music.html">Lead</a>
+        <a href="music.html" className="foot-sub">Music</a>
         <a href="family-prayer.html" className="foot-sub">Seven Days of Prayer</a>
+        <a href="worthy-books.html">Learn</a>
         <a href="worthy-books.html" className="foot-sub">Worthy Books</a>
         <a href="worthy-men.html" className="foot-sub">Worthy Men</a>
+        <a href="make-war.html">Make War</a>
+        <a href="art.html">Build</a>
+        <a href="art.html" className="foot-sub">Art</a>
       </nav>
       <div className="foot-social">
         <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
