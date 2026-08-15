@@ -141,13 +141,12 @@ function Hero() {
       <div>
         <div className="hero-eyebrow">Est. MMXXVI</div>
         <h1 className="hero-title">
-          <span className="row">Serve the <em>Crown.</em></span>
-          <span className="row world">Rise to your <em>Calling.</em></span>
+          <span className="row">For the <em>King.</em></span>
         </h1>
         <p className="hero-strap">
-          His Majesty’s Sons is a fellowship of men learning what it means to bow
-          low before Christ and stand tall in the world He made — at the altar,
-          at the desk, in the field, and at the door of our homes.
+          HMS is a brotherhood sworn to taking ground for the kingdom. Every day.
+          In every way. At our workbenches, in the pew, on our phones, and on
+          our streets.
         </p>
         <div className="hero-actions">
           <a className="btn-ghost" href="#manifesto">Read the Mission ↓</a>
