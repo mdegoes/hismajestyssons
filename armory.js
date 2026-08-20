@@ -21,10 +21,12 @@
 
   var currentView = 'dossier';
   var currentQuery = '';
+  var currentSinMapId = '';
   var profileOverlayMode = 'list';
   var pendingAvatar = { sigil: 'shield', color: 't3' };
   var pendingName = '';
   var editingProfileId = null;
+  var pendingDrillVerseId = null;
 
   // ---------- utils ----------
 
@@ -175,7 +177,11 @@
 
   // Mirrors the .card-progress.is-* color rules in armory.html so the
   // dossier card's left border always matches its own "verses mastered" text.
-  var PROGRESS_STATE_COLOR_VAR = { 'is-none': '--t4', 'is-partial': '--t2', 'is-complete': '--t1' };
+  // 'is-none' (nothing attempted yet) deliberately uses the site's own
+  // --accent blue, not a --t* threat-tier color — every card starts in this
+  // state, so a tier color here (especially --t4's red) would read as the
+  // page's dominant/primary color on a fresh visit instead of a neutral default.
+  var PROGRESS_STATE_COLOR_VAR = { 'is-none': '--accent', 'is-partial': '--t2', 'is-complete': '--t1' };
 
   // A verse masters at 2 correct passes in a row (see recordAttempt in
   // armory-state.js) — this renders that as 2 dots so progress toward it is
@@ -354,6 +360,7 @@
     if (currentView === 'dossier') renderDossier(stage);
     else renderMap(stage);
     applySearch();
+    applySinMap();
   }
 
   function applySearch() {
@@ -370,6 +377,30 @@
         node.classList.toggle('match', isMatch);
       });
     }
+  }
+
+  // Highlights the core sin(s) a chosen "common sin" (armory-sin-map.js)
+  // maps to. Purely additive — unlike applySearch, it never hides/dims
+  // anything, so it can be active at the same time as a search query.
+  // Re-run after every render() since render() rebuilds #armoryStage's DOM.
+  function applySinMap() {
+    document.querySelectorAll('#sinMapChips .sinmap-chip').forEach(function (chip) {
+      var isActive = chip.dataset.id === currentSinMapId;
+      chip.classList.toggle('is-active', isActive);
+      chip.setAttribute('aria-pressed', String(isActive));
+    });
+    document.querySelectorAll('#armoryStage .is-sin-match').forEach(function (el) {
+      el.classList.remove('is-sin-match');
+    });
+    var entry = (window.ARMORY_SIN_MAP || []).find(function (e) { return e.id === currentSinMapId; });
+    var summaryEl = document.getElementById('sinMapSummary');
+    if (!entry) { summaryEl.hidden = true; summaryEl.textContent = ''; return; }
+    entry.coreSins.forEach(function (cs) {
+      var el = document.querySelector('#armoryStage [data-sin-id="' + cs.sinId + '"]');
+      if (el) el.classList.add('is-sin-match');
+    });
+    summaryEl.hidden = false;
+    summaryEl.textContent = entry.summary;
   }
 
   // ---------- drill modal ----------
@@ -412,7 +443,7 @@
     var found = findVerseGlobal(verseId);
     if (!found) return;
     var profile = CC.armory.getActiveProfile();
-    if (!profile) { openProfileOverlay(); return; }
+    if (!profile) { pendingDrillVerseId = verseId; openProfileOverlay(); return; }
     var mode = getEffectiveDrillMode(profile.id);
     openDrillBody(found.sin, found.verse, mode, profile.id);
     document.getElementById('drillOverlay').classList.add('open');
@@ -599,9 +630,17 @@
 
   function renderProfileChip() {
     var chip = document.getElementById('armoryProfileChip');
-    var p = CC.armory.getActiveProfile();
-    if (!p) { chip.innerHTML = ''; chip.hidden = true; return; }
     chip.hidden = false;
+    var p = CC.armory.getActiveProfile();
+    if (!p) {
+      chip.innerHTML = '<button type="button" class="profile-chip-btn" id="profileChipBtn" aria-haspopup="true" aria-label="Who’s fighting? Set up a profile">'
+        + '<span class="profile-chip-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>'
+        + '<span class="profile-chip-text"><span class="profile-chip-name">Who&rsquo;s Fighting?</span></span>'
+        + '<svg class="chip-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>'
+        + '</button>';
+      document.getElementById('profileChipBtn').addEventListener('click', function () { openProfileOverlay(); });
+      return;
+    }
     var level = CC.armory.getLevel(p.id);
     chip.innerHTML = '<button type="button" class="profile-chip-btn" id="profileChipBtn" aria-haspopup="true" aria-label="Switch player or add a new profile — currently playing as ' + escapeHTML(p.name) + '">'
       + '<span class="profile-chip-avatar" data-level-stage="' + avatarStage(level.level) + '">' + avatarSVG(p.avatar.sigil, p.avatar.color, 28) + '</span>'
@@ -610,6 +649,21 @@
       + '<svg class="chip-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>'
       + '</button>';
     document.getElementById('profileChipBtn').addEventListener('click', function () { openProfileOverlay(); });
+  }
+
+  // Called once a profile is active (just created, or picked from the
+  // list) — closes the overlay and, if this profile was set up in response
+  // to a Drill click that had no profile yet, resumes straight into that
+  // drill instead of leaving the visitor to click Drill a second time.
+  function resumeAfterProfileReady() {
+    document.getElementById('profileOverlay').classList.remove('open');
+    renderProfileChip();
+    render();
+    if (pendingDrillVerseId) {
+      var verseId = pendingDrillVerseId;
+      pendingDrillVerseId = null;
+      openDrill(verseId);
+    }
   }
 
   function openProfileOverlay() {
@@ -682,9 +736,7 @@
           CC.armory.createProfile({ name: nameInput.value, sigil: pendingAvatar.sigil, color: pendingAvatar.color });
           pendingAvatar = { sigil: 'shield', color: 't3' };
           pendingName = '';
-          document.getElementById('profileOverlay').classList.remove('open');
-          renderProfileChip();
-          render();
+          resumeAfterProfileReady();
         }
       });
       // Autofocus + select so typing can start immediately (select() is a
@@ -715,9 +767,7 @@
       modal.querySelectorAll('.profile-tile-select').forEach(function (btn) {
         btn.addEventListener('click', function () {
           CC.armory.setActiveProfile(btn.dataset.id);
-          document.getElementById('profileOverlay').classList.remove('open');
-          renderProfileChip();
-          render();
+          resumeAfterProfileReady();
         });
       });
       modal.querySelectorAll('.profile-tile-edit').forEach(function (btn) {
@@ -751,7 +801,10 @@
       });
     }
 
-    document.getElementById('profileOverlayClose').addEventListener('click', function () { document.getElementById('profileOverlay').classList.remove('open'); });
+    document.getElementById('profileOverlayClose').addEventListener('click', function () {
+      pendingDrillVerseId = null;
+      document.getElementById('profileOverlay').classList.remove('open');
+    });
   }
 
   // ---------- init ----------
@@ -763,6 +816,32 @@
     document.getElementById('armorySearch').addEventListener('input', function (e) {
       currentQuery = e.target.value.trim();
       applySearch();
+    });
+
+    var sinMapChips = document.getElementById('sinMapChips');
+    var allChip = document.createElement('button');
+    allChip.type = 'button';
+    allChip.className = 'sinmap-chip is-active';
+    allChip.dataset.id = '';
+    allChip.setAttribute('aria-pressed', 'true');
+    allChip.textContent = 'All';
+    sinMapChips.appendChild(allChip);
+    (window.ARMORY_SIN_MAP || []).slice().sort(function (a, b) {
+      return a.label.localeCompare(b.label);
+    }).forEach(function (entry) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'sinmap-chip';
+      chip.dataset.id = entry.id;
+      chip.setAttribute('aria-pressed', 'false');
+      chip.textContent = entry.label;
+      sinMapChips.appendChild(chip);
+    });
+    sinMapChips.addEventListener('click', function (e) {
+      var chip = e.target.closest('.sinmap-chip');
+      if (!chip) return;
+      currentSinMapId = chip.dataset.id;
+      applySinMap();
     });
 
     document.querySelectorAll('.view-toggle button').forEach(function (btn) {
@@ -784,13 +863,17 @@
       if (e.target.id === 'sheetOverlay') closeSheet();
     });
     document.getElementById('profileOverlay').addEventListener('click', function (e) {
-      if (e.target.id === 'profileOverlay') e.currentTarget.classList.remove('open');
+      if (e.target.id === 'profileOverlay') {
+        pendingDrillVerseId = null;
+        e.currentTarget.classList.remove('open');
+      }
     });
 
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       closeDrill();
       closeSheet();
+      pendingDrillVerseId = null;
       document.getElementById('profileOverlay').classList.remove('open');
     });
 
@@ -806,8 +889,6 @@
       renderProfileChip();
       render();
     });
-
-    if (!CC.armory.getActiveProfile()) openProfileOverlay();
   }
 
   window.Armory = { init: init };

@@ -662,7 +662,7 @@
     <div class="ds-group ds-armory">
       <div class="ds-group-head">
         <h3>Threat-tier badge <em>(new)</em></h3>
-        <p>armory.html's hex "callsign" badge, colored by threat tier (Skirmish/Siege/Stronghold/Total War, worst→best the <em>opposite</em> direction from the trust-score scale above — higher tier means more dangerous, not more trustworthy). The tier names are deliberately not spelled out anywhere in the UI (an earlier pill-chip label was tried and removed as unhelpful noise) — color alone carries the severity cue, and the tier name only survives in each map node's `aria-label` for screen readers. It's now map-nodes-only: the dossier card dropped its copy of the badge (the 2-letter callsign read as noise with no explained meaning) and relies on the card's own tier-colored left border for the same color cue instead.</p>
+        <p>armory.html's hex "callsign" badge, colored by threat tier (Skirmish/Siege/Stronghold/Total War, worst→best the <em>opposite</em> direction from the trust-score scale above — higher tier means more dangerous, not more trustworthy). The tier names are deliberately not spelled out anywhere in the UI (an earlier pill-chip label was tried and removed as unhelpful noise) — color alone carries the severity cue, and the tier name only survives in each map node's `aria-label` for screen readers. It's now map-nodes-only: the dossier card dropped its copy of the badge (the 2-letter callsign read as noise with no explained meaning). Its left border is a <em>different</em> scale, not a copy of this one — it's colored by the visitor's own mastery progress on that sin (a neutral accent border before any verse is attempted, amber once partially mastered, the same green as "conquered" once every verse is mastered), never by the sin's threat tier.</p>
       </div>
       <div class="ds-spec"><span class="ds-spec-tag">armory.html → .badge-hex</span>
         <div class="ds-row" style="gap:14px; flex-wrap:wrap;">
@@ -709,13 +709,18 @@
 
     <div class="ds-group ds-armory">
       <div class="ds-group-head">
-        <h3>XP / rank bar <em>(new)</em></h3>
-        <p>Cosmetic only — never gates content. Every verse and sin stays attemptable at any level; leveling unlocks a rank title, an avatar-frame upgrade, and (Map view only) visible cosmetic growth on the command-post mark.</p>
+        <h3>Common-sin lookup <em>(new)</em></h3>
+        <p>A single-select chip row, backed by a standalone data file (assets/documents/armory-sin-map.js, editable independently of the core 9-sin dataset) that maps everyday/specific sins ("Disobeys Parents," "Hates Someone") to the core sin(s) they're rooted in, per Reformed sourcing. Picking a chip outlines the matching core sin(s) in gold in both Dossier and Map views — purely additive, never hides/dims anything — and shows a short plain-language rationale underneath. Single-select: choosing a new chip (or "All") clears the previous highlight.</p>
       </div>
-      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .rank-bar-track / .rank-bar-fill</span>
-        <div style="max-width:320px;">
-          <div class="rank-bar-label"><span>Lv 4 · Sentinel</span><span>145 / 280 XP</span></div>
-          <div class="rank-bar-track"><div class="rank-bar-fill" style="width:52%"></div></div>
+      <div class="ds-spec"><span class="ds-spec-tag">armory.html → .sinmap-chip / .sinmap-summary / .is-sin-match</span>
+        <div class="ds-stack">
+          <div class="sinmap-chips" style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button type="button" class="sinmap-chip">All</button>
+            <button type="button" class="sinmap-chip is-active" aria-pressed="true">Disobeys Parents</button>
+            <button type="button" class="sinmap-chip">Hates Someone</button>
+          </div>
+          <p class="sinmap-summary" style="margin:0; max-width:62ch; font-style:italic; color:var(--muted); font-size:14px; line-height:1.5;">Rooted in pride — self-rule against the authority God has placed over a child (Rom. 1:30; Westminster Larger Catechism Q.130). Often surfaces as open, angry defiance rather than quiet doubt.</p>
+          <span class="badge-hex is-sin-match" style="--badge-color:var(--t3); width:fit-content;">PR</span>
         </div>
       </div>
     </div>

@@ -22,11 +22,13 @@
     --armory-panel: #E2DED4; --armory-panel-2: #D7D1C2;
     --hairline-strong: rgba(20,16,6,0.32);
     --hud: ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+    --match-gold: #C9A75D;
   }
   [data-scheme="ink"] {
     --t1: #8FA06B; --t2: #D79A3C; --t3: #C05A3A; --t4: #C93A5A;
     --armory-panel: #201808; --armory-panel-2: #2B2210;
     --hairline-strong: rgba(239,237,232,0.3);
+    --match-gold: #C9A75D;
   }
 
   /* ---------- masthead ---------- */
@@ -84,6 +86,28 @@
   }
   .view-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 
+  /* ---------- common-sin -> core-sin mapping lookup ---------- */
+  .sinmap-row { margin: 0 0 24px; }
+  .sinmap-label {
+    font-family: var(--hud); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 10px;
+  }
+  .sinmap-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* Same shape/tracking/behavior as the canonical .chip (worthy-books.html,
+     documented in design-system.css) — transparent until active, 1.5px
+     border, wide tracking — just in Armory's own palette/label font. */
+  .sinmap-chip {
+    display: inline-flex; align-items: center;
+    padding: 10px 18px; border-radius: var(--radius-pill); border: 1.5px solid var(--hairline-strong);
+    background: transparent; color: var(--ink-2); font: inherit; font-family: var(--hud);
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+    cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .sinmap-chip:hover { border-color: var(--ink); color: var(--ink); }
+  .sinmap-chip.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .sinmap-summary { margin: 10px 0 0; max-width: 62ch; font-style: italic; color: var(--ink-2); font-size: 14px; line-height: 1.5; }
+  .sinmap-summary[hidden] { display: none; }
+
   /* ---------- dossier grid ---------- */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 40px; }
   .card {
@@ -108,16 +132,19 @@
   }
   .badge-hex.is-conquered-ring { box-shadow: 0 0 0 3px color-mix(in oklab, var(--badge-color, var(--t2)) 40%, transparent); }
   .card-id { font-family: var(--hud); font-size: 10px; letter-spacing: .14em; color: var(--muted); margin-top: 4px; }
-  .card-name { font-size: 22px; margin: 0 0 12px; }
+  .card-name { font-family: var(--display); font-size: 22px; font-weight: 400; letter-spacing: -0.02em; margin: 0 0 12px; }
   .card-blurb { font-style: italic; color: var(--ink-2); font-size: 14.5px; margin: 0 0 12px; }
   .card-progress { font-family: var(--hud); font-size: 11px; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
-  .card-progress.is-none { color: var(--t4); font-weight: 700; }
+  .card-progress.is-none { color: var(--accent); font-weight: 700; }
   .card-progress.is-partial { color: var(--t2); font-weight: 700; }
   .card-progress.is-complete { color: var(--t1); font-weight: 700; }
   .conquered-tag {
     display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--t3); color: var(--on-accent);
     font-size: 9.5px; font-weight: 800; letter-spacing: .1em;
   }
+  /* Gold ring from the common-sin lookup (armory-sin-map.js) — additive to
+     the mastery-progress left border, never replaces it. */
+  .card.is-sin-match { box-shadow: 0 0 0 3px var(--match-gold), var(--shadow-soft); }
   /* mastery-dots: 2 dots = the 2 correct passes a verse needs to master.
      Shown wherever a verse appears (card rows, map sheet, drill modal) so
      progress toward it is never hidden — deliberately icon-only, no label
@@ -220,6 +247,9 @@
   .node:hover .badge-hex, .node:focus-visible .badge-hex { border-color: var(--ink); }
   .node.dimmed { opacity: .25; }
   .node.match .badge-hex { border-color: var(--ink); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 20%, transparent); }
+  /* Gold ring from the common-sin lookup (armory-sin-map.js) — independent
+     of and additive to search's own .match/.dimmed state. */
+  .node.is-sin-match .badge-hex { box-shadow: 0 0 0 3px var(--match-gold); }
   .map-caption { text-align: center; font-family: var(--hud); font-size: 10px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin: 0 0 40px; }
 
   /* ---------- bottom sheet (map node) + drill modal + profile overlay share this shape ---------- */
@@ -238,14 +268,14 @@
   .sheet-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
   .sheet-close { background: none; border: 0; font-size: 20px; color: var(--muted); cursor: pointer; line-height: 1; }
   .sheet-id { font-family: var(--hud); font-size: 10px; letter-spacing: .14em; color: var(--muted); margin-bottom: 4px; }
-  .sheet-name { font-size: 24px; margin: 0; }
+  .sheet-name { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: -0.02em; margin: 0; }
   .sheet-blurb { font-style: italic; color: var(--ink-2); font-size: 15px; margin: 12px 0 0; }
   .sheet .card-progress { margin-top: 6px; }
   .sheet .verse-list { margin-top: 18px; }
 
   /* ---------- drill modal ---------- */
   .drill-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
-  .drill-head-title { font-size: 18px; margin: 0; }
+  .drill-head-title { font-family: var(--display); font-size: 18px; font-weight: 400; letter-spacing: -0.02em; margin: 0; }
   .drill-head-meta { display: flex; align-items: center; gap: 10px; }
   #drillModeIndicator { font-family: var(--hud); font-size: 9.5px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
   #drillModeSwitch { font-family: var(--hud); font-size: 10px; letter-spacing: .06em; text-decoration: underline; color: var(--ink-2); }
@@ -256,10 +286,21 @@
   }
   .drill-textarea:focus-visible { outline: none; border-color: var(--accent); }
   .drill-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .drill-actions button { flex: 1; padding: 13px; border-radius: 6px; font-family: var(--hud); font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-  .btn-ghost2 { background: none; border: 1px solid var(--hairline-strong); color: var(--ink); }
+  /* Shape/motion/tracking mirror the shared .btn-primary/.btn-ghost recipe
+     in site.css (pill radius, wide tracking, hover lift, ink-to-accent on
+     the solid variant) — only the flex:1 pairing and --hud label font are
+     Armory-specific. */
+  .drill-actions button {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center;
+    padding: 16px 20px; border-radius: var(--radius-pill); border: 1.5px solid var(--ink);
+    font-family: var(--hud); font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
+    transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .drill-actions button:hover { transform: translateY(-1px); }
+  .btn-ghost2 { background: none; border-color: var(--rule); color: var(--ink); }
   .btn-ghost2:hover { border-color: var(--ink); }
-  .btn-solid { background: var(--accent); border: 1px solid var(--accent); color: var(--on-accent); }
+  .btn-solid { background: var(--ink); color: var(--paper); }
+  .btn-solid:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .drill-result-card {
     display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; margin: 4px 0 0;
   }
@@ -480,6 +521,12 @@
     </div>
   </div>
 
+  <div class="sinmap-row">
+    <p class="sinmap-label">Find it by what you&rsquo;re struggling with</p>
+    <div class="sinmap-chips" id="sinMapChips" role="group" aria-label="Find it by what you're struggling with"></div>
+    <p id="sinMapSummary" class="sinmap-summary" hidden></p>
+  </div>
+
   <div id="armoryStage"></div>
 </main>
 
@@ -586,6 +633,7 @@
 
 <script src="armory-data.js"></script>
 <script src="armory-state.js"></script>
+<script src="assets/documents/armory-sin-map.js"></script>
 <script src="armory.js"></script>
 <script>
   const nav = document.querySelector('.nav');

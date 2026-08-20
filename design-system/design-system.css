@@ -475,11 +475,23 @@
   --t1: #5C6B47; --t2: #B4802A; --t3: #9C3F26; --t4: #6E1423;
   --armory-panel: #E2DED4; --hairline-strong: rgba(20,16,6,0.32);
   --hud: ui-sans-serif, "Helvetica Neue", Arial, sans-serif;
+  --match-gold: #C9A75D;
 }
 [data-scheme="ink"] .ds-armory {
   --t1: #8FA06B; --t2: #D79A3C; --t3: #C05A3A; --t4: #C93A5A;
   --armory-panel: #201808; --hairline-strong: rgba(239,237,232,0.3);
+  --match-gold: #C9A75D;
 }
+/* Common-sin lookup — same shape as the canonical .chip above (transparent
+   until active, 1.5px border, wide tracking), in Armory's own palette. */
+.ds-armory .sinmap-chip {
+  display: inline-flex; align-items: center;
+  padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--hairline-strong);
+  background: transparent; color: var(--ink-2); font-family: var(--hud);
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+}
+.ds-armory .sinmap-chip.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.ds-armory .badge-hex.is-sin-match { box-shadow: 0 0 0 3px var(--match-gold); }
 .ds-armory .badge-hex {
   width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
   font-family: var(--hud); font-weight: 800; font-size: 12px;
