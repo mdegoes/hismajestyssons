@@ -892,7 +892,7 @@
   </nav>
   <div class="foot-social">
     <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
-    <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
+    <a href="https://www.youtube.com/@his.majestyssons" target="_blank" rel="noopener">YouTube</a>
   </div>
   <div class="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
 </footer>
@@ -911,6 +911,7 @@
   const closeOtherDrops = (except) => {
     navDrops.forEach((drop) => { if (drop !== except) setDropOpen(drop, false); });
   };
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   navDrops.forEach((drop) => {
     const trigger = drop.querySelector('.nav-drop-trigger');
     trigger.addEventListener('click', () => {
@@ -918,11 +919,13 @@
       closeOtherDrops(drop);
       setDropOpen(drop, open);
     });
-    drop.addEventListener('mouseenter', () => {
-      closeOtherDrops(drop);
-      setDropOpen(drop, true);
-    });
-    drop.addEventListener('mouseleave', () => setDropOpen(drop, false));
+    if (supportsHover) {
+      drop.addEventListener('mouseenter', () => {
+        closeOtherDrops(drop);
+        setDropOpen(drop, true);
+      });
+      drop.addEventListener('mouseleave', () => setDropOpen(drop, false));
+    }
   });
 
   const navToggle = nav.querySelector('.nav-toggle');

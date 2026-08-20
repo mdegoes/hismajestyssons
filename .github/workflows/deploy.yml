@@ -25,12 +25,12 @@ jobs:
           mkdir -p dist
           rsync -a --exclude='.git' --exclude='.github' --exclude='dist' ./ dist/
 
-      - name: Cache-bust local CSS/JS references
+      - name: Cache-bust local CSS/JS/image references
         run: |
           VERSION=$(git rev-parse --short HEAD)
           echo "Cache-busting local assets with version: $VERSION"
-          find dist -name "*.html" -print0 | while IFS= read -r -d '' f; do
-            perl -pi -e "s/((?:href|src)=\")((?:[^\"]*\/)?(?:site\.css|home\.css|theme\.js|app\.jsx|design-system\.css|armory-data\.js|armory-state\.js|armory\.js))(\")/\${1}\${2}?v=$VERSION\${3}/g" "$f"
+          find dist \( -path '*/node_modules' -o -path '*/stripe-setup' -o -path '*/social-engine' -o -path '*/screenshots' -o -path '*/uploads' \) -prune -o \( -name "*.html" -o -name "*.jsx" \) -type f -print0 | while IFS= read -r -d '' f; do
+            perl -pi -e "s{((?:href|src)=\"|src:\s*\")((?!https?:)(?!//)(?!data:)[^\"]+\.(?:css|jsx?|png|jpe?g|gif|svg|webp|ico))(\")}{\${1}\${2}?v=$VERSION\${3}}g" "$f"
           done
 
       - name: Upload artifact

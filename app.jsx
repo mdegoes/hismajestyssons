@@ -1,4 +1,5 @@
 const { useState, useEffect, useRef } = React;
+const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // ---------- Components ----------
 function Sigil({ size = 190, src = "assets/logo-long.svg" }) {
@@ -95,8 +96,8 @@ function Nav({ onJump, onToggleScheme }) {
               key={drop.key}
               className="nav-drop"
               data-open={openDrop === drop.key}
-              onMouseEnter={() => setOpenDrop(drop.key)}
-              onMouseLeave={() => setOpenDrop((v) => (v === drop.key ? null : v))}
+              onMouseEnter={supportsHover ? () => setOpenDrop(drop.key) : undefined}
+              onMouseLeave={supportsHover ? () => setOpenDrop((v) => (v === drop.key ? null : v)) : undefined}
             >
               <button
                 type="button"
@@ -276,7 +277,7 @@ function Foot({ onJump }) {
       </nav>
       <div className="foot-social">
         <a href="https://www.instagram.com/hismajestyssons" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@hismajestyssons" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.youtube.com/@his.majestyssons" target="_blank" rel="noopener">YouTube</a>
       </div>
       <div className="foot-legal">© 2026 His Majesty’s Sons. All rights reserved.</div>
     </footer>
