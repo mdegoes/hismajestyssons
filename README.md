@@ -41,6 +41,8 @@ Top nav: **Mission** (scrolls to the home page's manifesto) plus four dropdown c
 ├── hms-art/                 # Full-size + thumbnail JPGs for the art.html print collection
 ├── stripe-setup/             # Standalone Node tooling to provision Stripe payment links (not part of the site)
 ├── social-engine/            # Standalone Remotion tool for on-brand social video clips (not part of the site)
+│   └── posts/                # Committed archive of X posts drafted by the x-repost skill
+├── .claude/skills/x-repost/  # Skill: research a topic, curate + draft X posts for @HisMajestysSons
 ├── uploads/                 # User-supplied source images
 ├── screenshots/             # Design exploration captures (reference only)
 └── CNAME                    # GitHub Pages custom domain
@@ -69,6 +71,15 @@ Then open <http://localhost:8000>.
 - **Schemes:** light (`paper`) and dark (`ink`) — the only user-facing control is the nav's light/dark toggle; it follows the OS preference until manually switched.
 
 See `CLAUDE.md` for the full architecture writeup (rendering strategy, theming internals, nav/footer structure, the art print shop, etc).
+
+## Social
+
+- **`social-engine/`** — Remotion tool for on-brand social *video* clips (IG/X).
+- **`.claude/skills/x-repost/`** — a Claude Code skill (`/x-repost`) that researches
+  a topic, finds aligned content worth amplifying (Worthy Men roster + newly
+  discovered voices), drafts the post in HMS voice, and renders a branded image
+  card. It writes a ready-to-post package to `social-engine/posts/` and never
+  posts to X itself.
 
 ## License
 

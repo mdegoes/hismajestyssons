@@ -23,7 +23,13 @@ jobs:
       - name: Prepare deploy directory
         run: |
           mkdir -p dist
-          rsync -a --exclude='.git' --exclude='.github' --exclude='dist' ./ dist/
+          # .claude/ (Claude Code skills) and the standalone Node tools are repo
+          # tooling, not site content — keep them out of the published site.
+          rsync -a \
+            --exclude='.git' --exclude='.github' --exclude='dist' \
+            --exclude='.claude' \
+            --exclude='social-engine' --exclude='stripe-setup' \
+            ./ dist/
 
       - name: Cache-bust local CSS/JS/image references
         run: |

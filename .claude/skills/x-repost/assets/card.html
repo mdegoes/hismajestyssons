@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HMS post card</title>
+<!--
+  His Majesty's Sons post-image template.
+  The skill replaces every {{TOKEN}} and renders this file to PNG with headless
+  Chrome (see SKILL.md step 6). Tokens:
+    {{SIZE}}  4x5 | 1x1 | 16x9        {{SCHEME}} paper | ink
+    {{BG}}    plain | cross            {{CARD_TYPE}} quote | statement | verse
+    {{REF}}   e.g. "Psalm 16:11 · KJV" (verse only, else empty)
+    {{QUOTE}} the quote / statement / verse text (HTML-escape & < >)
+    {{ATTRIB_NAME}}  e.g. "Douglas Wilson" (else empty)
+    {{ATTRIB_HANDLE}} e.g. "@douglaswils" (else empty)
+    {{LOGO_SRC}}  ../../../assets/logo-vertical.svg
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    font-family: "Baskerville", "Libre Baskerville", "Baskerville Old Face", Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.scheme-paper {
+    --bg:#EFEDE8; --fg:#141006; --muted:#82714A;
+    --rule:rgba(20,16,6,.18); --accent:#1D3263; --gold:#C9A75D;
+  }
+  body.scheme-ink {
+    --bg:#141006; --fg:#EFEDE8; --muted:#9A8C6C;
+    --rule:rgba(239,237,232,.18); --accent:#1D3263; --gold:#C9A75D;
+  }
+  body { background: var(--bg); }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    width: var(--w);
+    height: var(--h);
+    padding: var(--pad);
+    background: var(--bg);
+    color: var(--fg);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    justify-items: center;
+    align-items: center;
+    text-align: center;
+  }
+  .card[data-size="4x5"]  { --w:1080px; --h:1350px; --pad:120px 110px; --logo:150px; --qmax:66px; --qmin:28px; }
+  .card[data-size="1x1"]  { --w:1200px; --h:1200px; --pad:128px 120px; --logo:150px; --qmax:66px; --qmin:28px; }
+  .card[data-size="16x9"] { --w:1600px; --h:900px;  --pad:74px 160px;  --logo:104px; --qmax:52px; --qmin:24px; }
+
+  /* --- background pattern --- */
+  .bg { position: absolute; inset: 0; display: none; pointer-events: none; }
+  .card[data-bg="cross"] .bg {
+    display: block;
+    background: var(--rule);
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%20viewBox='0%200%20200%20200'%3E%3Cg%20fill='%23000'%3E%3Crect%20x='94'%20y='75'%20width='12'%20height='50'/%3E%3Crect%20x='75'%20y='94'%20width='50'%20height='12'/%3E%3Crect%20x='88'%20y='70'%20width='24'%20height='10'/%3E%3Crect%20x='88'%20y='120'%20width='24'%20height='10'/%3E%3Crect%20x='70'%20y='88'%20width='10'%20height='24'/%3E%3Crect%20x='120'%20y='88'%20width='10'%20height='24'/%3E%3C/g%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='200'%20height='200'%20viewBox='0%200%20200%20200'%3E%3Cg%20fill='%23000'%3E%3Crect%20x='94'%20y='75'%20width='12'%20height='50'/%3E%3Crect%20x='75'%20y='94'%20width='50'%20height='12'/%3E%3Crect%20x='88'%20y='70'%20width='24'%20height='10'/%3E%3Crect%20x='88'%20y='120'%20width='24'%20height='10'/%3E%3Crect%20x='70'%20y='88'%20width='10'%20height='24'/%3E%3Crect%20x='120'%20y='88'%20width='10'%20height='24'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-size: 150px 150px; mask-size: 150px 150px;
+    opacity: .55;
+  }
+
+  /* --- logo --- */
+  .logo {
+    grid-row: 1;
+    width: var(--logo);
+    height: auto;
+    display: block;
+  }
+  .scheme-ink .logo { filter: invert(1); }
+
+  /* --- center block --- */
+  .center {
+    grid-row: 2;
+    align-self: stretch;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .ref {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    font-size: 21px;
+    color: var(--muted);
+    margin-bottom: 34px;
+  }
+  .ref:empty { display: none; }
+
+  .quote {
+    margin: 0;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.28;
+    color: var(--fg);
+    max-width: 84%;
+    overflow: hidden;
+  }
+  .quote-inner { display: block; }
+  .card[data-type="quote"] .quote-inner::before { content: "\201C"; }
+  .card[data-type="quote"] .quote-inner::after  { content: "\201D"; }
+  .quote em, .quote i { color: var(--gold); font-style: italic; }
+
+  .attrib { margin-top: 44px; }
+  .card[data-type="statement"] .attrib,
+  .card[data-type="verse"] .attrib { display: none; }
+  .attrib-name {
+    font-style: normal;
+    font-size: 24px;
+    color: var(--muted);
+  }
+  .attrib-name:empty { display: none; }
+  .attrib-handle {
+    margin-top: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    font-size: 17px;
+    color: var(--muted);
+  }
+  .attrib-handle:empty { display: none; }
+
+  /* --- footer --- */
+  .foot {
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .rule { width: 48px; height: 1px; background: var(--fg); opacity: .35; }
+  .footer-text {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .24em;
+    font-size: 20px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body class="scheme-{{SCHEME}}">
+  <div class="card" data-size="{{SIZE}}" data-type="{{CARD_TYPE}}" data-bg="{{BG}}">
+    <div class="bg" aria-hidden="true"></div>
+
+    <img class="logo" src="{{LOGO_SRC}}" alt="His Majesty's Sons">
+
+    <div class="center">
+      <div class="ref">{{REF}}</div>
+      <blockquote class="quote"><span class="quote-inner">{{QUOTE}}</span></blockquote>
+      <div class="attrib">
+        <div class="attrib-name">{{ATTRIB_NAME}}</div>
+        <div class="attrib-handle">{{ATTRIB_HANDLE}}</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="rule"></div>
+      <div class="footer-text">hismajestyssons.com</div>
+    </div>
+  </div>
+
+<script>
+  // Auto-fit the quote: largest font size (between --qmin and --qmax) at which
+  // the text still fits the available vertical + horizontal space.
+  function fitQuote() {
+    var card = document.querySelector('.card');
+    var center = document.querySelector('.center');
+    var ref = document.querySelector('.ref');
+    var attrib = document.querySelector('.attrib');
+    var quote = document.querySelector('.quote');
+    var inner = document.querySelector('.quote-inner');
+    if (!card || !quote || !inner) return;
+
+    var cs = getComputedStyle(card);
+    var min = parseFloat(cs.getPropertyValue('--qmin')) || 24;
+    var max = parseFloat(cs.getPropertyValue('--qmax')) || 60;
+
+    var used = 0;
+    if (ref && ref.textContent.trim()) used += ref.offsetHeight + 34;
+    if (attrib && getComputedStyle(attrib).display !== 'none') used += attrib.offsetHeight + 44;
+    var avail = Math.max(80, center.clientHeight - used - 4);
+    quote.style.maxHeight = avail + 'px';
+
+    function fits(px) {
+      quote.style.fontSize = px + 'px';
+      return inner.scrollHeight <= quote.clientHeight + 1 &&
+             inner.scrollWidth <= quote.clientWidth + 1;
+    }
+
+    var lo = min, hi = max;
+    if (fits(max)) { lo = max; }
+    else {
+      for (var i = 0; i < 26; i++) {
+        var mid = (lo + hi) / 2;
+        if (fits(mid)) lo = mid; else hi = mid;
+      }
+    }
+    quote.style.fontSize = Math.floor(lo) + 'px';
+    document.documentElement.setAttribute('data-fitted', '1');
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitQuote);
+  }
+  window.addEventListener('load', fitQuote);
+  setTimeout(fitQuote, 1400);
+</script>
+</body>
+</html>
