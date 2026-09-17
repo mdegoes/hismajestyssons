@@ -119,3 +119,15 @@ commentary. Count characters before presenting variants.
 >
 > Deus vult.
 
+**2026-09-16 · Build · classical ed / vouchers, @-crediting @A_C_C_S** — https://x.com/HisMajestysSons/status/2100307761548697894
+> School choice and voucher programs are a boon to Christian education. A blessing...and a trap.
+> [source link]
+>
+> @A_C_C_S already requires every accredited school to have an exit plan from government funding.
+>
+> Get yours ready before you need it. You will.
+
+Note the ellipsis in "a blessing...and a trap" — a suggested em-dash was not
+taken here. See [[hms-x-post-voice]]: an ellipsis, not an em-dash, is the
+better fit for a dramatic-pause/reveal beat ("X...and Y").
+

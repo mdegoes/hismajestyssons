@@ -5,8 +5,8 @@ description: >-
   (@HisMajestysSons), and draft the post plus a matching on-brand image. Use for
   "research this topic", "x post", "repost", "quote tweet", "twitter", "what should
   we post", "amplify", "social post". Sources from the Worthy Men roster AND
-  discovers new brand-synergizing voices. Produces a committed package under
-  social-engine/posts/ — it never posts to X directly.
+  discovers new brand-synergizing voices. Produces a local (gitignored)
+  package under social-engine/posts/ — it never posts to X directly.
 ---
 
 # x-repost — curate, draft, and package on-brand X posts
@@ -225,5 +225,5 @@ If the owner says "I posted this: <x.com URL>" — analyze and record it:
 - Never amplify an account that failed vetting; when unsure, `pass` and say why.
 - Quote people's exact words; link back; credit by @handle.
 - Keep everything ≤ 280 chars and in voice — check against `brand-voice.md`.
-- `social-engine/posts/` is committed. Don't put secrets or unpublished drafts
-  you were told to keep private there.
+- `social-engine/posts/` is gitignored (local-only). Don't put secrets or
+  unpublished drafts you were told to keep private there.
