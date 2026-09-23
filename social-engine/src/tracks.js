@@ -16,15 +16,55 @@ export const TRACKS = {
   "Watchman's Balad": "music/Watchman's Balad.mp3",
 };
 
-// Duration in seconds per track (via ffprobe), or null if it couldn't be
-// read. See schema.js's audioStartSeconds validation.
+// Duration in seconds per track (via ffprobe, system or the bundled
+// @remotion/compositor-* binary), or null if it couldn't be read. See
+// schema.js's audioStartSeconds validation.
 export const TRACK_DURATIONS = {
   "A Mighty Fortress Is Our God": 186.9,
   "Am I a Solder of the Cross_": 182,
   "Canticle of the Turning": 234.9,
-  "King Alfred's War Song": 147,
+  "King Alfred's War Song": 147.1,
   "Rise Again Ye Lion-Hearted": 184.9,
   "The Son of God Goes Forth to War": 192.7,
   "War Song": 214.4,
-  "Watchman's Balad": 513.5,
+  "Watchman's Balad": 513.6,
+};
+
+// A suggested audioStartSeconds per track — the first point where the mix
+// gets sustainably louder/fuller than its opening few seconds (a coarse
+// loudness heuristic, not lyric/vocal detection; see suggestStart() in
+// generate-tracks.js for the method and its limits). null means no clear
+// rise was found (e.g. a consistently loud track) or duration/ffmpeg wasn't
+// available — callers should fall back to 0 in that case. The schema's own
+// default stays 0 (Zod can't default one field off another), so callers
+// that want this — Remotion Studio's props panel doesn't, but the x-repost
+// skill's CLI renders should — must look this value up explicitly and pass
+// it as audioStartSeconds rather than relying on the schema default.
+//
+// A track marked "owner-confirmed by ear" below (see TRACK_START_CONFIRMED)
+// came from scripts/track-start-overrides.json, not the heuristic — add an
+// entry there once someone's actually listened and picked an exact second;
+// it takes priority on every future regeneration.
+export const TRACK_SUGGESTED_START = {
+  "A Mighty Fortress Is Our God": 48, // owner-confirmed by ear
+  "Am I a Solder of the Cross_": 39, // owner-confirmed by ear
+  "Canticle of the Turning": 53, // owner-confirmed by ear
+  "King Alfred's War Song": 26, // owner-confirmed by ear
+  "Rise Again Ye Lion-Hearted": 18, // owner-confirmed by ear
+  "The Son of God Goes Forth to War": 80, // owner-confirmed by ear
+  "War Song": 34, // owner-confirmed by ear
+  "Watchman's Balad": 26, // owner-confirmed by ear
+};
+
+// Which of the above are a human-confirmed pick (scripts/track-start-overrides.json)
+// rather than the untested loudness heuristic. See the note above.
+export const TRACK_START_CONFIRMED = {
+  "A Mighty Fortress Is Our God": true,
+  "Am I a Solder of the Cross_": true,
+  "Canticle of the Turning": true,
+  "King Alfred's War Song": true,
+  "Rise Again Ye Lion-Hearted": true,
+  "The Son of God Goes Forth to War": true,
+  "War Song": true,
+  "Watchman's Balad": true,
 };

@@ -1,0 +1,11 @@
+{
+  "_comment": "Hand-confirmed audioStartSeconds per track, by ear, overriding scripts/generate-tracks.js's loudness-heuristic guess (TRACK_SUGGESTED_START in src/tracks.js). Add an entry here once the owner has listened and picked an exact second; generate-tracks.js prefers this value over the computed one and regenerates src/tracks.js's comment to say so. Keyed by the track's filename minus extension, same as TRACKS/TRACK_SUGGESTED_START.",
+  "A Mighty Fortress Is Our God": 48,
+  "Am I a Solder of the Cross_": 39,
+  "Canticle of the Turning": 53,
+  "King Alfred's War Song": 26,
+  "Rise Again Ye Lion-Hearted": 18,
+  "The Son of God Goes Forth to War": 80,
+  "War Song": 34,
+  "Watchman's Balad": 26
+}

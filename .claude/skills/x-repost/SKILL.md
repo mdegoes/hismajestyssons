@@ -22,6 +22,7 @@ post in HMS voice, build a branded image, and drop a ready-to-post package into
 
 - `references/brand-voice.md` — voice, lexicon, theology guardrails, sample posts. **Read before drafting any text.**
 - `references/visual-spec.md` — colors, type, card anatomy, image sizes. **Read before building an image.**
+- `references/motion-spec.md` — `social-engine` (Remotion) integration for an animated clip. **Read before building a video.**
 - `references/sourcing.md` — topic research + candidate discovery + the scoring rubric.
 - `references/vetting.md` — checklist for judging a non-roster account before amplifying it.
 
@@ -174,6 +175,30 @@ Then:
    --props='{"text":"…","background":"cross"}'` — frame 0 is already fully
    composed. Use only if the HTML card is fighting you.)*
 
+### 6b. Build a motion clip  *(optional — always ask)*
+
+Read `references/motion-spec.md` first.
+
+Once the post text is locked, ask the owner: *"Want an animated clip too, or
+just the static card?"* Never build one silently — it costs real render time
+that the static card doesn't. If yes:
+
+1. Suggest a background + track pairing (and, from `TRACK_SUGGESTED_START`,
+   a non-zero `audioStartSeconds`) based on the post's pillar and tone, per
+   `motion-spec.md`'s table — then let the owner confirm or override.
+2. Render **both** `Square` and `Vertical` into the post's package folder as
+   `video-square.mp4` / `video-vertical.mp4` — both, always, once a clip is
+   wanted; it's two CLI calls, not two rounds of work.
+3. Spot-check with a still frame near the end of the clip (`--frame=239`),
+   `Read` it, confirm nothing's clipped, then delete the preview PNG.
+4. Note in `post.md` that audio content itself is unverified (no tool here
+   can listen to it) — flag the chosen track/offset for the owner's own
+   by-ear check before publishing.
+
+The static card and the clip(s) are **both** deliverables when a video is
+built — don't treat the video as replacing the card. Let the owner pick
+which asset to actually attach when they publish.
+
 ### 7. Assemble the package
 
 Write `social-engine/posts/<YYYY-MM-DD>-<slug>/`:
@@ -183,6 +208,7 @@ Write `social-engine/posts/<YYYY-MM-DD>-<slug>/`:
 | `post.md` | chosen variant (marked), all variants, **alt text as a ready-to-paste block** (the owner tends to skip adding it — make it copy-paste trivial), post type, credit @handle, source URL, claims-to-verify, tone check |
 | `image.png` | the final card (skip for text-only runs) |
 | `card.html` | the filled template (reproducible) |
+| `video-square.mp4` / `video-vertical.mp4` | the optional motion clips (only if the owner said yes at step 6b) |
 | `source.md` | source link · snapshot of what's being amplified · fit rationale · rubric scores · NEW-account vetting notes · link to the research brief if any |
 | `PUBLISH.md` | the numbered checklist below, filled in |
 
@@ -195,8 +221,13 @@ Write `social-engine/posts/<YYYY-MM-DD>-<slug>/`:
 2. <if quote-post> Open <source URL>, click Repost → Quote.
    <if standalone> Click Post.
 3. Paste the post text from post.md (the ✅ variant).
-4. Attach image.png.
+4. Attach image.png <if a motion clip was also built>, or pick video-square.mp4
+   / video-vertical.mp4 instead — whichever suits where you're posting
+   (feed vs. Story/Reel). Not both.
 5. Click the image → "Add description" → paste the alt text from post.md.
+   <if posting the video instead, check whether X's composer offers the same
+   "Add description" step for video on the day you're posting — it's worth
+   confirming rather than assuming either way.>
 6. Review the preview on mobile width. Post.
 ```
 
