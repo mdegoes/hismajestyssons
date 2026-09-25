@@ -9,10 +9,10 @@ Pulled from the live profile on 2026-09-14:
 - **2 followers, 18 following, 7 posts total, joined January 2026.** This is a from-zero account, not an established one with a plateaued growth curve — the strategy has to be a bootstrap plan, not an optimization plan.
 - **No avatar, no banner image, no bio.** Both image slots are still gray placeholders.
 - **Display name is "Paul DeGoes," not "His Majesty's Sons."** The handle is branded but the name isn't — anyone landing on the profile sees a personal account, not a project.
-- **The 7 posts are mixed-identity.** The oldest (Feb 14) is a personal Grok-video post ("Nice work @xai") with zero brand connection. Only the last 2 (Sep 7–8, from the `x-repost` skill) are on-brand — a Michael Foster quote card and an Ephesians 6:4 verse card, both well-produced but sitting at 11–16 impressions and 0 replies/likes/reposts.
+- **The 7 posts are mixed-identity.** The oldest (Feb 14) is a personal Grok-video post ("Nice work @xai") with zero brand connection. Only the last 2 (Sep 7–8, from the `/post` skill) are on-brand — a Michael Foster quote card and an Ephesians 6:4 verse card, both well-produced but sitting at 11–16 impressions and 0 replies/likes/reposts.
 - **You're already following the right people** — Auron MacIntyre, Owen Strachan, Eric Conn (New Christendom Press) show up in your following/suggestions, which is exactly the Worthy Men-adjacent niche. That's a usable asset, not something to build from scratch.
 
-So the honest starting point: good content engine (`x-repost` skill), zero distribution, and a profile that doesn't visually read as a brand yet.
+So the honest starting point: good content engine (`/post` skill), zero distribution, and a profile that doesn't visually read as a brand yet.
 
 ## Who we're actually targeting
 
@@ -55,13 +55,13 @@ The rule: **treat "hot" as a filter, not a license.**
 
 ### Phase 2 — Content cadence & format
 
-- Ship 1 `x-repost` post/day minimum (the pipeline already exists); when volume allows, aim toward the research's 3–5/day, spaced 3–4 hours apart.
+- Ship 1 `/post` post/day minimum (the pipeline already exists); when volume allows, aim toward the research's 3–5/day, spaced 3–4 hours apart.
 - Add **threads** as a second format alongside the quote cards — e.g., walk through one Armory sin/scripture entry, or one Worthy Books argument, as a 5–8 tweet thread. Threads are the highest-leverage format for authority-building per the research, and structured long-form content (Armory data, book descriptions) is already available to adapt from.
 - Where possible, prefer short native video/image over link-outs — links get suppressed for non-Premium accounts, so drive traffic via bio link and pinned post rather than in-post URLs.
 
 ### Phase 3 — Cross-promotion from existing assets
 
-- The site's footer social links point to Instagram/YouTube — the same branded quote cards from `x-repost`/`social-engine` are reusable there with zero extra production cost. Don't build X in isolation from those.
+- The site's footer social links point to Instagram/YouTube — the same branded quote cards from `/post`/`social-engine` are reusable there with zero extra production cost. Don't build X in isolation from those.
 - The Armory's common-sin lookup and Worthy Men roster are both content goldmines already structured as data — each entry is a ready-made post or thread, no new research per post.
 
 ## Targets, given the real starting point
@@ -84,5 +84,5 @@ The rule: **treat "hot" as a filter, not a license.**
 
 Candidates for follow-up work, not yet started:
 
-- Turn one Armory entry or Worthy Men bio into a first thread using the `x-repost` skill's voice guide.
+- Turn one Armory entry or Worthy Men bio into a first thread using the `/post` skill's voice guide.
 - Draft a few reply templates in the HMS voice (verb-first, hard-negation style) as a starting point for the daily Phase 1/1b routine.

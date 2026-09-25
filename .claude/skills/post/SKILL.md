@@ -1,15 +1,17 @@
 ---
-name: x-repost
+name: post
 description: >-
   Research a topic, curate content to amplify on the His Majesty's Sons X account
-  (@HisMajestysSons), and draft the post plus a matching on-brand image. Use for
+  (@HisMajestysSons), and draft the post plus a matching on-brand image — or draft
+  the next entry in the sequential Heidelberg Catechism series. Use for
   "research this topic", "x post", "repost", "quote tweet", "twitter", "what should
-  we post", "amplify", "social post". Sources from the Worthy Men roster AND
-  discovers new brand-synergizing voices. Produces a local (gitignored)
-  package under social-engine/posts/ — it never posts to X directly.
+  we post", "amplify", "social post", "catechism", "next catechism post",
+  "Heidelberg". Sources from the Worthy Men roster AND discovers new
+  brand-synergizing voices. Produces a local (gitignored) package under
+  social-engine/posts/ — it never posts to X directly.
 ---
 
-# x-repost — curate, draft, and package on-brand X posts
+# post — curate, draft, and package on-brand X posts
 
 Runs the whole pre-publish workflow for the His Majesty's Sons X account
 (**@HisMajestysSons**): research a topic, find things worth amplifying, draft the
@@ -25,6 +27,9 @@ post in HMS voice, build a branded image, and drop a ready-to-post package into
 - `references/motion-spec.md` — `social-engine` (Remotion) integration for an animated clip. **Read before building a video.**
 - `references/sourcing.md` — topic research + candidate discovery + the scoring rubric.
 - `references/vetting.md` — checklist for judging a non-roster account before amplifying it.
+- `references/catechism/` — the Heidelberg Catechism series: `heidelberg.md`
+  (all 129 Q&As, post-ready), `progress.md` (what's been posted),
+  `Heidelberg-Catechism.pdf` (the source). **Read before a catechism run.**
 
 ## Workflow
 
@@ -34,9 +39,10 @@ Figure out the mode from what the owner gave you:
 
 | Owner gave… | Mode |
 |---|---|
-| a topic/theme (incl. `/x-repost <topic>`) | **topic** — research, then source, then draft |
+| a topic/theme (incl. `/post <topic>`) | **topic** — research, then source, then draft |
 | "check the roster" / nothing | **roster** — skip deep research, scan roster + this week |
 | an X link / article URL / a pasted quote | **link** — skip research, go straight to draft |
+| "catechism" / "Heidelberg" / `/post catechism` | **catechism** — skip everything below; follow **Catechism mode** at the end of this file |
 
 Then ask two things (one message):
 - How far to take it: **brief only** · **through drafting** (text, no image) · **full package**.
@@ -250,11 +256,93 @@ If the owner says "I posted this: <x.com URL>" — analyze and record it:
 - If it's an unplanned post with no package folder, create one from the URL alone
   (`<date>-<slug>/POSTED.md` + a stub `source.md`).
 
+## Catechism mode (Heidelberg Catechism series)
+
+A standing series: the Heidelberg Catechism posted **in order**, one question
+per post, as a text-only long post in the PDF's own layout. The owner's first
+one is the model — https://x.com/HisMajestysSons/status/2103360314289045644.
+None of steps 2–6b apply: no research, no sourcing, no scoring, no image card.
+
+### C1. Find the next question
+
+Read `references/catechism/progress.md`. The next post is the question after
+the last posted row. Don't skip ahead or double up unless the owner asks
+(e.g. "post Q5 next" or "do all of Lord's Day 3") — and if they do, the next
+run still continues from whatever was actually posted last.
+
+### C2. Pull the text
+
+Copy that question's block from `references/catechism/heidelberg.md`
+**verbatim**. Never retype it from memory, modernize the wording, or
+"fix" its spelling (it's the Book of Praise translation — "Saviour",
+"neighbour"). The formatting rules the block already follows:
+
+- `Question:` and `Answer:` each on their own label line.
+- The question joined onto one line.
+- The answer keeps the PDF's line breaks; each deeper PDF indent = 2 leading
+  spaces.
+- Footnote numbers and proof-text references are left out.
+
+### C3. Draft the post
+
+```
+<lead-in — optional, 1–2 lines>
+
+Question:
+<question>
+
+Answer:
+<answer block, indentation intact>
+
+https://www.heidelberg-catechism.com/pdf/lords-days/Heidelberg-Catechism.pdf
+```
+
+- **Lead-in:** Q1's was the series opener ("Catechize your family… Start
+  here."). Later posts don't need to repeat that. Offer 2–3 short options in
+  HMS voice (read `references/brand-voice.md`), and always include one bare
+  option such as `Heidelberg Catechism, Q2.` plus a "no lead-in" option. Never
+  paraphrase or add to the catechism text itself.
+- This runs well past 280 characters. That's fine: @HisMajestysSons can post
+  long-form (Q1 was ~900 chars), so the 280 cap doesn't apply in this mode.
+- No image and no alt text by default. Build a card only if the owner asks.
+- Write the full post body inside a fenced block in `post.md` so the leading
+  spaces survive the copy-paste.
+
+### C4. Package
+
+Write `social-engine/posts/<YYYY-MM-DD>-heidelberg-q<N>/` with just
+`post.md` (lead-in options with one marked ✅, then the full post body in a
+fenced block) and `PUBLISH.md`:
+
+```
+# Publish checklist — Heidelberg Catechism Q<N>
+
+1. Sign in to x.com as @HisMajestysSons. Click Post.
+2. Paste the post body from post.md.
+3. Select "Question:" and click Bold, then do the same for "Answer:"
+   (pasting drops bold — Q1 had both labels bolded).
+4. Check the indented answer lines still start with spaces in the preview.
+5. Post.
+6. Send the live URL back so progress.md gets updated.
+```
+
+Print the post body and the checklist to the owner and stop. Don't post.
+
+### C5. Record it
+
+When the owner sends back the live URL, add a row to
+`references/catechism/progress.md` (Q, Lord's Day, date, URL). Check the posted
+text with the fxtwitter API (step 8) first. If the owner changed the wording or
+layout, add a note under the table so the next draft follows their version. If
+they posted a different question than the one drafted, record the question
+that actually went up. Unlike `social-engine/posts/`, `progress.md` is
+committed, so it's the lasting record of where the series stands.
+
 ## Guardrails
 
 - Never publish to X, never DM, never follow/like/repost from the account.
 - Never amplify an account that failed vetting; when unsure, `pass` and say why.
 - Quote people's exact words; link back; credit by @handle.
-- Keep everything ≤ 280 chars and in voice — check against `brand-voice.md`.
+- Keep everything ≤ 280 chars (except catechism posts) and in voice — check against `brand-voice.md`.
 - `social-engine/posts/` is gitignored (local-only). Don't put secrets or
   unpublished drafts you were told to keep private there.

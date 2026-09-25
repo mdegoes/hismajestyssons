@@ -5,7 +5,7 @@ An optional animated alternative (or companion) to the static card in
 out character-by-character, then the tagline fading in — with an optional
 music bed. Built with `social-engine/`, the repo's standalone
 Node/Remotion tool (see `social-engine/README.md` for the full mechanics —
-this file only covers how `x-repost` drives it).
+this file only covers how the `/post` skill drives it).
 
 **Always ask before building one.** Unlike the static card (cheap, always
 built for a full package), a render takes real wall-clock time and — the

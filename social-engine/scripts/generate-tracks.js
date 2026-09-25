@@ -218,7 +218,7 @@ ${durationLines.length ? durationLines.join('\n') + '\n' : ''}};
 // rise was found (e.g. a consistently loud track) or duration/ffmpeg wasn't
 // available — callers should fall back to 0 in that case. The schema's own
 // default stays 0 (Zod can't default one field off another), so callers
-// that want this — Remotion Studio's props panel doesn't, but the x-repost
+// that want this — Remotion Studio's props panel doesn't, but the /post
 // skill's CLI renders should — must look this value up explicitly and pass
 // it as audioStartSeconds rather than relying on the schema default.
 //
