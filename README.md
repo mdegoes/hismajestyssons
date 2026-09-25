@@ -41,7 +41,7 @@ Top nav: **Mission** (scrolls to the home page's manifesto) plus four dropdown c
 ├── hms-art/                 # Full-size + thumbnail JPGs for the art.html print collection
 ├── stripe-setup/             # Standalone Node tooling to provision Stripe payment links (not part of the site)
 ├── social-engine/            # Standalone Remotion tool for on-brand social video clips (not part of the site)
-│   └── posts/                # Committed archive of X posts drafted by the /post skill
+│   └── posts/                # Local-only (gitignored) X post drafts from the /post skill
 ├── .claude/skills/post/      # Skill: research a topic, curate + draft X posts for @HisMajestysSons
 ├── uploads/                 # User-supplied source images
 ├── screenshots/             # Design exploration captures (reference only)
