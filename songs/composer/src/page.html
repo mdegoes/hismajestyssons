@@ -1,0 +1,223 @@
+<title>The Composer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: one narrow column. Lyrics in, meter read-out, a dozen tunes, the lamp, controls, note editor, then the score on a paper sheet. Deliberately single-theme: wine-dark sea. */
+:root {
+  --sea: #160f1c;        /* wine-dark ground */
+  --sea-2: #221829;      /* raised panel */
+  --foam: #ece6dc;       /* text */
+  --foam-dim: #a99fae;   /* secondary text */
+  --brass: #c9a75d;      /* accent, the site's gold */
+  --rule: #3a2c42;
+  --paper: #f3efe6;      /* score sheet */
+  --ink: #1b1520;
+  --display: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --ui: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--sea); color: var(--foam); }
+body {
+  font-family: var(--display);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+.eyebrow { font-family: var(--ui); font-weight: 600; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); margin: 0 0 10px; }
+h1 { font-size: clamp(32px, 7vw, 52px); line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+h1 em { color: var(--brass); }
+.sub { color: var(--foam-dim); font-size: 15px; line-height: 1.6; margin: 12px 0 0; max-width: 60ch; }
+
+.lyric { background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; padding: 24px clamp(16px, 4vw, 32px); display: grid; gap: 10px; }
+.line { font-size: clamp(17px, 3.6vw, 22px); line-height: 1.5; color: var(--foam-dim); transition: color .2s; }
+.line.on { color: var(--foam); }
+.syl { transition: color .08s, text-shadow .08s; }
+.syl.on { color: var(--brass); text-shadow: 0 0 14px rgba(201,167,93,.45); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+button.play {
+  font-family: var(--ui); font-weight: 600; font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
+  background: var(--brass); color: var(--sea); border: 0; border-radius: 999px; padding: 12px 26px; cursor: pointer;
+}
+button.play:hover { filter: brightness(1.08); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--foam); outline-offset: 3px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; overflow: hidden; }
+.seg button { font-family: var(--ui); font-weight: 500; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; background: transparent; color: var(--foam-dim); border: 0; padding: 9px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--rule); color: var(--foam); }
+label.opt { font-family: var(--ui); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--foam-dim); display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+input[type=checkbox] { accent-color: var(--brass); width: 16px; height: 16px; }
+.tempo { display: inline-flex; gap: 10px; align-items: center; font-family: var(--ui); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--foam-dim); }
+.tempo input { accent-color: var(--brass); width: 180px; }
+.tempo output { font-variant-numeric: tabular-nums; color: var(--foam); min-width: 2.5ch; }
+
+.tunes { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.tune { text-align: left; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; cursor: pointer; display: grid; gap: 6px; font-family: var(--display); min-width: 0; }
+.tune:hover { border-color: var(--foam-dim); }
+.tune[aria-pressed="true"] { border-color: var(--brass); box-shadow: inset 0 0 0 1px var(--brass); }
+.tune .tn { font-size: 17px; }
+.tune .tn small { font-family: var(--ui); font-size: 11px; letter-spacing: .1em; color: var(--brass); margin-right: 8px; font-variant-numeric: tabular-nums; }
+.tune .tt { font-family: var(--ui); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--brass); }
+.tune .tb { font-size: 13px; line-height: 1.5; color: var(--foam-dim); }
+.now { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.now h2 { margin: 0; font-weight: 400; font-size: clamp(22px, 4.5vw, 30px); }
+.now span { font-family: var(--ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.sheet { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.sheet svg { max-width: 100%; }
+.note { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); line-height: 1.6; margin: 0; }
+.tempo select { font-family: var(--ui); font-size: 13px; letter-spacing: .02em; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+.tempo select:focus-visible { outline: 2px solid var(--foam); outline-offset: 3px; }
+.save-mp3 { display: inline-flex; align-items: center; gap: 10px; }
+.save-status { font-family: var(--ui); font-size: 12px; color: var(--foam-dim); }
+.editor { display: grid; gap: 10px; }
+.editor-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; }
+.editor-head h3 { margin: 0; font-weight: 400; font-size: 19px; }
+.editor-head .hint { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); }
+.editor-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-left: auto; }
+.btn-small { font-family: var(--ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; background: transparent; color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.btn-small:hover:not(:disabled) { border-color: var(--foam-dim); }
+.btn-small:disabled { opacity: .4; cursor: default; }
+.edited-flag { font-family: var(--ui); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.roll { display: flex; background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.roll-gut { flex: none; border-right: 1px solid var(--rule); }
+.roll-scroll { overflow-x: auto; flex: 1; min-width: 0; touch-action: pan-x; }
+.roll svg { display: block; font-family: var(--ui); }
+.roll .row-in { fill: rgba(236,230,220,.045); }
+.roll .row-out { fill: rgba(0,0,0,.18); }
+.roll .row-tonic { fill: rgba(201,167,93,.10); }
+.roll .gl { font-size: 10px; fill: var(--foam-dim); }
+.roll .gl.tonic { fill: var(--brass); font-weight: 600; }
+.roll .bar { stroke: var(--rule); stroke-width: 1.5; }
+.roll .beat { stroke: rgba(58,44,66,.55); stroke-width: 1; }
+.roll .rn { cursor: ns-resize; touch-action: none; outline: none; }
+.roll .rn rect { fill: #8c6f3a; stroke: var(--brass); stroke-width: 1; rx: 3; transition: fill .08s; }
+.roll .rn text { font-size: 9.5px; font-weight: 600; fill: var(--sea); pointer-events: none; }
+.roll .rn.changed rect { fill: var(--brass); }
+.roll .rn:hover rect { stroke: var(--foam-dim); stroke-width: 2; }
+.roll .rn.sel rect { stroke: var(--foam); stroke-width: 2.5; }
+.roll .rn.drag rect { fill: var(--foam); }
+.roll-scroll:focus-visible { outline: 2px solid var(--foam); outline-offset: -2px; }
+.roll .rn.on rect { fill: var(--foam); stroke: var(--foam); }
+.roll .lyr { font-size: 10px; fill: var(--foam-dim); font-family: var(--display); }
+.abc-src summary { font-family: var(--ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--foam-dim); cursor: pointer; }
+.abc-src textarea { width: 100%; min-height: 150px; margin-top: 8px; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; font: 12px/1.5 ui-monospace, Menlo, monospace; resize: vertical; }
+@media (prefers-reduced-motion: reduce) { .syl, .line { transition: none; } .syl.on { text-shadow: none; } }
+
+.panel { background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; padding: 18px clamp(14px, 3vw, 24px); display: grid; gap: 12px; }
+.panel h2, .section-head h2 { margin: 0; font-weight: 400; font-size: 21px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.section-head .hint { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); }
+.lyrics-box { width: 100%; min-height: 220px; resize: vertical; background: var(--sea); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; font: 15px/1.6 var(--display); }
+.lyrics-box:focus-visible, .text-in:focus-visible, select:focus-visible { outline: 2px solid var(--foam); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.meter { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); display: grid; gap: 8px; }
+.meter p { margin: 0; line-height: 1.5; }
+.meter-lines { display: grid; gap: 4px; font-family: var(--display); font-size: 14px; color: var(--foam); }
+.meter-line { display: flex; gap: 10px; }
+.mcount { font-family: var(--ui); font-variant-numeric: tabular-nums; color: var(--brass); min-width: 2ch; text-align: right; }
+.ms.st { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.meter-meta { color: var(--foam-dim); }
+.btn-main { font-family: var(--ui); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; background: var(--brass); color: var(--sea); border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+.btn-main:disabled { opacity: .45; cursor: default; }
+.btn-main:hover:not(:disabled) { filter: brightness(1.08); }
+.text-in { flex: 1 1 220px; min-width: 0; background: var(--sea); color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 9px 14px; font: 14px var(--display); }
+.status { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); min-height: 1em; }
+.empty { margin: 0; color: var(--foam-dim); font-size: 15px; }
+.mismatch { font-family: var(--ui); font-size: 13px; color: var(--brass); margin: 0; }
+.tempo select:disabled, button.play:disabled { opacity: .45; cursor: default; }
+.file-label { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+.file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-label:focus-within { outline: 2px solid var(--foam); outline-offset: 3px; }
+.sub-head { font-family: var(--ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); margin: 6px 0 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">His Majesty's Sons · Song tools</p>
+    <h1>The <em>Composer</em></h1>
+    <p class="sub">Paste or write your lyrics, pick a stanza, and get a dozen melodies that fit its meter, or ask Claude for hand-made ones. Play them with the words lit as they're sung, drag notes to taste, change key and tempo, and save an MP3.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="lyricsHead">
+    <div class="section-head"><h2 id="lyricsHead">Lyrics</h2><span class="hint">Separate stanzas with a blank line. A line like [Chorus] names the stanza under it; a bare [Chorus] repeats the last chorus.</span></div>
+    <textarea class="lyrics-box" id="lyricsText" spellcheck="false" aria-label="Lyrics"></textarea>
+    <div class="row">
+      <button type="button" class="btn-small" id="clearLyrics">Start blank</button>
+      <button type="button" class="btn-small" id="sampleLyrics">Load the Baladin sample</button>
+    </div>
+    <div class="meter" id="meterInfo" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="tunesHead">
+    <div class="section-head"><h2 id="tunesHead">Tunes</h2><span class="hint">for <span id="shapeName">—</span> stanzas</span></div>
+    <div class="row">
+      <button type="button" class="btn-main" id="compose">Compose 12 tunes</button>
+      <button type="button" class="btn-small" id="clearComposed" hidden>Clear these tunes</button>
+    </div>
+    <div class="row" id="claudeWrap" hidden>
+      <input class="text-in" id="claudeDirection" type="text" maxlength="500" placeholder="Optional direction for Claude, e.g. like a sea shanty, rising chorus" aria-label="Direction for Claude">
+      <button type="button" class="btn-small" id="askClaude">Ask Claude for 3 tunes</button>
+      <button type="button" class="btn-small" id="stopClaude" hidden>Stop</button>
+    </div>
+    <p class="status" id="composeStatus" role="status"></p>
+    <p class="empty" id="noTunes" hidden>No tunes for this meter yet. Press Compose.</p>
+    <div class="tunes" id="tunes" role="group" aria-label="Composed tunes"></div>
+    <div id="presetWrap" hidden>
+      <p class="sub-head">Baladin chorus tunes (fit any 10.10.10.10 stanza)</p>
+      <div class="tunes" id="presets" role="group" aria-label="Baladin chorus tunes"></div>
+    </div>
+  </section>
+
+  <div class="now"><h2 id="nowName"></h2><span id="nowTag"></span></div>
+  <p class="mismatch" id="mismatch" hidden></p>
+  <section class="lyric" id="lyric" aria-live="off"></section>
+
+  <div class="controls">
+    <button class="play" id="play" type="button">Play</button>
+    <span class="tempo"><label for="stanza">Stanza</label><select id="stanza"></select></span>
+    <div class="seg" role="group" aria-label="Pitch">
+      <button type="button" id="o-men" aria-pressed="true">Men</button>
+      <button type="button" id="o-high" aria-pressed="false">Octave up</button>
+    </div>
+    <label class="opt"><input type="checkbox" id="chords" checked> Chords</label>
+    <label class="opt"><input type="checkbox" id="loop"> Loop</label>
+    <span class="tempo"><label for="key">Key</label><select id="key"></select></span>
+    <span class="tempo"><label for="bpm">Tempo</label><input type="range" id="bpm" min="40" max="140" value="63"><output id="bpmOut">63</output></span>
+    <span class="save-mp3"><button type="button" class="btn-small" id="saveMp3" hidden>Save MP3</button><span class="save-status" id="saveStatus" role="status"></span></span>
+  </div>
+
+  <section class="editor" id="editor" aria-label="Note editor">
+    <div class="editor-head">
+      <h3>The notes</h3>
+      <span class="hint">Drag a note up or down to change it. Or click a note, then use ← → to move between notes and ↑ ↓ to change one (Shift + ↑ ↓ jumps an octave).</span>
+      <div class="editor-tools">
+        <span class="edited-flag" id="editedFlag" hidden>Edited</span>
+        <label class="opt"><input type="checkbox" id="chromatic"> Chromatic</label>
+        <button type="button" class="btn-small" id="resetNotes" disabled>Reset notes</button>
+      </div>
+    </div>
+    <div class="roll"><svg class="roll-gut" id="rollGut" aria-hidden="true"></svg><div class="roll-scroll" id="rollScroll" tabindex="-1"><svg id="roll" role="group" aria-label="Notes of the melody"></svg></div></div>
+  </section>
+
+  <div class="sheet" id="sheet" aria-label="Sheet music"></div>
+  <details class="abc-src"><summary>ABC notation (copy to keep a tune)</summary><textarea id="abcText" readonly spellcheck="false"></textarea></details>
+
+  <section class="panel" aria-labelledby="projHead">
+    <div class="section-head"><h2 id="projHead">Project</h2><span class="hint">Your lyrics, tunes and edits are kept in this browser. Save a project file to keep them anywhere.</span></div>
+    <div class="row">
+      <button type="button" class="btn-small" id="saveProject" hidden>Save project file</button>
+      <label class="btn-small file-label">Open project file<input type="file" id="openProject" accept=".json,application/json"></label>
+      <span class="status" id="projectStatus" role="status"></span>
+    </div>
+  </section>
+
+  <p class="note">"Octave up" helps on laptop speakers, which drop the low notes. Tempo is in <span id="beatName">dotted-quarter</span> beats per minute. Syllables and stresses are guessed from spelling; fix a miscount by hyphenating the word. Chords are a simple sketch for judging the tune, not a finished arrangement.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
+<script>
+/*TUNES*/
+/*DEFAULT_TEXT*/
+/*COMPOSER_JS*/
+</script>

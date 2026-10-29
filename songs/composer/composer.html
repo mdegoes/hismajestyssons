@@ -1,0 +1,1451 @@
+<title>The Composer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap">
+<style>
+/* Layout: one narrow column. Lyrics in, meter read-out, a dozen tunes, the lamp, controls, note editor, then the score on a paper sheet. Deliberately single-theme: wine-dark sea. */
+:root {
+  --sea: #160f1c;        /* wine-dark ground */
+  --sea-2: #221829;      /* raised panel */
+  --foam: #ece6dc;       /* text */
+  --foam-dim: #a99fae;   /* secondary text */
+  --brass: #c9a75d;      /* accent, the site's gold */
+  --rule: #3a2c42;
+  --paper: #f3efe6;      /* score sheet */
+  --ink: #1b1520;
+  --display: "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --ui: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--sea); color: var(--foam); }
+body {
+  font-family: var(--display);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+.eyebrow { font-family: var(--ui); font-weight: 600; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); margin: 0 0 10px; }
+h1 { font-size: clamp(32px, 7vw, 52px); line-height: 1.05; margin: 0; font-weight: 400; text-wrap: balance; }
+h1 em { color: var(--brass); }
+.sub { color: var(--foam-dim); font-size: 15px; line-height: 1.6; margin: 12px 0 0; max-width: 60ch; }
+
+.lyric { background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; padding: 24px clamp(16px, 4vw, 32px); display: grid; gap: 10px; }
+.line { font-size: clamp(17px, 3.6vw, 22px); line-height: 1.5; color: var(--foam-dim); transition: color .2s; }
+.line.on { color: var(--foam); }
+.syl { transition: color .08s, text-shadow .08s; }
+.syl.on { color: var(--brass); text-shadow: 0 0 14px rgba(201,167,93,.45); }
+
+.controls { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+button.play {
+  font-family: var(--ui); font-weight: 600; font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
+  background: var(--brass); color: var(--sea); border: 0; border-radius: 999px; padding: 12px 26px; cursor: pointer;
+}
+button.play:hover { filter: brightness(1.08); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--foam); outline-offset: 3px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; overflow: hidden; }
+.seg button { font-family: var(--ui); font-weight: 500; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; background: transparent; color: var(--foam-dim); border: 0; padding: 9px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--rule); color: var(--foam); }
+label.opt { font-family: var(--ui); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--foam-dim); display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
+input[type=checkbox] { accent-color: var(--brass); width: 16px; height: 16px; }
+.tempo { display: inline-flex; gap: 10px; align-items: center; font-family: var(--ui); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--foam-dim); }
+.tempo input { accent-color: var(--brass); width: 180px; }
+.tempo output { font-variant-numeric: tabular-nums; color: var(--foam); min-width: 2.5ch; }
+
+.tunes { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.tune { text-align: left; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; cursor: pointer; display: grid; gap: 6px; font-family: var(--display); min-width: 0; }
+.tune:hover { border-color: var(--foam-dim); }
+.tune[aria-pressed="true"] { border-color: var(--brass); box-shadow: inset 0 0 0 1px var(--brass); }
+.tune .tn { font-size: 17px; }
+.tune .tn small { font-family: var(--ui); font-size: 11px; letter-spacing: .1em; color: var(--brass); margin-right: 8px; font-variant-numeric: tabular-nums; }
+.tune .tt { font-family: var(--ui); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--brass); }
+.tune .tb { font-size: 13px; line-height: 1.5; color: var(--foam-dim); }
+.now { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.now h2 { margin: 0; font-weight: 400; font-size: clamp(22px, 4.5vw, 30px); }
+.now span { font-family: var(--ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.sheet { background: var(--paper); color: var(--ink); border-radius: 6px; padding: 12px; overflow-x: auto; }
+.sheet svg { max-width: 100%; }
+.note { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); line-height: 1.6; margin: 0; }
+.tempo select { font-family: var(--ui); font-size: 13px; letter-spacing: .02em; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+.tempo select:focus-visible { outline: 2px solid var(--foam); outline-offset: 3px; }
+.save-mp3 { display: inline-flex; align-items: center; gap: 10px; }
+.save-status { font-family: var(--ui); font-size: 12px; color: var(--foam-dim); }
+.editor { display: grid; gap: 10px; }
+.editor-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; }
+.editor-head h3 { margin: 0; font-weight: 400; font-size: 19px; }
+.editor-head .hint { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); }
+.editor-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin-left: auto; }
+.btn-small { font-family: var(--ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; background: transparent; color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.btn-small:hover:not(:disabled) { border-color: var(--foam-dim); }
+.btn-small:disabled { opacity: .4; cursor: default; }
+.edited-flag { font-family: var(--ui); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.roll { display: flex; background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.roll-gut { flex: none; border-right: 1px solid var(--rule); }
+.roll-scroll { overflow-x: auto; flex: 1; min-width: 0; touch-action: pan-x; }
+.roll svg { display: block; font-family: var(--ui); }
+.roll .row-in { fill: rgba(236,230,220,.045); }
+.roll .row-out { fill: rgba(0,0,0,.18); }
+.roll .row-tonic { fill: rgba(201,167,93,.10); }
+.roll .gl { font-size: 10px; fill: var(--foam-dim); }
+.roll .gl.tonic { fill: var(--brass); font-weight: 600; }
+.roll .bar { stroke: var(--rule); stroke-width: 1.5; }
+.roll .beat { stroke: rgba(58,44,66,.55); stroke-width: 1; }
+.roll .rn { cursor: ns-resize; touch-action: none; outline: none; }
+.roll .rn rect { fill: #8c6f3a; stroke: var(--brass); stroke-width: 1; rx: 3; transition: fill .08s; }
+.roll .rn text { font-size: 9.5px; font-weight: 600; fill: var(--sea); pointer-events: none; }
+.roll .rn.changed rect { fill: var(--brass); }
+.roll .rn:hover rect { stroke: var(--foam-dim); stroke-width: 2; }
+.roll .rn.sel rect { stroke: var(--foam); stroke-width: 2.5; }
+.roll .rn.drag rect { fill: var(--foam); }
+.roll-scroll:focus-visible { outline: 2px solid var(--foam); outline-offset: -2px; }
+.roll .rn.on rect { fill: var(--foam); stroke: var(--foam); }
+.roll .lyr { font-size: 10px; fill: var(--foam-dim); font-family: var(--display); }
+.abc-src summary { font-family: var(--ui); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--foam-dim); cursor: pointer; }
+.abc-src textarea { width: 100%; min-height: 150px; margin-top: 8px; background: var(--sea-2); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; font: 12px/1.5 ui-monospace, Menlo, monospace; resize: vertical; }
+@media (prefers-reduced-motion: reduce) { .syl, .line { transition: none; } .syl.on { text-shadow: none; } }
+
+.panel { background: var(--sea-2); border: 1px solid var(--rule); border-radius: 6px; padding: 18px clamp(14px, 3vw, 24px); display: grid; gap: 12px; }
+.panel h2, .section-head h2 { margin: 0; font-weight: 400; font-size: 21px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.section-head .hint { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); }
+.lyrics-box { width: 100%; min-height: 220px; resize: vertical; background: var(--sea); color: var(--foam); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 14px; font: 15px/1.6 var(--display); }
+.lyrics-box:focus-visible, .text-in:focus-visible, select:focus-visible { outline: 2px solid var(--foam); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.meter { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); display: grid; gap: 8px; }
+.meter p { margin: 0; line-height: 1.5; }
+.meter-lines { display: grid; gap: 4px; font-family: var(--display); font-size: 14px; color: var(--foam); }
+.meter-line { display: flex; gap: 10px; }
+.mcount { font-family: var(--ui); font-variant-numeric: tabular-nums; color: var(--brass); min-width: 2ch; text-align: right; }
+.ms.st { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.meter-meta { color: var(--foam-dim); }
+.btn-main { font-family: var(--ui); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; background: var(--brass); color: var(--sea); border: 0; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+.btn-main:disabled { opacity: .45; cursor: default; }
+.btn-main:hover:not(:disabled) { filter: brightness(1.08); }
+.text-in { flex: 1 1 220px; min-width: 0; background: var(--sea); color: var(--foam); border: 1px solid var(--rule); border-radius: 999px; padding: 9px 14px; font: 14px var(--display); }
+.status { font-family: var(--ui); font-size: 13px; color: var(--foam-dim); min-height: 1em; }
+.empty { margin: 0; color: var(--foam-dim); font-size: 15px; }
+.mismatch { font-family: var(--ui); font-size: 13px; color: var(--brass); margin: 0; }
+.tempo select:disabled, button.play:disabled { opacity: .45; cursor: default; }
+.file-label { position: relative; overflow: hidden; display: inline-flex; align-items: center; }
+.file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-label:focus-within { outline: 2px solid var(--foam); outline-offset: 3px; }
+.sub-head { font-family: var(--ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); margin: 6px 0 0; }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">His Majesty's Sons · Song tools</p>
+    <h1>The <em>Composer</em></h1>
+    <p class="sub">Paste or write your lyrics, pick a stanza, and get a dozen melodies that fit its meter, or ask Claude for hand-made ones. Play them with the words lit as they're sung, drag notes to taste, change key and tempo, and save an MP3.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="lyricsHead">
+    <div class="section-head"><h2 id="lyricsHead">Lyrics</h2><span class="hint">Separate stanzas with a blank line. A line like [Chorus] names the stanza under it; a bare [Chorus] repeats the last chorus.</span></div>
+    <textarea class="lyrics-box" id="lyricsText" spellcheck="false" aria-label="Lyrics"></textarea>
+    <div class="row">
+      <button type="button" class="btn-small" id="clearLyrics">Start blank</button>
+      <button type="button" class="btn-small" id="sampleLyrics">Load the Baladin sample</button>
+    </div>
+    <div class="meter" id="meterInfo" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="tunesHead">
+    <div class="section-head"><h2 id="tunesHead">Tunes</h2><span class="hint">for <span id="shapeName">—</span> stanzas</span></div>
+    <div class="row">
+      <button type="button" class="btn-main" id="compose">Compose 12 tunes</button>
+      <button type="button" class="btn-small" id="clearComposed" hidden>Clear these tunes</button>
+    </div>
+    <div class="row" id="claudeWrap" hidden>
+      <input class="text-in" id="claudeDirection" type="text" maxlength="500" placeholder="Optional direction for Claude, e.g. like a sea shanty, rising chorus" aria-label="Direction for Claude">
+      <button type="button" class="btn-small" id="askClaude">Ask Claude for 3 tunes</button>
+      <button type="button" class="btn-small" id="stopClaude" hidden>Stop</button>
+    </div>
+    <p class="status" id="composeStatus" role="status"></p>
+    <p class="empty" id="noTunes" hidden>No tunes for this meter yet. Press Compose.</p>
+    <div class="tunes" id="tunes" role="group" aria-label="Composed tunes"></div>
+    <div id="presetWrap" hidden>
+      <p class="sub-head">Baladin chorus tunes (fit any 10.10.10.10 stanza)</p>
+      <div class="tunes" id="presets" role="group" aria-label="Baladin chorus tunes"></div>
+    </div>
+  </section>
+
+  <div class="now"><h2 id="nowName"></h2><span id="nowTag"></span></div>
+  <p class="mismatch" id="mismatch" hidden></p>
+  <section class="lyric" id="lyric" aria-live="off"></section>
+
+  <div class="controls">
+    <button class="play" id="play" type="button">Play</button>
+    <span class="tempo"><label for="stanza">Stanza</label><select id="stanza"></select></span>
+    <div class="seg" role="group" aria-label="Pitch">
+      <button type="button" id="o-men" aria-pressed="true">Men</button>
+      <button type="button" id="o-high" aria-pressed="false">Octave up</button>
+    </div>
+    <label class="opt"><input type="checkbox" id="chords" checked> Chords</label>
+    <label class="opt"><input type="checkbox" id="loop"> Loop</label>
+    <span class="tempo"><label for="key">Key</label><select id="key"></select></span>
+    <span class="tempo"><label for="bpm">Tempo</label><input type="range" id="bpm" min="40" max="140" value="63"><output id="bpmOut">63</output></span>
+    <span class="save-mp3"><button type="button" class="btn-small" id="saveMp3" hidden>Save MP3</button><span class="save-status" id="saveStatus" role="status"></span></span>
+  </div>
+
+  <section class="editor" id="editor" aria-label="Note editor">
+    <div class="editor-head">
+      <h3>The notes</h3>
+      <span class="hint">Drag a note up or down to change it. Or click a note, then use ← → to move between notes and ↑ ↓ to change one (Shift + ↑ ↓ jumps an octave).</span>
+      <div class="editor-tools">
+        <span class="edited-flag" id="editedFlag" hidden>Edited</span>
+        <label class="opt"><input type="checkbox" id="chromatic"> Chromatic</label>
+        <button type="button" class="btn-small" id="resetNotes" disabled>Reset notes</button>
+      </div>
+    </div>
+    <div class="roll"><svg class="roll-gut" id="rollGut" aria-hidden="true"></svg><div class="roll-scroll" id="rollScroll" tabindex="-1"><svg id="roll" role="group" aria-label="Notes of the melody"></svg></div></div>
+  </section>
+
+  <div class="sheet" id="sheet" aria-label="Sheet music"></div>
+  <details class="abc-src"><summary>ABC notation (copy to keep a tune)</summary><textarea id="abcText" readonly spellcheck="false"></textarea></details>
+
+  <section class="panel" aria-labelledby="projHead">
+    <div class="section-head"><h2 id="projHead">Project</h2><span class="hint">Your lyrics, tunes and edits are kept in this browser. Save a project file to keep them anywhere.</span></div>
+    <div class="row">
+      <button type="button" class="btn-small" id="saveProject" hidden>Save project file</button>
+      <label class="btn-small file-label">Open project file<input type="file" id="openProject" accept=".json,application/json"></label>
+      <span class="status" id="projectStatus" role="status"></span>
+    </div>
+  </section>
+
+  <p class="note">"Octave up" helps on laptop speakers, which drop the low notes. Tempo is in <span id="beatName">dotted-quarter</span> beats per minute. Syllables and stresses are guessed from spelling; fix a miscount by hyphenating the word. Chords are a simple sketch for judging the tune, not a finished arrangement.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
+<script>
+  const TUNES = [{"id": "wine-dark", "name": "Wine-Dark", "tag": "D Dorian \u00b7 6/8", "blurb": "The first one. A call from the top, lifted a third on \"Go,\" peak on \"name.\"", "beat": 3, "bpm": 63, "beatName": "dotted quarter", "total": 96, "notes": [{"t": 0, "d": 3, "m": 69, "s": 0}, {"t": 3, "d": 2, "m": 74, "s": 1}, {"t": 5, "d": 1, "m": 72, "s": 2}, {"t": 6, "d": 3, "m": 69, "s": 3}, {"t": 11, "d": 1, "m": 67, "s": 4}, {"t": 12, "d": 2, "m": 65, "s": 5}, {"t": 14, "d": 1, "m": 67, "s": 6}, {"t": 15, "d": 2, "m": 69, "s": 7}, {"t": 17, "d": 1, "m": 67, "s": 8}, {"t": 18, "d": 3, "m": 64, "s": 9}, {"t": 23, "d": 1, "m": 64, "s": 10}, {"t": 24, "d": 2, "m": 62, "s": 11}, {"t": 26, "d": 1, "m": 64, "s": 12}, {"t": 27, "d": 2, "m": 65, "s": 13}, {"t": 29, "d": 1, "m": 67, "s": 14}, {"t": 30, "d": 2, "m": 69, "s": 15}, {"t": 32, "d": 1, "m": 71, "s": 16}, {"t": 33, "d": 2, "m": 72, "s": 17}, {"t": 35, "d": 1, "m": 71, "s": 18}, {"t": 36, "d": 9, "m": 69, "s": 19}, {"t": 48, "d": 3, "m": 72, "s": 20}, {"t": 51, "d": 2, "m": 76, "s": 21}, {"t": 53, "d": 1, "m": 74, "s": 22}, {"t": 54, "d": 3, "m": 72, "s": 23}, {"t": 59, "d": 1, "m": 69, "s": 24}, {"t": 60, "d": 2, "m": 71, "s": 25}, {"t": 62, "d": 1, "m": 72, "s": 26}, {"t": 63, "d": 2, "m": 74, "s": 27}, {"t": 65, "d": 1, "m": 72, "s": 28}, {"t": 66, "d": 3, "m": 71, "s": 29}, {"t": 71, "d": 1, "m": 69, "s": 30}, {"t": 72, "d": 2, "m": 74, "s": 31}, {"t": 74, "d": 1, "m": 76, "s": 32}, {"t": 75, "d": 2, "m": 77, "s": 33}, {"t": 77, "d": 1, "m": 76, "s": 34}, {"t": 78, "d": 2, "m": 74, "s": 35}, {"t": 80, "d": 1, "m": 72, "s": 36}, {"t": 81, "d": 2, "m": 69, "s": 37}, {"t": 83, "d": 1, "m": 64, "s": 38}, {"t": 84, "d": 9, "m": 62, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 12, "d": 6, "v": [41, 60, 53, 57], "name": "F"}, {"t": 18, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 24, "d": 6, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 30, "d": 18, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 48, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 54, "d": 6, "v": [41, 60, 53, 57], "name": "F"}, {"t": 60, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 72, "d": 6, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 78, "d": 3, "v": [43, 50, 55, 59], "name": "G"}, {"t": 81, "d": 3, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 84, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}], "abcHead": ["X:1", "M:6/8", "L:1/8", "K:Ddor clef=treble-8"], "abcLines": [["\"Dm\"A3 d2 c | A3 z2 G | \"F\"F2 G A2 G | \"C\"E3 z2 E |", 11], ["\"Dm\"D2 E F2 G | \"Am\"A2 B c2 B | A6- | A3 z3 |", 9], ["\"C\"c3 e2 d | \"F\"c3 z2 A | \"G\"B2 c d2 c | B3 z2 A |", 11], ["\"Dm\"d2 e f2 e | \"G\"d2 c \"Am\"A2 E | \"Dm\"D6- | D3 z3 |]", 9]], "lo": 62, "hi": 77}, {"id": "lament", "name": "Highland Lament", "tag": "D minor \u00b7 3/4", "blurb": "Slow waltz that starts low and climbs the whole first line, like a tide coming in.", "beat": 2, "bpm": 84, "beatName": "quarter", "total": 144, "notes": [{"t": 0, "d": 6, "m": 62, "s": 0}, {"t": 6, "d": 4, "m": 65, "s": 1}, {"t": 10, "d": 2, "m": 64, "s": 2}, {"t": 12, "d": 4, "m": 62, "s": 3}, {"t": 16, "d": 2, "m": 60, "s": 4}, {"t": 18, "d": 4, "m": 62, "s": 5}, {"t": 22, "d": 2, "m": 64, "s": 6}, {"t": 24, "d": 4, "m": 65, "s": 7}, {"t": 28, "d": 2, "m": 67, "s": 8}, {"t": 30, "d": 4, "m": 69, "s": 9}, {"t": 34, "d": 2, "m": 69, "s": 10}, {"t": 36, "d": 4, "m": 72, "s": 11}, {"t": 40, "d": 2, "m": 70, "s": 12}, {"t": 42, "d": 4, "m": 69, "s": 13}, {"t": 46, "d": 2, "m": 67, "s": 14}, {"t": 48, "d": 4, "m": 65, "s": 15}, {"t": 52, "d": 2, "m": 64, "s": 16}, {"t": 54, "d": 4, "m": 65, "s": 17}, {"t": 58, "d": 2, "m": 67, "s": 18}, {"t": 60, "d": 10, "m": 69, "s": 19}, {"t": 72, "d": 6, "m": 74, "s": 20}, {"t": 78, "d": 4, "m": 77, "s": 21}, {"t": 82, "d": 2, "m": 76, "s": 22}, {"t": 84, "d": 4, "m": 74, "s": 23}, {"t": 88, "d": 2, "m": 72, "s": 24}, {"t": 90, "d": 4, "m": 74, "s": 25}, {"t": 94, "d": 2, "m": 72, "s": 26}, {"t": 96, "d": 4, "m": 69, "s": 27}, {"t": 100, "d": 2, "m": 67, "s": 28}, {"t": 102, "d": 4, "m": 69, "s": 29}, {"t": 106, "d": 2, "m": 69, "s": 30}, {"t": 108, "d": 4, "m": 74, "s": 31}, {"t": 112, "d": 2, "m": 72, "s": 32}, {"t": 114, "d": 4, "m": 77, "s": 33}, {"t": 118, "d": 2, "m": 76, "s": 34}, {"t": 120, "d": 4, "m": 74, "s": 35}, {"t": 124, "d": 2, "m": 69, "s": 36}, {"t": 126, "d": 4, "m": 65, "s": 37}, {"t": 130, "d": 2, "m": 64, "s": 38}, {"t": 132, "d": 12, "m": 62, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 12, "d": 6, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 18, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 30, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 42, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 54, "d": 6, "v": [34, 50, 53, 58], "name": "Bb"}, {"t": 60, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 72, "d": 6, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 78, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 90, "d": 6, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 96, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 108, "d": 6, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 114, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 126, "d": 6, "v": [34, 50, 53, 58], "name": "Bb"}, {"t": 132, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}], "abcHead": ["X:1", "M:3/4", "L:1/8", "K:Dm clef=treble-8"], "abcLines": [["\"Dm\"D6 | F4 E2 | \"Gm\"D4 C2 | \"Dm\"D4 E2 | F4 G2 | \"Am\"A4 A2 |", 11], ["c4 B2 | \"Dm\"A4 G2 | F4 E2 | \"Bb\"F4 G2 | \"Dm\"A6- | A4 z2 |", 9], ["\"Gm\"d6 | \"Dm\"f4 e2 | d4 c2 | \"Gm\"d4 c2 | \"Dm\"A4 G2 | A4 A2 |", 11], ["\"Gm\"d4 c2 | \"Dm\"f4 e2 | d4 A2 | \"Bb\"F4 E2 | \"Dm\"D6- | D6 |]", 9]], "lo": 60, "hi": 77}, {"id": "capstan", "name": "Capstan", "tag": "A Mixolydian \u00b7 4/4", "blurb": "Work-shanty drive with repeated notes. The flat seventh on \"no home\" keeps it salty.", "beat": 2, "bpm": 104, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 76, "s": 0}, {"t": 4, "d": 3, "m": 76, "s": 1}, {"t": 7, "d": 1, "m": 73, "s": 2}, {"t": 8, "d": 4, "m": 69, "s": 3}, {"t": 14, "d": 2, "m": 69, "s": 4}, {"t": 16, "d": 3, "m": 71, "s": 5}, {"t": 19, "d": 1, "m": 73, "s": 6}, {"t": 20, "d": 3, "m": 74, "s": 7}, {"t": 23, "d": 1, "m": 73, "s": 8}, {"t": 24, "d": 6, "m": 69, "s": 9}, {"t": 30, "d": 2, "m": 64, "s": 10}, {"t": 32, "d": 3, "m": 69, "s": 11}, {"t": 35, "d": 1, "m": 69, "s": 12}, {"t": 36, "d": 3, "m": 69, "s": 13}, {"t": 39, "d": 1, "m": 71, "s": 14}, {"t": 40, "d": 3, "m": 73, "s": 15}, {"t": 43, "d": 1, "m": 71, "s": 16}, {"t": 44, "d": 3, "m": 69, "s": 17}, {"t": 47, "d": 1, "m": 67, "s": 18}, {"t": 48, "d": 14, "m": 64, "s": 19}, {"t": 64, "d": 4, "m": 76, "s": 20}, {"t": 68, "d": 3, "m": 79, "s": 21}, {"t": 71, "d": 1, "m": 78, "s": 22}, {"t": 72, "d": 4, "m": 76, "s": 23}, {"t": 78, "d": 2, "m": 73, "s": 24}, {"t": 80, "d": 3, "m": 74, "s": 25}, {"t": 83, "d": 1, "m": 73, "s": 26}, {"t": 84, "d": 3, "m": 71, "s": 27}, {"t": 87, "d": 1, "m": 69, "s": 28}, {"t": 88, "d": 6, "m": 71, "s": 29}, {"t": 94, "d": 2, "m": 71, "s": 30}, {"t": 96, "d": 3, "m": 73, "s": 31}, {"t": 99, "d": 1, "m": 74, "s": 32}, {"t": 100, "d": 3, "m": 76, "s": 33}, {"t": 103, "d": 1, "m": 76, "s": 34}, {"t": 104, "d": 3, "m": 74, "s": 35}, {"t": 107, "d": 1, "m": 73, "s": 36}, {"t": 108, "d": 3, "m": 71, "s": 37}, {"t": 111, "d": 1, "m": 67, "s": 38}, {"t": 112, "d": 16, "m": 69, "s": 39}], "chords": [{"t": 0, "d": 16, "v": [45, 61, 52, 57], "name": "A"}, {"t": 16, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 20, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 24, "d": 16, "v": [45, 61, 52, 57], "name": "A"}, {"t": 40, "d": 4, "v": [42, 61, 54, 57], "name": "F#m"}, {"t": 44, "d": 16, "v": [45, 61, 52, 57], "name": "A"}, {"t": 60, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 64, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 68, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 72, "d": 8, "v": [45, 61, 52, 57], "name": "A"}, {"t": 80, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 84, "d": 12, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 96, "d": 8, "v": [45, 61, 52, 57], "name": "A"}, {"t": 104, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 108, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 112, "d": 16, "v": [45, 61, 52, 57], "name": "A"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Amix clef=treble-8"], "abcLines": [["\"A\"e4 e3 c | A4 z2 A2 | \"Em\"B3 c \"D\"d3 c | \"A\"A6 E2 |", 11], ["A3 A A3 B | \"F#m\"c3 B \"A\"A3 G | E8- | E6 z2 |", 9], ["\"A\"e4 \"Em\"g3 f | \"A\"e4 z2 c2 | \"D\"d3 c \"Em\"B3 A | B6 B2 |", 11], ["\"A\"c3 d e3 e | \"D\"d3 c \"Em\"B3 G | \"A\"A8- | A8 |]", 9]], "lo": 64, "hi": 79}, {"id": "anthem", "name": "Anthem", "tag": "D major \u00b7 4/4", "blurb": "Stadium singalong. A leap of a sixth on \"Lo, brothers\" and a broad major-key lift.", "beat": 2, "bpm": 76, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 69, "s": 0}, {"t": 4, "d": 3, "m": 78, "s": 1}, {"t": 7, "d": 1, "m": 76, "s": 2}, {"t": 8, "d": 4, "m": 74, "s": 3}, {"t": 14, "d": 2, "m": 69, "s": 4}, {"t": 16, "d": 2, "m": 71, "s": 5}, {"t": 18, "d": 2, "m": 69, "s": 6}, {"t": 20, "d": 2, "m": 74, "s": 7}, {"t": 22, "d": 2, "m": 76, "s": 8}, {"t": 24, "d": 6, "m": 78, "s": 9}, {"t": 30, "d": 2, "m": 76, "s": 10}, {"t": 32, "d": 2, "m": 79, "s": 11}, {"t": 34, "d": 2, "m": 78, "s": 12}, {"t": 36, "d": 2, "m": 76, "s": 13}, {"t": 38, "d": 2, "m": 74, "s": 14}, {"t": 40, "d": 2, "m": 76, "s": 15}, {"t": 42, "d": 2, "m": 74, "s": 16}, {"t": 44, "d": 2, "m": 73, "s": 17}, {"t": 46, "d": 2, "m": 71, "s": 18}, {"t": 48, "d": 14, "m": 69, "s": 19}, {"t": 64, "d": 4, "m": 71, "s": 20}, {"t": 68, "d": 3, "m": 79, "s": 21}, {"t": 71, "d": 1, "m": 78, "s": 22}, {"t": 72, "d": 4, "m": 76, "s": 23}, {"t": 78, "d": 2, "m": 74, "s": 24}, {"t": 80, "d": 2, "m": 76, "s": 25}, {"t": 82, "d": 2, "m": 78, "s": 26}, {"t": 84, "d": 2, "m": 79, "s": 27}, {"t": 86, "d": 2, "m": 78, "s": 28}, {"t": 88, "d": 6, "m": 76, "s": 29}, {"t": 94, "d": 2, "m": 69, "s": 30}, {"t": 96, "d": 2, "m": 74, "s": 31}, {"t": 98, "d": 2, "m": 76, "s": 32}, {"t": 100, "d": 2, "m": 79, "s": 33}, {"t": 102, "d": 2, "m": 78, "s": 34}, {"t": 104, "d": 2, "m": 76, "s": 35}, {"t": 106, "d": 2, "m": 74, "s": 36}, {"t": 108, "d": 2, "m": 71, "s": 37}, {"t": 110, "d": 2, "m": 73, "s": 38}, {"t": 112, "d": 16, "m": 74, "s": 39}], "chords": [{"t": 0, "d": 16, "v": [38, 50, 54, 57], "name": "D"}, {"t": 16, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 20, "d": 8, "v": [38, 50, 54, 57], "name": "D"}, {"t": 28, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 32, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 36, "d": 12, "v": [45, 61, 52, 57], "name": "A"}, {"t": 48, "d": 16, "v": [38, 50, 54, 57], "name": "D"}, {"t": 64, "d": 8, "v": [43, 50, 55, 59], "name": "G"}, {"t": 72, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 76, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 80, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 84, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 88, "d": 8, "v": [45, 61, 52, 57], "name": "A"}, {"t": 96, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 100, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 104, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 108, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 112, "d": 16, "v": [38, 50, 54, 57], "name": "D"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:D clef=treble-8"], "abcLines": [["\"D\"A4 f3 e | d4 z2 A2 | \"G\"B2 A2 \"D\"d2 e2 | f6 e2 |", 11], ["\"G\"g2 f2 \"A\"e2 d2 | e2 d2 c2 B2 | \"D\"A8- | A6 z2 |", 9], ["\"G\"B4 g3 f | \"A\"e4 \"D\"z2 d2 | \"A\"e2 f2 \"G\"g2 f2 | \"A\"e6 A2 |", 11], ["\"D\"d2 e2 \"G\"g2 f2 | \"A\"e2 d2 \"G\"B2 c2 | \"D\"d8- | d8 |]", 9]], "lo": 69, "hi": 79}, {"id": "veils", "name": "The Veils", "tag": "E Phrygian \u00b7 4/4", "blurb": "Dark and narrow, built on the half step above the tonic. Line two hangs unresolved.", "beat": 2, "bpm": 72, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 64, "s": 0}, {"t": 4, "d": 3, "m": 65, "s": 1}, {"t": 7, "d": 1, "m": 64, "s": 2}, {"t": 8, "d": 4, "m": 64, "s": 3}, {"t": 14, "d": 2, "m": 62, "s": 4}, {"t": 16, "d": 3, "m": 64, "s": 5}, {"t": 19, "d": 1, "m": 65, "s": 6}, {"t": 20, "d": 3, "m": 67, "s": 7}, {"t": 23, "d": 1, "m": 65, "s": 8}, {"t": 24, "d": 6, "m": 64, "s": 9}, {"t": 30, "d": 2, "m": 71, "s": 10}, {"t": 32, "d": 3, "m": 72, "s": 11}, {"t": 35, "d": 1, "m": 71, "s": 12}, {"t": 36, "d": 3, "m": 69, "s": 13}, {"t": 39, "d": 1, "m": 67, "s": 14}, {"t": 40, "d": 3, "m": 69, "s": 15}, {"t": 43, "d": 1, "m": 67, "s": 16}, {"t": 44, "d": 3, "m": 65, "s": 17}, {"t": 47, "d": 1, "m": 64, "s": 18}, {"t": 48, "d": 14, "m": 65, "s": 19}, {"t": 64, "d": 4, "m": 71, "s": 20}, {"t": 68, "d": 3, "m": 76, "s": 21}, {"t": 71, "d": 1, "m": 74, "s": 22}, {"t": 72, "d": 4, "m": 72, "s": 23}, {"t": 78, "d": 2, "m": 71, "s": 24}, {"t": 80, "d": 3, "m": 72, "s": 25}, {"t": 83, "d": 1, "m": 71, "s": 26}, {"t": 84, "d": 3, "m": 69, "s": 27}, {"t": 87, "d": 1, "m": 67, "s": 28}, {"t": 88, "d": 6, "m": 69, "s": 29}, {"t": 94, "d": 2, "m": 67, "s": 30}, {"t": 96, "d": 3, "m": 72, "s": 31}, {"t": 99, "d": 1, "m": 71, "s": 32}, {"t": 100, "d": 3, "m": 76, "s": 33}, {"t": 103, "d": 1, "m": 74, "s": 34}, {"t": 104, "d": 3, "m": 72, "s": 35}, {"t": 107, "d": 1, "m": 71, "s": 36}, {"t": 108, "d": 3, "m": 69, "s": 37}, {"t": 111, "d": 1, "m": 65, "s": 38}, {"t": 112, "d": 16, "m": 64, "s": 39}], "chords": [{"t": 0, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 4, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 8, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 12, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 16, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 32, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 44, "d": 16, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 60, "d": 4, "v": [41, 60, 53, 57], "name": "F"}, {"t": 64, "d": 8, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 72, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 76, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 80, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 92, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 96, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 100, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 104, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 108, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 112, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Ephr clef=treble-8"], "abcLines": [["\"Em\"E4 \"Dm\"F3 E | \"Em\"E4 \"Dm\"z2 D2 | \"Em\"E3 F G3 F | E6 B2 |", 11], ["\"Am\"c3 B A3 G | A3 G \"Dm\"F3 E | F8- | F6 z2 |", 9], ["\"Em\"B4 e3 d | \"Am\"c4 \"Em\"z2 B2 | \"Am\"c3 B A3 G | A6 G2 |", 11], ["\"Am\"c3 B \"Em\"e3 d | \"Am\"c3 B \"Dm\"A3 F | \"Em\"E8- | E8 |]", 9]], "lo": 62, "hi": 76}, {"id": "rover", "name": "Rover", "tag": "G major \u00b7 6/8", "blurb": "Quick jig for a pub or a ship's deck. Bright, bouncing, easy to clap to.", "beat": 3, "bpm": 92, "beatName": "dotted quarter", "total": 96, "notes": [{"t": 0, "d": 3, "m": 74, "s": 0}, {"t": 3, "d": 2, "m": 71, "s": 1}, {"t": 5, "d": 1, "m": 67, "s": 2}, {"t": 6, "d": 3, "m": 74, "s": 3}, {"t": 11, "d": 1, "m": 72, "s": 4}, {"t": 12, "d": 2, "m": 71, "s": 5}, {"t": 14, "d": 1, "m": 69, "s": 6}, {"t": 15, "d": 2, "m": 67, "s": 7}, {"t": 17, "d": 1, "m": 69, "s": 8}, {"t": 18, "d": 3, "m": 71, "s": 9}, {"t": 23, "d": 1, "m": 62, "s": 10}, {"t": 24, "d": 2, "m": 67, "s": 11}, {"t": 26, "d": 1, "m": 69, "s": 12}, {"t": 27, "d": 2, "m": 71, "s": 13}, {"t": 29, "d": 1, "m": 72, "s": 14}, {"t": 30, "d": 2, "m": 74, "s": 15}, {"t": 32, "d": 1, "m": 76, "s": 16}, {"t": 33, "d": 2, "m": 74, "s": 17}, {"t": 35, "d": 1, "m": 72, "s": 18}, {"t": 36, "d": 9, "m": 69, "s": 19}, {"t": 48, "d": 3, "m": 74, "s": 20}, {"t": 51, "d": 2, "m": 79, "s": 21}, {"t": 53, "d": 1, "m": 78, "s": 22}, {"t": 54, "d": 3, "m": 76, "s": 23}, {"t": 59, "d": 1, "m": 74, "s": 24}, {"t": 60, "d": 2, "m": 76, "s": 25}, {"t": 62, "d": 1, "m": 74, "s": 26}, {"t": 63, "d": 2, "m": 71, "s": 27}, {"t": 65, "d": 1, "m": 69, "s": 28}, {"t": 66, "d": 3, "m": 71, "s": 29}, {"t": 71, "d": 1, "m": 74, "s": 30}, {"t": 72, "d": 2, "m": 76, "s": 31}, {"t": 74, "d": 1, "m": 74, "s": 32}, {"t": 75, "d": 2, "m": 79, "s": 33}, {"t": 77, "d": 1, "m": 78, "s": 34}, {"t": 78, "d": 2, "m": 76, "s": 35}, {"t": 80, "d": 1, "m": 74, "s": 36}, {"t": 81, "d": 2, "m": 71, "s": 37}, {"t": 83, "d": 1, "m": 69, "s": 38}, {"t": 84, "d": 9, "m": 67, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 12, "d": 6, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 18, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 30, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 42, "d": 6, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 48, "d": 6, "v": [43, 50, 55, 59], "name": "G"}, {"t": 54, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 60, "d": 6, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 66, "d": 6, "v": [43, 50, 55, 59], "name": "G"}, {"t": 72, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 78, "d": 6, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 84, "d": 12, "v": [43, 50, 55, 59], "name": "G"}], "abcHead": ["X:1", "M:6/8", "L:1/8", "K:G clef=treble-8"], "abcLines": [["\"G\"d3 B2 G | d3 z2 c | \"Em\"B2 A G2 A | \"G\"B3 z2 D |", 11], ["G2 A B2 c | \"D\"d2 e d2 c | A6- | \"Am\"A3 z3 |", 9], ["\"G\"d3 g2 f | \"C\"e3 z2 d | \"Em\"e2 d B2 A | \"G\"B3 z2 d |", 11], ["\"C\"e2 d g2 f | \"Em\"e2 d B2 A | \"G\"G6- | G3 z3 |]", 9]], "lo": 62, "hi": 79}, {"id": "chorale", "name": "Chorale", "tag": "D harmonic minor \u00b7 4/4", "blurb": "Hymn-like and stepwise, with a sharpened leading tone pulling home on \"roam.\"", "beat": 2, "bpm": 66, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 62, "s": 0}, {"t": 4, "d": 3, "m": 69, "s": 1}, {"t": 7, "d": 1, "m": 69, "s": 2}, {"t": 8, "d": 4, "m": 70, "s": 3}, {"t": 14, "d": 2, "m": 69, "s": 4}, {"t": 16, "d": 2, "m": 67, "s": 5}, {"t": 18, "d": 2, "m": 65, "s": 6}, {"t": 20, "d": 2, "m": 64, "s": 7}, {"t": 22, "d": 2, "m": 65, "s": 8}, {"t": 24, "d": 6, "m": 64, "s": 9}, {"t": 30, "d": 2, "m": 64, "s": 10}, {"t": 32, "d": 2, "m": 65, "s": 11}, {"t": 34, "d": 2, "m": 67, "s": 12}, {"t": 36, "d": 2, "m": 69, "s": 13}, {"t": 38, "d": 2, "m": 69, "s": 14}, {"t": 40, "d": 2, "m": 74, "s": 15}, {"t": 42, "d": 2, "m": 73, "s": 16}, {"t": 44, "d": 2, "m": 70, "s": 17}, {"t": 46, "d": 2, "m": 67, "s": 18}, {"t": 48, "d": 14, "m": 69, "s": 19}, {"t": 64, "d": 4, "m": 69, "s": 20}, {"t": 68, "d": 3, "m": 74, "s": 21}, {"t": 71, "d": 1, "m": 74, "s": 22}, {"t": 72, "d": 4, "m": 76, "s": 23}, {"t": 78, "d": 2, "m": 77, "s": 24}, {"t": 80, "d": 2, "m": 76, "s": 25}, {"t": 82, "d": 2, "m": 74, "s": 26}, {"t": 84, "d": 2, "m": 73, "s": 27}, {"t": 86, "d": 2, "m": 74, "s": 28}, {"t": 88, "d": 6, "m": 76, "s": 29}, {"t": 94, "d": 2, "m": 76, "s": 30}, {"t": 96, "d": 2, "m": 77, "s": 31}, {"t": 98, "d": 2, "m": 76, "s": 32}, {"t": 100, "d": 2, "m": 79, "s": 33}, {"t": 102, "d": 2, "m": 77, "s": 34}, {"t": 104, "d": 2, "m": 76, "s": 35}, {"t": 106, "d": 2, "m": 74, "s": 36}, {"t": 108, "d": 2, "m": 74, "s": 37}, {"t": 110, "d": 2, "m": 73, "s": 38}, {"t": 112, "d": 16, "m": 74, "s": 39}], "chords": [{"t": 0, "d": 8, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 8, "d": 4, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 12, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 16, "d": 4, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 20, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 32, "d": 12, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 44, "d": 4, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 48, "d": 16, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 64, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 68, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 72, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 76, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 80, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 84, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 88, "d": 8, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 96, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 100, "d": 4, "v": [43, 50, 55, 58], "name": "Gm"}, {"t": 104, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 108, "d": 20, "v": [38, 50, 53, 57], "name": "Dm"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Dm clef=treble-8"], "abcLines": [["\"Dm\"D4 A3 A | \"Gm\"B4 \"Dm\"z2 A2 | \"Gm\"G2 F2 \"Am\"E2 F2 | E6 E2 |", 11], ["\"Dm\"F2 G2 A2 A2 | d2 ^c2 \"Gm\"B2 G2 | \"Dm\"A8- | A6 z2 |", 9], ["\"Am\"A4 \"Dm\"d3 d | \"Am\"e4 \"Dm\"z2 f2 | \"Am\"e2 d2 \"A\"^c2 d2 | \"Am\"e6 e2 |", 11], ["\"Dm\"f2 e2 \"Gm\"g2 f2 | \"Am\"e2 d2 \"Dm\"d2 ^c2 | d8- | d8 |]", 9]], "lo": 62, "hi": 79}, {"id": "pentatonic", "name": "Five-Stone", "tag": "A minor pentatonic \u00b7 4/4", "blurb": "Five notes only, Celtic-rock style. Line two lands on the flat seventh.", "beat": 2, "bpm": 96, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 76, "s": 0}, {"t": 4, "d": 3, "m": 79, "s": 1}, {"t": 7, "d": 1, "m": 76, "s": 2}, {"t": 8, "d": 4, "m": 74, "s": 3}, {"t": 14, "d": 2, "m": 72, "s": 4}, {"t": 16, "d": 3, "m": 74, "s": 5}, {"t": 19, "d": 1, "m": 76, "s": 6}, {"t": 20, "d": 3, "m": 79, "s": 7}, {"t": 23, "d": 1, "m": 76, "s": 8}, {"t": 24, "d": 6, "m": 74, "s": 9}, {"t": 30, "d": 2, "m": 69, "s": 10}, {"t": 32, "d": 3, "m": 72, "s": 11}, {"t": 35, "d": 1, "m": 74, "s": 12}, {"t": 36, "d": 3, "m": 76, "s": 13}, {"t": 39, "d": 1, "m": 74, "s": 14}, {"t": 40, "d": 3, "m": 72, "s": 15}, {"t": 43, "d": 1, "m": 69, "s": 16}, {"t": 44, "d": 3, "m": 72, "s": 17}, {"t": 47, "d": 1, "m": 69, "s": 18}, {"t": 48, "d": 14, "m": 67, "s": 19}, {"t": 64, "d": 4, "m": 79, "s": 20}, {"t": 68, "d": 3, "m": 79, "s": 21}, {"t": 71, "d": 1, "m": 76, "s": 22}, {"t": 72, "d": 4, "m": 74, "s": 23}, {"t": 78, "d": 2, "m": 72, "s": 24}, {"t": 80, "d": 3, "m": 76, "s": 25}, {"t": 83, "d": 1, "m": 79, "s": 26}, {"t": 84, "d": 3, "m": 76, "s": 27}, {"t": 87, "d": 1, "m": 74, "s": 28}, {"t": 88, "d": 6, "m": 76, "s": 29}, {"t": 94, "d": 2, "m": 72, "s": 30}, {"t": 96, "d": 3, "m": 74, "s": 31}, {"t": 99, "d": 1, "m": 76, "s": 32}, {"t": 100, "d": 3, "m": 79, "s": 33}, {"t": 103, "d": 1, "m": 76, "s": 34}, {"t": 104, "d": 3, "m": 74, "s": 35}, {"t": 107, "d": 1, "m": 72, "s": 36}, {"t": 108, "d": 3, "m": 69, "s": 37}, {"t": 111, "d": 1, "m": 67, "s": 38}, {"t": 112, "d": 16, "m": 69, "s": 39}], "chords": [{"t": 0, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 4, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 8, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 12, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 16, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 20, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 24, "d": 8, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 32, "d": 16, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 48, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 64, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 68, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 72, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 76, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 80, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 84, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 96, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 100, "d": 4, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 104, "d": 4, "v": [38, 50, 53, 57], "name": "Dm"}, {"t": 108, "d": 20, "v": [45, 60, 52, 57], "name": "Am"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Am clef=treble-8"], "abcLines": [["\"Am\"e4 \"Em\"g3 e | \"Dm\"d4 \"Am\"z2 c2 | \"Dm\"d3 e \"Em\"g3 e | \"Dm\"d6 A2 |", 11], ["\"Am\"c3 d e3 d | c3 A c3 A | \"Em\"G8- | G6 z2 |", 9], ["\"G\"g4 \"Em\"g3 e | \"Dm\"d4 \"Am\"z2 c2 | \"Em\"e3 g \"Am\"e3 d | e6 c2 |", 11], ["\"Dm\"d3 e \"Em\"g3 e | \"Dm\"d3 c \"Am\"A3 G | A8- | A8 |]", 9]], "lo": 67, "hi": 79}, {"id": "northern", "name": "Northern Waltz", "tag": "D Mixolydian \u00b7 3/4", "blurb": "Lilting border-ballad waltz. Climbs to the octave on \"sea,\" then walks back down.", "beat": 2, "bpm": 120, "beatName": "quarter", "total": 144, "notes": [{"t": 0, "d": 6, "m": 69, "s": 0}, {"t": 6, "d": 4, "m": 74, "s": 1}, {"t": 10, "d": 2, "m": 72, "s": 2}, {"t": 12, "d": 4, "m": 69, "s": 3}, {"t": 16, "d": 2, "m": 66, "s": 4}, {"t": 18, "d": 4, "m": 67, "s": 5}, {"t": 22, "d": 2, "m": 69, "s": 6}, {"t": 24, "d": 4, "m": 71, "s": 7}, {"t": 28, "d": 2, "m": 72, "s": 8}, {"t": 30, "d": 4, "m": 74, "s": 9}, {"t": 34, "d": 2, "m": 72, "s": 10}, {"t": 36, "d": 4, "m": 69, "s": 11}, {"t": 40, "d": 2, "m": 67, "s": 12}, {"t": 42, "d": 4, "m": 66, "s": 13}, {"t": 46, "d": 2, "m": 64, "s": 14}, {"t": 48, "d": 4, "m": 62, "s": 15}, {"t": 52, "d": 2, "m": 64, "s": 16}, {"t": 54, "d": 4, "m": 66, "s": 17}, {"t": 58, "d": 2, "m": 67, "s": 18}, {"t": 60, "d": 10, "m": 69, "s": 19}, {"t": 72, "d": 6, "m": 74, "s": 20}, {"t": 78, "d": 4, "m": 76, "s": 21}, {"t": 82, "d": 2, "m": 78, "s": 22}, {"t": 84, "d": 4, "m": 76, "s": 23}, {"t": 88, "d": 2, "m": 74, "s": 24}, {"t": 90, "d": 4, "m": 72, "s": 25}, {"t": 94, "d": 2, "m": 69, "s": 26}, {"t": 96, "d": 4, "m": 72, "s": 27}, {"t": 100, "d": 2, "m": 74, "s": 28}, {"t": 102, "d": 4, "m": 76, "s": 29}, {"t": 106, "d": 2, "m": 74, "s": 30}, {"t": 108, "d": 4, "m": 72, "s": 31}, {"t": 112, "d": 2, "m": 74, "s": 32}, {"t": 114, "d": 4, "m": 78, "s": 33}, {"t": 118, "d": 2, "m": 76, "s": 34}, {"t": 120, "d": 4, "m": 74, "s": 35}, {"t": 124, "d": 2, "m": 72, "s": 36}, {"t": 126, "d": 4, "m": 69, "s": 37}, {"t": 130, "d": 2, "m": 66, "s": 38}, {"t": 132, "d": 12, "m": 62, "s": 39}], "chords": [{"t": 0, "d": 18, "v": [38, 50, 54, 57], "name": "D"}, {"t": 18, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 30, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 42, "d": 6, "v": [35, 50, 54, 59], "name": "Bm"}, {"t": 48, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 60, "d": 6, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 66, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 78, "d": 18, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 96, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 102, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 114, "d": 30, "v": [38, 50, 54, 57], "name": "D"}], "abcHead": ["X:1", "M:3/4", "L:1/8", "K:Dmix clef=treble-8"], "abcLines": [["\"D\"A6 | d4 c2 | A4 F2 | \"G\"G4 A2 | B4 c2 | \"D\"d4 c2 |", 11], ["A4 G2 | \"Bm\"F4 E2 | \"D\"D4 E2 | F4 G2 | \"Am\"A6- | \"D\"A4 z2 |", 9], ["d6 | \"Am\"e4 f2 | e4 d2 | c4 A2 | \"C\"c4 d2 | \"Am\"e4 d2 |", 11], ["c4 d2 | \"D\"f4 e2 | d4 c2 | A4 F2 | D6- | D6 |]", 9]], "lo": 62, "hi": 78}, {"id": "slow-air", "name": "Slow Air", "tag": "E minor \u00b7 4/4", "blurb": "Solo-voice lament with wide intervals and long holds. Best sung alone, then joined.", "beat": 2, "bpm": 56, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 71, "s": 0}, {"t": 4, "d": 3, "m": 76, "s": 1}, {"t": 7, "d": 1, "m": 74, "s": 2}, {"t": 8, "d": 4, "m": 71, "s": 3}, {"t": 14, "d": 2, "m": 69, "s": 4}, {"t": 16, "d": 3, "m": 67, "s": 5}, {"t": 19, "d": 1, "m": 66, "s": 6}, {"t": 20, "d": 3, "m": 64, "s": 7}, {"t": 23, "d": 1, "m": 66, "s": 8}, {"t": 24, "d": 6, "m": 67, "s": 9}, {"t": 30, "d": 2, "m": 67, "s": 10}, {"t": 32, "d": 3, "m": 71, "s": 11}, {"t": 35, "d": 1, "m": 69, "s": 12}, {"t": 36, "d": 3, "m": 67, "s": 13}, {"t": 39, "d": 1, "m": 66, "s": 14}, {"t": 40, "d": 3, "m": 64, "s": 15}, {"t": 43, "d": 1, "m": 62, "s": 16}, {"t": 44, "d": 3, "m": 64, "s": 17}, {"t": 47, "d": 1, "m": 67, "s": 18}, {"t": 48, "d": 14, "m": 66, "s": 19}, {"t": 64, "d": 4, "m": 74, "s": 20}, {"t": 68, "d": 3, "m": 79, "s": 21}, {"t": 71, "d": 1, "m": 78, "s": 22}, {"t": 72, "d": 4, "m": 76, "s": 23}, {"t": 78, "d": 2, "m": 71, "s": 24}, {"t": 80, "d": 3, "m": 72, "s": 25}, {"t": 83, "d": 1, "m": 71, "s": 26}, {"t": 84, "d": 3, "m": 69, "s": 27}, {"t": 87, "d": 1, "m": 67, "s": 28}, {"t": 88, "d": 6, "m": 69, "s": 29}, {"t": 94, "d": 2, "m": 71, "s": 30}, {"t": 96, "d": 3, "m": 76, "s": 31}, {"t": 99, "d": 1, "m": 78, "s": 32}, {"t": 100, "d": 3, "m": 79, "s": 33}, {"t": 103, "d": 1, "m": 78, "s": 34}, {"t": 104, "d": 3, "m": 76, "s": 35}, {"t": 107, "d": 1, "m": 74, "s": 36}, {"t": 108, "d": 3, "m": 71, "s": 37}, {"t": 111, "d": 1, "m": 63, "s": 38}, {"t": 112, "d": 16, "m": 64, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 12, "d": 4, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 16, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 32, "d": 4, "v": [35, 50, 54, 59], "name": "Bm"}, {"t": 36, "d": 12, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 48, "d": 16, "v": [35, 50, 54, 59], "name": "Bm"}, {"t": 64, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 68, "d": 12, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 80, "d": 12, "v": [45, 60, 52, 57], "name": "Am"}, {"t": 92, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 108, "d": 4, "v": [35, 50, 54, 59], "name": "Bm"}, {"t": 112, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Em clef=treble-8"], "abcLines": [["\"Em\"B4 e3 d | B4 \"Am\"z2 A2 | \"Em\"G3 F E3 F | G6 G2 |", 11], ["\"Bm\"B3 A \"Em\"G3 F | E3 D E3 G | \"Bm\"F8- | F6 z2 |", 9], ["\"D\"d4 \"Em\"g3 f | e4 z2 B2 | \"Am\"c3 B A3 G | A6 B2 |", 11], ["e3 f g3 f | e3 d \"Bm\"B3 ^D | \"Em\"E8- | E8 |]", 9]], "lo": 62, "hi": 79}, {"id": "stomp", "name": "Stomp", "tag": "G major \u00b7 4/4", "blurb": "Modern folk stomp. A chanted, near-monotone hook, made for foot-stamping.", "beat": 2, "bpm": 112, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 71, "s": 0}, {"t": 4, "d": 3, "m": 71, "s": 1}, {"t": 7, "d": 1, "m": 67, "s": 2}, {"t": 8, "d": 4, "m": 71, "s": 3}, {"t": 14, "d": 2, "m": 72, "s": 4}, {"t": 16, "d": 2, "m": 74, "s": 5}, {"t": 18, "d": 2, "m": 71, "s": 6}, {"t": 20, "d": 2, "m": 69, "s": 7}, {"t": 22, "d": 2, "m": 67, "s": 8}, {"t": 24, "d": 6, "m": 69, "s": 9}, {"t": 30, "d": 2, "m": 62, "s": 10}, {"t": 32, "d": 2, "m": 67, "s": 11}, {"t": 34, "d": 2, "m": 67, "s": 12}, {"t": 36, "d": 2, "m": 67, "s": 13}, {"t": 38, "d": 2, "m": 69, "s": 14}, {"t": 40, "d": 2, "m": 71, "s": 15}, {"t": 42, "d": 2, "m": 69, "s": 16}, {"t": 44, "d": 2, "m": 67, "s": 17}, {"t": 46, "d": 2, "m": 64, "s": 18}, {"t": 48, "d": 14, "m": 62, "s": 19}, {"t": 64, "d": 4, "m": 74, "s": 20}, {"t": 68, "d": 3, "m": 74, "s": 21}, {"t": 71, "d": 1, "m": 71, "s": 22}, {"t": 72, "d": 4, "m": 74, "s": 23}, {"t": 78, "d": 2, "m": 76, "s": 24}, {"t": 80, "d": 2, "m": 74, "s": 25}, {"t": 82, "d": 2, "m": 71, "s": 26}, {"t": 84, "d": 2, "m": 69, "s": 27}, {"t": 86, "d": 2, "m": 67, "s": 28}, {"t": 88, "d": 6, "m": 69, "s": 29}, {"t": 94, "d": 2, "m": 69, "s": 30}, {"t": 96, "d": 2, "m": 71, "s": 31}, {"t": 98, "d": 2, "m": 74, "s": 32}, {"t": 100, "d": 2, "m": 79, "s": 33}, {"t": 102, "d": 2, "m": 76, "s": 34}, {"t": 104, "d": 2, "m": 74, "s": 35}, {"t": 106, "d": 2, "m": 71, "s": 36}, {"t": 108, "d": 2, "m": 69, "s": 37}, {"t": 110, "d": 2, "m": 66, "s": 38}, {"t": 112, "d": 16, "m": 67, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 12, "d": 4, "v": [36, 60, 52, 55], "name": "C"}, {"t": 16, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 20, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 32, "d": 12, "v": [43, 50, 55, 59], "name": "G"}, {"t": 44, "d": 4, "v": [36, 60, 52, 55], "name": "C"}, {"t": 48, "d": 16, "v": [43, 50, 55, 59], "name": "G"}, {"t": 64, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 68, "d": 8, "v": [43, 50, 55, 59], "name": "G"}, {"t": 76, "d": 4, "v": [36, 60, 52, 55], "name": "C"}, {"t": 80, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 84, "d": 12, "v": [38, 50, 54, 57], "name": "D"}, {"t": 96, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 100, "d": 4, "v": [36, 60, 52, 55], "name": "C"}, {"t": 104, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 108, "d": 4, "v": [38, 50, 54, 57], "name": "D"}, {"t": 112, "d": 16, "v": [43, 50, 55, 59], "name": "G"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:G clef=treble-8"], "abcLines": [["\"G\"B4 B3 G | B4 \"C\"z2 c2 | \"G\"d2 B2 \"D\"A2 G2 | A6 D2 |", 11], ["\"G\"G2 G2 G2 A2 | B2 A2 \"C\"G2 E2 | \"G\"D8- | D6 z2 |", 9], ["\"D\"d4 \"G\"d3 B | d4 \"C\"z2 e2 | \"G\"d2 B2 \"D\"A2 G2 | A6 A2 |", 11], ["\"G\"B2 d2 \"C\"g2 e2 | \"G\"d2 B2 \"D\"A2 F2 | \"G\"G8- | G8 |]", 9]], "lo": 62, "hi": 79}, {"id": "war-chant", "name": "War Chant", "tag": "E Dorian \u00b7 4/4", "blurb": "Low, narrow and droning, like a host on the march. Rises a fifth for the second half.", "beat": 2, "bpm": 80, "beatName": "quarter", "total": 128, "notes": [{"t": 0, "d": 4, "m": 64, "s": 0}, {"t": 4, "d": 3, "m": 64, "s": 1}, {"t": 7, "d": 1, "m": 62, "s": 2}, {"t": 8, "d": 4, "m": 64, "s": 3}, {"t": 14, "d": 2, "m": 64, "s": 4}, {"t": 16, "d": 3, "m": 67, "s": 5}, {"t": 19, "d": 1, "m": 66, "s": 6}, {"t": 20, "d": 3, "m": 64, "s": 7}, {"t": 23, "d": 1, "m": 62, "s": 8}, {"t": 24, "d": 6, "m": 64, "s": 9}, {"t": 30, "d": 2, "m": 64, "s": 10}, {"t": 32, "d": 3, "m": 67, "s": 11}, {"t": 35, "d": 1, "m": 67, "s": 12}, {"t": 36, "d": 3, "m": 69, "s": 13}, {"t": 39, "d": 1, "m": 67, "s": 14}, {"t": 40, "d": 3, "m": 71, "s": 15}, {"t": 43, "d": 1, "m": 69, "s": 16}, {"t": 44, "d": 3, "m": 67, "s": 17}, {"t": 47, "d": 1, "m": 66, "s": 18}, {"t": 48, "d": 14, "m": 64, "s": 19}, {"t": 64, "d": 4, "m": 71, "s": 20}, {"t": 68, "d": 3, "m": 71, "s": 21}, {"t": 71, "d": 1, "m": 69, "s": 22}, {"t": 72, "d": 4, "m": 71, "s": 23}, {"t": 78, "d": 2, "m": 71, "s": 24}, {"t": 80, "d": 3, "m": 74, "s": 25}, {"t": 83, "d": 1, "m": 73, "s": 26}, {"t": 84, "d": 3, "m": 71, "s": 27}, {"t": 87, "d": 1, "m": 69, "s": 28}, {"t": 88, "d": 6, "m": 71, "s": 29}, {"t": 94, "d": 2, "m": 71, "s": 30}, {"t": 96, "d": 3, "m": 76, "s": 31}, {"t": 99, "d": 1, "m": 74, "s": 32}, {"t": 100, "d": 3, "m": 76, "s": 33}, {"t": 103, "d": 1, "m": 74, "s": 34}, {"t": 104, "d": 3, "m": 71, "s": 35}, {"t": 107, "d": 1, "m": 69, "s": 36}, {"t": 108, "d": 3, "m": 67, "s": 37}, {"t": 111, "d": 1, "m": 66, "s": 38}, {"t": 112, "d": 16, "m": 64, "s": 39}], "chords": [{"t": 0, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 16, "d": 4, "v": [43, 50, 55, 59], "name": "G"}, {"t": 20, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 36, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 40, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 56, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 60, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 76, "d": 8, "v": [35, 50, 54, 59], "name": "Bm"}, {"t": 84, "d": 16, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 100, "d": 4, "v": [45, 61, 52, 57], "name": "A"}, {"t": 104, "d": 24, "v": [40, 52, 55, 59], "name": "Em"}], "abcHead": ["X:1", "M:4/4", "L:1/8", "K:Edor clef=treble-8"], "abcLines": [["\"Em\"E4 E3 D | E4 z2 E2 | \"G\"G3 F \"Em\"E3 D | E6 E2 |", 11], ["G3 G \"A\"A3 G | \"Em\"B3 A G3 F | E8- | \"A\"E6 z2 |", 9], ["B4 B3 A | B4 \"Bm\"z2 B2 | d3 c \"Em\"B3 A | B6 B2 |", 11], ["e3 d \"A\"e3 d | \"Em\"B3 A G3 F | E8- | E8 |]", 9]], "lo": 62, "hi": 76}, {"id": "lydian", "name": "Lydian Dawn", "tag": "F Lydian \u00b7 6/8", "blurb": "Dreamy, rocking and luminous. The raised fourth gives \"across\" an open-sky shimmer.", "beat": 3, "bpm": 56, "beatName": "dotted quarter", "total": 96, "notes": [{"t": 0, "d": 3, "m": 72, "s": 0}, {"t": 3, "d": 2, "m": 77, "s": 1}, {"t": 5, "d": 1, "m": 76, "s": 2}, {"t": 6, "d": 3, "m": 72, "s": 3}, {"t": 11, "d": 1, "m": 69, "s": 4}, {"t": 12, "d": 2, "m": 71, "s": 5}, {"t": 14, "d": 1, "m": 72, "s": 6}, {"t": 15, "d": 2, "m": 74, "s": 7}, {"t": 17, "d": 1, "m": 72, "s": 8}, {"t": 18, "d": 3, "m": 69, "s": 9}, {"t": 23, "d": 1, "m": 67, "s": 10}, {"t": 24, "d": 2, "m": 65, "s": 11}, {"t": 26, "d": 1, "m": 67, "s": 12}, {"t": 27, "d": 2, "m": 69, "s": 13}, {"t": 29, "d": 1, "m": 71, "s": 14}, {"t": 30, "d": 2, "m": 72, "s": 15}, {"t": 32, "d": 1, "m": 74, "s": 16}, {"t": 33, "d": 2, "m": 72, "s": 17}, {"t": 35, "d": 1, "m": 71, "s": 18}, {"t": 36, "d": 9, "m": 67, "s": 19}, {"t": 48, "d": 3, "m": 74, "s": 20}, {"t": 51, "d": 2, "m": 79, "s": 21}, {"t": 53, "d": 1, "m": 77, "s": 22}, {"t": 54, "d": 3, "m": 76, "s": 23}, {"t": 59, "d": 1, "m": 74, "s": 24}, {"t": 60, "d": 2, "m": 72, "s": 25}, {"t": 62, "d": 1, "m": 71, "s": 26}, {"t": 63, "d": 2, "m": 72, "s": 27}, {"t": 65, "d": 1, "m": 74, "s": 28}, {"t": 66, "d": 3, "m": 76, "s": 29}, {"t": 71, "d": 1, "m": 74, "s": 30}, {"t": 72, "d": 2, "m": 77, "s": 31}, {"t": 74, "d": 1, "m": 76, "s": 32}, {"t": 75, "d": 2, "m": 79, "s": 33}, {"t": 77, "d": 1, "m": 77, "s": 34}, {"t": 78, "d": 2, "m": 76, "s": 35}, {"t": 80, "d": 1, "m": 74, "s": 36}, {"t": 81, "d": 2, "m": 72, "s": 37}, {"t": 83, "d": 1, "m": 67, "s": 38}, {"t": 84, "d": 9, "m": 65, "s": 39}], "chords": [{"t": 0, "d": 12, "v": [41, 60, 53, 57], "name": "F"}, {"t": 12, "d": 6, "v": [43, 50, 55, 59], "name": "G"}, {"t": 18, "d": 12, "v": [41, 60, 53, 57], "name": "F"}, {"t": 30, "d": 12, "v": [36, 60, 52, 55], "name": "C"}, {"t": 42, "d": 6, "v": [40, 52, 55, 59], "name": "Em"}, {"t": 48, "d": 6, "v": [43, 50, 55, 59], "name": "G"}, {"t": 54, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 60, "d": 6, "v": [41, 60, 53, 57], "name": "F"}, {"t": 66, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 72, "d": 6, "v": [41, 60, 53, 57], "name": "F"}, {"t": 78, "d": 6, "v": [36, 60, 52, 55], "name": "C"}, {"t": 84, "d": 12, "v": [41, 60, 53, 57], "name": "F"}], "abcHead": ["X:1", "M:6/8", "L:1/8", "K:Flyd clef=treble-8"], "abcLines": [["\"F\"c3 f2 e | c3 z2 A | \"G\"B2 c d2 c | \"F\"A3 z2 G |", 11], ["F2 G A2 B | \"C\"c2 d c2 B | G6- | \"Em\"G3 z3 |", 9], ["\"G\"d3 g2 f | \"C\"e3 z2 d | \"F\"c2 B c2 d | \"C\"e3 z2 d |", 11], ["\"F\"f2 e g2 f | \"C\"e2 d c2 G | \"F\"F6- | F3 z3 |]", 9]], "lo": 65, "hi": 79}];
+  const DEFAULT_TEXT = "[Verse]\nSing, wine-dark Sea, that rocks the drowned to sleep,\nOf Baladin the farseer and his shame:\nHow he was lost upon the restless deep,\nAnd found again, and how he gained his name.\n\n[Verse]\nHigh in the peaks of Pel Regat, where snow\nEncircles rock and crowns the Maudrim stair,\nKyme, iron-browed, in ages long ago,\nWas crowned, and ruled the Dynan, stern and fair.\n\n[Verse]\nAnd Baladin, his son, whose gaze could find\nThe hawk against the sun at blazing noon;\nYet all he saw could never sate his mind,\nAnd so he sought a darker, older boon:\n\n[Verse]\nThe lore that tore the Veils when time was young.\nHe spoke its words, and all the mountains shook;\nThe elders found him in the snow, unstrung,\nAnd in his hands lay Rel Abyr's own book.\n\n[Verse]\nIn wrath they plucked the eyes of Kyme, and led\nTheir king in chains; but Baladin they cast\nInto the sea, a curse upon his head:\nTo lose his name, his kin, his home, his past.\n\n[Chorus]\nLo, brothers, lo, across the wine-dark sea:\nThe man who has no name can have no home.\nGo, brothers, go, find him who cannot see.\nRestore his name lest he forever roam.\n\n[Verse]\nThe grey surf cast him up on Ire's white sand\nWith salt upon his lips and in his eyes;\nHe toiled, unnamed, a stranger in the land,\nWhile gulls wheeled high above with mocking cries.\n\n[Verse]\nNow Barathrim of gilded tongue was lord\nOf Ire, and eyed the stranger with a smile:\n\"Unbound, my doom; but bound to me, my sword.\"\nSo thought the king, grown strong in craft and guile.\n\n[Verse]\nHe wept, \"My son, whom I have mourned for years!\nSee in our eyes the selfsame hawk-keen light;\nThe gods at last have dried a father's tears:\nWe are the same.\" And he of farthest sight\n\n[Verse]\nSaw not the lie. A man without a name\nWill take the first a stranger offers him;\nSo Baladin knelt down, and to his shame\nHe took a name of blood: Kaftoralim.\n\n[Chorus]\nLo, brothers, lo, across the wine-dark sea:\nThe man who has no name can have no home.\nGo, brothers, go, find him who cannot see.\nRestore his name lest he forever roam.\n\n[Verse]\nWhere Barathrim but looked, his son would go,\nTo Paltyne, Farport, Gathsrier, and Nane;\nAnd widows, where he laid the cities low,\nWould curse Kaftoralim above their slain.\n\n[Verse]\nAt last he led them up the Maudrim stair\nTo Pel Regat's high peaks of ice and stone.\nThe Dynan met them spear to spear; and there\nNo kinsman knew the prince, nor he his own.\n\n[Verse]\nAnd, chained among them, bent beneath the yoke,\nA blind old man, who toiled as oxen do,\nTurned up his face to hear the man who spoke.\nThat voice was life, was hope, a voice he knew.\n\n[Verse]\nAnd Baladin, who saw the farthest, saw\nAt last what was so near: within that face,\nThe iron brow, the stern, unbending jaw\nOf Kyme, his king, his father and his race.\n\n[Verse]\nThen, as the ice that binds a river breaks\nWith thunder at the coming of the spring,\nHis blood o'ercame the curse; as one who wakes,\nHe knew his name, his crime, his home, his king.\n\n[Verse]\nAnd blinded Kyme, his father, wept for joy,\nAnd, crying \"Baladin!\" with breaking voice,\nGave back the name he'd given to the boy,\nAnd bade the snows of Pel Regat rejoice.\n\n[Chorus]\nLo, brothers, lo, across the wine-dark sea:\nThe man who has no name can have no home.\nGo, brothers, go, find him who cannot see.\nRestore his name lest he forever roam.\n\n[Verse]\nHis borrowed name flung wide the gates of Ire.\nThe king, grown grey and small, held out to him\nHis crown, and wept, \"Receive this from your sire;\nYou are my child, my own Kaftoralim!\"\n\n[Verse]\nBut Baladin, unbending as the peak,\nLike granite carved without a fault within,\nGave answer, as the son of Kyme should speak:\n\"I am not yours. My name is Baladin.\"\n\n[Verse]\nThen came his wife, King Barathrim's dear ward,\nAnd stepped between them, braving all his ire;\nWith trembling hand she stayed her husband's sword,\nAnd with her tears she quenched the warlord's fire.\n\n[Verse]\nAnd he who set the very world ablaze\nLet fall his sword to strike the marbled floor.\nIt rang like bells that tell the end of days.\nIt sang that Barathrim would take no more.\n\n[Verse]\nAnd Baladin took up the crown, and reigned\nFrom Pel Regat's high snows to Ire's white shore;\nHis father sat beside him, crowned, unchained;\nAnd with his queen he mended what he tore.\n\n[Final Chorus]\nLo, brothers, lo, across the wine-dark sea:\nWhat once was lost has now been found and won.\nHo, brothers, ho; for Baladin can see,\nAnd sees himself at last: his father's son.\n\nHo, brothers, ho; for Baladin can see,\nAnd sees himself at last: his father's son.\n";
+(() => {
+  const $ = id => document.getElementById(id);
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const mod12 = x => ((x % 12) + 12) % 12;
+  const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+
+  // =====================================================================
+  // Syllables and stress (heuristic; hyphens in a word set syllables by hand)
+  // =====================================================================
+  const OVERRIDES = {
+    people: 2, heaven: 2, heavens: 2, "heav'n": 1, every: 2, "ev'ry": 2, everything: 3, everyone: 3,
+    fire: 1, fires: 1, desire: 2, desires: 2, hour: 1, hours: 1, power: 2, our: 1, flower: 2,
+    champion: 3, warrior: 2, warriors: 2, reverent: 3, wandering: 3, righteous: 2, righteousness: 3,
+    glorious: 3, glory: 2, "o'er": 1, "e'er": 1, "ne'er": 1, "'tis": 1, being: 2, lion: 2, zion: 2,
+    jehovah: 3, israel: 3, crucified: 3, firmament: 3, whose: 1, yea: 1, fury: 2, aged: 1, the: 1,
+    fathers: 2, wicked: 2, sacred: 2, naked: 2, beloved: 3, crooked: 2, somewhere: 2, evermore: 3,
+    forevermore: 4, whole: 1, blessed: 1, "blessèd": 2, idea: 3, create: 2, created: 3, creation: 3,
+    science: 2, quiet: 2, poem: 2, poet: 2, hundred: 2, dying: 2, beyond: 2, iron: 2, sire: 1,
+    eyes: 1, ire: 1, ayre: 1, gathsrier: 3, paltyne: 2, maudrim: 2, crying: 2, marbled: 2, kaftoralim: 4, baladin: 3,
+    barathrim: 3, unbending: 3, prayer: 1, prayers: 1, toward: 1, towards: 1, christ: 1, lord: 1,
+  };
+  const FUNCTION_WORDS = new Set(("a an the and or but nor of to in on at by for from with as is was be are were am his her its my " +
+    "your our their him them me us it he she we they that which who whom whose than so if shall will would can could has have had " +
+    "do does did should may might must there these those this o thy thee thine ye upon unto into through 'tis i").split(" "));
+  const STRESS_LAST = /(?:ee|eer|oon|ique|ade|ain|ose|ere)$/;
+  const PREFIXES = /^(?:a|be|de|re|un|en|em|in|im|con|com|for|fore|per|pre|pro|ab|ad|ob|sub|dis|mis|with|up|al|ac|ap|as|at)(?=[a-z])/;
+
+  function sylCount(word) {
+    let w = word.toLowerCase().replace(/’/g, "'").replace(/^'+|'+$/g, "");
+    if (!w) return 0;
+    if (w in OVERRIDES) return OVERRIDES[w];
+    let base = w.endsWith("'s") ? w.slice(0, -2) : w;
+    if (base in OVERRIDES) return OVERRIDES[base];
+    w = base.replace(/'/g, "");
+    const groups = w.match(/[aeiouyàèéìòù]+/g) || [];
+    let n = groups.length;
+    if (/^y[aeiou]/.test(w)) n--;
+    if (w.endsWith("e") && n > 1 && !/[^aeiou]le$/.test(w) && !/[^gq]ue$/.test(w)) n--;
+    if (/[^aeiouy]ed$/.test(w) && n > 1 && !/[td]ed$/.test(w)) n--;
+    else if (/[gq]ues$/.test(w) && n > 1) n--;
+    else if (/[^aeiouy]es$/.test(w) && n > 1 && !/(s|x|z|ch|sh|c|g)es$/.test(w) && !/[^aeiou]les$/.test(w)) n--;
+    n += (w.match(/(?<=[^aeiousctx])(ia|io|eo|iu)(?=[^aeiou]|$)/g) || []).length;
+    n += (w.match(/(?<=[^aeiougq])ua(?=[^aeiou]|$)/g) || []).length;
+    return Math.max(1, n);
+  }
+  const CLUSTERS = new Set(["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "sc", "sk", "sp", "st", "sw", "tw", "wr", "th", "sh", "ch", "ph", "wh", "qu"]);
+  // Split a word's letters into n chunks at sensible places.
+  function splitWord(word, n) {
+    if (n <= 1) return [word];
+    const lw = word.toLowerCase();
+    const isV = (i) => /[aeiouàèéìòù]/.test(lw[i]) || (lw[i] === "y" && i > 0 && !/[aeiou]/.test(lw[i + 1] || ""));
+    let groups = [];
+    for (let i = 0; i < lw.length; i++) {
+      if (isV(i)) { const s = i; while (i + 1 < lw.length && isV(i + 1)) i++; groups.push([s, i + 1]); }
+    }
+    while (groups.length > n) { const g = groups.pop(); groups[groups.length - 1][1] = g[1]; }
+    while (groups.length < n) {
+      const k = groups.findIndex(g => g[1] - g[0] >= 2);
+      if (k < 0) break;
+      const g = groups[k]; groups.splice(k, 1, [g[0], g[0] + 1], [g[0] + 1, g[1]]);
+    }
+    if (groups.length < n) {
+      // y between vowels (crying, praying) still starts a syllable
+      const g2 = []; for (let i = 0; i < lw.length; i++) { if (/[aeiouyàèéìòù]/.test(lw[i])) { const s0 = i; while (i + 1 < lw.length && /[aeiouàèéìòù]/.test(lw[i + 1]) && lw[i] !== "y") i++; g2.push([s0, i + 1]); } }
+      if (g2.length === n) groups = g2;
+    }
+    if (groups.length < n) {
+      const size = Math.max(1, Math.round(word.length / n)), out = [];
+      for (let k = 0; k < n; k++) out.push(word.slice(k * size, k === n - 1 ? undefined : (k + 1) * size));
+      return out.filter(Boolean).length === n ? out : [word];
+    }
+    if (groups.length < 2) return [word];
+    const cuts = [];
+    for (let k = 0; k + 1 < groups.length; k++) {
+      const a = groups[k][1], b = groups[k + 1][0], c = lw.slice(a, b).replace(/'/g, "");
+      let cut;
+      if (b === a) cut = b;
+      else if (c.length === 1) cut = a;
+      else if (CLUSTERS.has(c.slice(-2)) && !(c.length === 2 && /^(st|sk|sp)$/.test(c))) cut = b - 2;
+      else if (CLUSTERS.has(c.slice(0, 2))) cut = a + 2;
+      else cut = a + 1;
+      cuts.push(Math.max(a, Math.min(b, cut)));
+    }
+    const out = []; let p = 0;
+    cuts.forEach(c => { out.push(word.slice(p, c)); p = c; });
+    out.push(word.slice(p));
+    const clean = out.filter(Boolean);
+    return clean.length === n ? clean : [word];
+  }
+  function stressOf(core, n) {
+    const w = core.toLowerCase().replace(/’/g, "'");
+    if (n === 1) return [FUNCTION_WORDS.has(w) ? 0.25 : 0.85];
+    const out = Array(n).fill(0.1);
+    let p = 0;
+    if (/(tion|sion|cian|tious|cious)s?$/.test(w)) p = n - 2;
+    else if (/(ity|ical|ically)$/.test(w) && n >= 3) p = n - 3;
+    else if (STRESS_LAST.test(w) && n === 2) p = 1;
+    else if (PREFIXES.test(w) && n >= 2 && !/^(ever|every|under|over|after|enter|evil|any|many|open|other|mother|father|brother|altar|anger|answer|army|arrow|ashes|honor|ancient|angel|alien)/.test(w)) p = 1;
+    out[Math.max(0, Math.min(n - 1, p))] = 1;
+    if (n >= 4) out[(p + 2) % n] = Math.max(out[(p + 2) % n], 0.45);
+    return out;
+  }
+  // One lyric line → syllables {d: display, a: ABC text, w: stress weight, sp: space after}
+  function analyzeLine(text) {
+    const syls = [];
+    text.split(/\s+/).filter(Boolean).forEach(tok => {
+      const parts = tok.split(/-(?=.)/);
+      parts.forEach((part, pi) => {
+        const m = part.match(/^([^A-Za-zÀ-ÿ']*)([A-Za-zÀ-ÿ'’]+)([^A-Za-zÀ-ÿ]*)$/);
+        const lastPart = pi === parts.length - 1;
+        if (!m) { if (syls.length && part) syls[syls.length - 1].d += part; return; }
+        const [, lead, core, trail] = m;
+        const n = sylCount(core) || 1;
+        const chunks = splitWord(core, n), st = stressOf(core, chunks.length);
+        chunks.forEach((ch, ci) => {
+          const first = ci === 0, last = ci === chunks.length - 1;
+          syls.push({
+            d: (first ? lead : "") + ch + (last ? trail : "") + (last && !lastPart ? "-" : ""),
+            a: (ch).replace(/[~_*|\\"]/g, ""),
+            w: st[ci],
+            sp: last && lastPart,
+            join: !last || !lastPart,
+          });
+        });
+      });
+    });
+    return { text, syls };
+  }
+  // Fit a regular meter to a stanza: binary (iambic/trochaic) or ternary (anapest/dactyl/amphibrach), phase per line.
+  function fitMeter(st) {
+    const fam = period => {
+      let cost = 0;
+      const lines = st.lines.map(l => {
+        let best = null;
+        for (let ph = 0; ph < period; ph++) {
+          let c = 0;
+          const pat = l.syls.map((s, i) => ((i + ph) % period === period - 1 ? 1 : 0));
+          // never start a line with 3 weak syllables; forbid lines with no strong syllable
+          if (!pat.includes(1)) c += 5;
+          l.syls.forEach((s, i) => { c += pat[i] ? (1 - s.w) : s.w; });
+          if (!best || c < best.c) best = { c, pat, ph };
+        }
+        cost += best.c; return best;
+      });
+      return { cost, lines };
+    };
+    const b = fam(2), t = fam(3);
+    const pick = t.cost < b.cost * 0.85 ? { kind: "ternary", ...t } : { kind: "binary", ...b };
+    st.meter = pick.kind;
+    st.lines.forEach((l, i) => { l.pat = pick.lines[i].pat; });
+    const firstStrong = st.lines.map(l => l.pat.indexOf(1));
+    const avg = firstStrong.reduce((a, b) => a + b, 0) / firstStrong.length;
+    st.meterName = pick.kind === "binary" ? (avg >= 0.5 ? "iambic" : "trochaic") : (avg >= 1.5 ? "anapestic" : avg >= 0.5 ? "amphibrachic" : "dactylic");
+    const totalCost = pick.lines.reduce((a, x) => a + x.c, 0), nSyl = st.lines.reduce((a, l) => a + l.syls.length, 0);
+    st.fit = nSyl ? 1 - totalCost / nSyl : 1;
+  }
+  function parseLyrics(text) {
+    const stanzas = []; let label = null, cur = null, pendingHeader = false;
+    const counts = {};
+    const nameFor = lab => { const base = lab || "Stanza"; counts[base] = (counts[base] || 0) + 1; return /\d/.test(base) ? base : base + " " + counts[base]; };
+    const repeatOf = lab => { for (let i = stanzas.length - 1; i >= 0; i--) if (stanzas[i].base === lab) return stanzas[i]; return null; };
+    const flushBare = () => { if (pendingHeader && label) { const r = repeatOf(label); if (r) stanzas.push({ ...r, name: nameFor(label), repeat: true }); } pendingHeader = false; };
+    text.replace(/\r/g, "").split("\n").forEach(raw => {
+      const s = raw.trim();
+      const m = s.match(/^\*{0,2}\[(.+?)\]\*{0,2}\s*(\(.*\))?$/);
+      if (m) { flushBare(); label = m[1].trim(); cur = null; pendingHeader = true; return; }
+      if (!s) { cur = null; return; }
+      if (s.startsWith("<!--") || /^#\s/.test(s)) return;
+      if (!cur) { cur = { base: label || "Stanza", name: nameFor(label), lines: [] }; stanzas.push(cur); label = null; pendingHeader = false; }
+      cur.lines.push(analyzeLine(s));
+    });
+    flushBare();
+    stanzas.forEach(st => { if (!st.repeat) { st.shape = st.lines.map(l => l.syls.length); fitMeter(st); } });
+    return stanzas;
+  }
+  // Flattened syllables of a stanza for display/ABC.
+  function stanzaSyls(st) {
+    const out = [], lineOf = [];
+    st.lines.forEach((l, li) => l.syls.forEach(s => { out.push(s); lineOf.push(li); }));
+    return { syls: out, lineOf };
+  }
+
+  // =====================================================================
+  // Keys, spelling, ABC writing
+  // =====================================================================
+  const LET = "CDEFGAB", NAT = [0, 2, 4, 5, 7, 9, 11];
+  const MODES = { "": ["Major", 0], m: ["Minor", -3], dor: ["Dorian", -2], phr: ["Phrygian", -4], lyd: ["Lydian", 1], mix: ["Mixolydian", -1] };
+  const MAJ5 = { C: 0, G: 1, D: 2, A: 3, E: 4, B: 5, F: -1 };
+  function keyInfo(t) {
+    const k = t.abcHead.find(h => h.startsWith("K:")).slice(2).split(" ")[0];
+    const [, L, acc, mode] = k.match(/^([A-G])([#b]?)(.*)$/);
+    const a = acc === "#" ? 1 : acc === "b" ? -1 : 0;
+    return { f0: MAJ5[L] + 7 * a + MODES[mode][1], tonic: mod12(NAT[LET.indexOf(L)] + a), mode };
+  }
+  function fifthsFor(f0, sh) { let f = mod12(f0 + 7 * sh); return f > 6 ? f - 12 : f; }
+  function keyAlts(f) {
+    const al = { C: 0, D: 0, E: 0, F: 0, G: 0, A: 0, B: 0 };
+    for (let i = 0; i < Math.abs(f); i++) al[(f > 0 ? "FCGDAEB" : "BEADGCF")[i]] = f > 0 ? 1 : -1;
+    return al;
+  }
+  function inKey(m, f) { const al = keyAlts(f); return [...LET].some((L, i) => mod12(NAT[i] + al[L]) === mod12(m)); }
+  // lt = the leading tone's pitch class: spelled sharp even in flat keys (C♯ in D minor).
+  function spell(m, f, lt) {
+    const al = keyAlts(f), pc = mod12(m);
+    const mk = (i, a) => ({ i, L: LET[i], a, oct: Math.round((m - a - NAT[i]) / 12) - 1 });
+    for (let i = 0; i < 7; i++) if (mod12(NAT[i] + al[LET[i]]) === pc) return mk(i, al[LET[i]]);
+    for (let i = 0; i < 7; i++) if (NAT[i] === pc) return mk(i, 0);
+    for (const a of (f < 0 && pc !== lt ? [-1, 1] : [1, -1])) for (let i = 0; i < 7; i++) if (mod12(NAT[i] + a) === pc) return mk(i, a);
+  }
+  const accSym = a => a > 0 ? "♯".repeat(a) : a < 0 ? "♭".repeat(-a) : "";
+  function keyLabel(t, sh) {
+    const ki = keyInfo(t), f = fifthsFor(ki.f0, sh), sp = spell(60 + ki.tonic + sh, f);
+    return { name: sp.L + accSym(sp.a) + " " + MODES[ki.mode][0], abc: sp.L + (sp.a > 0 ? "#" : sp.a < 0 ? "b" : "") + ki.mode, f };
+  }
+  function abcPitch(sp) {
+    const L = sp.oct >= 5 ? sp.L.toLowerCase() : sp.L;
+    return L + (sp.oct >= 6 ? "'".repeat(sp.oct - 5) : sp.oct <= 3 ? ",".repeat(4 - sp.oct) : "");
+  }
+  function chordName(name, sh, f) {
+    if (!sh) return name;
+    const m = name.match(/^([A-G])([#b]?)(.*)$/); if (!m) return name;
+    const [, L, acc, rest] = m;
+    const pc = NAT[LET.indexOf(L)] + (acc === "#" ? 1 : acc === "b" ? -1 : 0) + sh;
+    const sp = spell(60 + mod12(pc), f);
+    return sp.L + (sp.a > 0 ? "#" : sp.a < 0 ? "b" : "") + rest;
+  }
+  const barLen = t => { const [n, d] = t.abcHead.find(h => h.startsWith("M:")).slice(2).split("/").map(Number); return n * 8 / d; };
+  // Bar boundaries: an optional partial pickup bar [0, pickup), then full bars.
+  function barStarts(t) {
+    const bar = barLen(t), pk = t.pickup || 0, out = [0];
+    for (let b = pk || bar; b < t.total; b += bar) out.push(b);
+    return out;
+  }
+  function lineBarsFromOnsets(t, lineOnsets) {
+    const starts = barStarts(t), idxAt = x => { let k = 0; while (k + 1 < starts.length && starts[k + 1] <= x) k++; return k; };
+    const first = lineOnsets.map((x, i) => i === 0 ? 0 : (starts.includes(x) ? idxAt(x) : idxAt(x) + 1));
+    return first.map((b, i) => Math.max(1, (i + 1 < first.length ? first[i + 1] : starts.length) - b));
+  }
+  // Write ABC from notes (used for composed tunes, edits, or a moved key).
+  function genLines(t, sh) {
+    const ki = keyInfo(t), f = fifthsFor(ki.f0, sh), al = keyAlts(f), lt = mod12(ki.tonic + sh - 1);
+    const total = t.total, starts = barStarts(t), startSet = new Set(starts);
+    const ns = t.notes.slice().sort((a, b) => a.t - b.t), onsets = new Set(ns.map(n => n.t));
+    const segs = []; let pos = 0;
+    ns.forEach(n => { if (n.t > pos) segs.push({ t: pos, d: n.t - pos, m: null }); segs.push({ t: n.t, d: n.d, m: n.m + sh }); pos = n.t + n.d; });
+    if (pos < total) segs.push({ t: pos, d: total - pos, m: null });
+    const restCuts = starts.concat(t.chords.map(c => c.t));
+    const chordAt = new Map(t.chords.map(c => [c.t, chordName(c.name, sh, f)]));
+    const pieces = [];
+    segs.forEach(sg => {
+      let a = sg.t; const end = sg.t + sg.d;
+      (sg.m === null ? restCuts : starts).filter(x => x > a && x < end).sort((x, y) => x - y).concat([end]).forEach(b => {
+        let d = b - a;
+        while (d > 0) { const v = [12, 8, 6, 4, 3, 2, 1].find(v => v <= d); pieces.push({ t: a, d: v, m: sg.m }); a += v; d -= v; }
+      });
+    });
+    pieces.forEach((p, i) => { const q = pieces[i + 1]; p.tie = p.m !== null && q && q.m === p.m && q.t === p.t + p.d && !onsets.has(q.t); });
+    const breaks = []; let acc0 = 0; (t.lineBars || []).forEach(n => { acc0 += n; breaks.push(acc0); });
+    const lines = []; let cur = "", cnt = 0, barIdx = 0, acc = {};
+    pieces.forEach(p => {
+      if (p.t > 0 && startSet.has(p.t)) {
+        cur += " |"; acc = {}; barIdx++;
+        if (breaks.includes(barIdx)) { lines.push([cur.trim(), cnt]); cur = ""; cnt = 0; }
+      }
+      let tok = " ";
+      if (chordAt.has(p.t)) { tok += '"' + chordAt.get(p.t) + '"'; chordAt.delete(p.t); }
+      if (p.m === null) tok += "z";
+      else {
+        const sp = spell(p.m, f, lt), k = sp.L + sp.oct, now = k in acc ? acc[k] : al[sp.L];
+        if (sp.a !== now) { tok += sp.a === 0 ? "=" : sp.a > 0 ? "^".repeat(sp.a) : "_".repeat(-sp.a); acc[k] = sp.a; }
+        tok += abcPitch(sp);
+        if (onsets.has(p.t)) cnt++;
+      }
+      tok += p.d === 1 ? "" : p.d;
+      if (p.tie) tok += "-";
+      cur += tok;
+    });
+    if (cur.trim()) lines.push([(cur + " |]").trim(), cnt]);
+    else if (lines.length) lines[lines.length - 1][0] = lines[lines.length - 1][0].replace(/\|$/, "|]");
+    return lines;
+  }
+
+  // =====================================================================
+  // The built-in composer: rhythm from the stanza's stresses, then harmony, then melody
+  // =====================================================================
+  const SCALES = {
+    ion: [0, 2, 4, 5, 7, 9, 11], dor: [0, 2, 3, 5, 7, 9, 10], phr: [0, 1, 3, 5, 7, 8, 10],
+    lyd: [0, 2, 4, 6, 7, 9, 11], mix: [0, 2, 4, 5, 7, 9, 10], aeo: [0, 2, 3, 5, 7, 8, 10], harm: [0, 2, 3, 5, 7, 8, 11],
+  };
+  const KMODE = { ion: "", dor: "dor", phr: "phr", lyd: "lyd", mix: "mix", aeo: "m", harm: "m" };
+  const MODE_NAME = { ion: "major", dor: "Dorian", phr: "Phrygian", lyd: "Lydian", mix: "Mixolydian", aeo: "minor", harm: "harmonic minor" };
+  // M: meter; B: eighths per beat (one stressed syllable per beat); bpb: beats per bar;
+  // sub: how a beat splits for 2 or 3 syllables; pu: pickup note length; hold: beats added at a line end.
+  const STYLES = [
+    { id: "hymn", name: "Hearth Hymn", M: "4/4", B: 4, bpb: 2, sub: { 2: [2, 2], 3: [2, 1, 1] }, pu: 2, hold: 1, breath: 0, mode: "ion", tonic: 67, home: 2, peak: 6, low: -3, high: 7, leap: .12, rep: .15, motif: .5, hr: 2, bpm: 84, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Plain four-square hymn: one note a syllable, stepwise, chords on every half bar." },
+    { id: "ballad", name: "Sea Ballad", M: "6/8", B: 3, bpb: 2, sub: { 2: [2, 1], 3: [1, 1, 1] }, pu: 1, hold: 1, breath: 2, mode: "dor", tonic: 62, home: 4, peak: 9, low: -1, high: 10, leap: .25, rep: .1, motif: .8, hr: 1, bpm: 62, tempoBeat: 3, beatName: "dotted-quarter",
+      blurb: "Rocking 6/8 in Dorian, long held line ends, a hook that comes back a step higher." },
+    { id: "waltz", name: "Border Waltz", M: "3/4", B: 6, bpb: 1, sub: { 2: [4, 2], 3: [2, 2, 2] }, pu: 2, hold: 1, breath: 2, mode: "mix", tonic: 62, home: 4, peak: 9, low: -1, high: 10, leap: .25, rep: .1, motif: .6, hr: 1, bpm: 112, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Lilting 3/4 with the flat seventh of Mixolydian. Climbs to the octave in the third line." },
+    { id: "shanty", name: "Capstan Shanty", M: "4/4", B: 4, bpb: 2, sub: { 2: [3, 1], 3: [2, 1, 1] }, pu: 1, hold: 1, breath: 2, mode: "mix", tonic: 57, home: 8, peak: 11, low: 4, high: 12, leap: .2, rep: .35, motif: .7, hr: 1, bpm: 96, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Dotted work-song drive with repeated notes, made for hauling and stamping." },
+    { id: "lament", name: "Highland Lament", M: "3/4", B: 6, bpb: 1, sub: { 2: [4, 2], 3: [2, 2, 2] }, pu: 2, hold: 2, breath: 2, mode: "aeo", tonic: 62, home: 3, peak: 9, low: -2, high: 10, leap: .3, rep: .05, motif: .5, hr: 1, bpm: 84, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Slow minor waltz with wide climbs and long holds at every line end." },
+    { id: "anthem", name: "Anthem", M: "4/4", B: 4, bpb: 2, sub: { 2: [2, 2], 3: [2, 1, 1] }, pu: 2, hold: 1, breath: 2, mode: "ion", tonic: 62, home: 4, peak: 9, low: -1, high: 10, leap: .38, rep: .1, motif: .7, hr: 2, bpm: 92, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Broad major-key singalong with bold leaps and a high climax." },
+    { id: "jig", name: "Deck Jig", M: "6/8", B: 3, bpb: 2, sub: { 2: [2, 1], 3: [1, 1, 1] }, pu: 1, hold: 1, breath: 1, mode: "ion", tonic: 67, home: 2, peak: 6, low: -3, high: 7, leap: .3, rep: .15, motif: .7, hr: 1, bpm: 104, tempoBeat: 3, beatName: "dotted-quarter",
+      blurb: "Quick, bright 6/8 for a ship's deck or a pub. Easy to clap to." },
+    { id: "march", name: "War March", M: "4/4", B: 4, bpb: 2, sub: { 2: [3, 1], 3: [2, 1, 1] }, pu: 1, hold: 1, breath: 2, mode: "dor", tonic: 64, home: 2, peak: 7, low: -2, high: 8, leap: .2, rep: .3, motif: .8, hr: 1, bpm: 100, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Dotted marching rhythm in Dorian, tight range, built to be shouted by a column of men." },
+    { id: "chant", name: "Host Chant", M: "4/4", B: 4, bpb: 2, sub: { 2: [2, 2], 3: [2, 1, 1] }, pu: 2, hold: 1, breath: 2, mode: "aeo", tonic: 64, home: 1, peak: 5, low: -2, high: 6, leap: .08, rep: .4, motif: .9, hr: 1, bpm: 80, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Low, narrow and droning, close to a monotone. Lifts only for the last line." },
+    { id: "air", name: "Slow Air", M: "4/4", B: 4, bpb: 2, sub: { 2: [3, 1], 3: [2, 1, 1] }, pu: 2, hold: 2, breath: 2, mode: "aeo", tonic: 64, home: 3, peak: 9, low: -2, high: 9, leap: .4, rep: .05, motif: .4, hr: 1, bpm: 60, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Solo-voice lament with wide intervals and long holds. Best sung alone, then joined." },
+    { id: "chorale", name: "Chorale", M: "4/4", B: 4, bpb: 2, sub: { 2: [2, 2], 3: [2, 1, 1] }, pu: 2, hold: 1, breath: 0, mode: "harm", tonic: 62, home: 3, peak: 8, low: -1, high: 9, leap: .1, rep: .1, motif: .4, hr: 2, bpm: 72, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Stepwise, hymn-like minor with a sharpened leading tone pulling home." },
+    { id: "veils", name: "Dark Veils", M: "4/4", B: 4, bpb: 2, sub: { 2: [2, 2], 3: [2, 1, 1] }, pu: 2, hold: 1, breath: 2, mode: "phr", tonic: 64, home: 2, peak: 6, low: -1, high: 7, leap: .15, rep: .25, motif: .7, hr: 1, bpm: 72, tempoBeat: 2, beatName: "quarter-note",
+      blurb: "Phrygian and narrow, leaning on the half step above the tonic. Grave and strange." },
+  ];
+  function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const pickW = (r, items) => { const tot = items.reduce((a, x) => a + x[1], 0); let x = r() * tot; for (const [v, w] of items) { if ((x -= w) <= 0) return v; } return items[items.length - 1][0]; };
+
+  function rhythmFor(st, S) {
+    const bar = S.B * S.bpb;
+    const events = []; // {s, t, d, strong, line}
+    const lineOnsets = [];
+    const pk0 = st.lines[0].pat.indexOf(1);
+    const pickupLen = Math.max(0, pk0) * S.pu;
+    let D = pickupLen; // first downbeat
+    let s = 0;
+    st.lines.forEach((l, li) => {
+      const pat = l.pat, first = Math.max(0, pat.indexOf(1));
+      // pickups sit just before the downbeat
+      const pick = [];
+      for (let i = 0; i < first; i++) pick.push(s + i);
+      pick.forEach((si, k) => events.push({ s: si, t: D - (first - k) * S.pu, d: S.pu, strong: false, line: li }));
+      lineOnsets.push(first ? D - first * S.pu : D);
+      // beats: each strong syllable starts a beat, following weak ones share it
+      const beats = [];
+      for (let i = first; i < pat.length; i++) { if (pat[i] || !beats.length) beats.push([i]); else beats[beats.length - 1].push(i); }
+      beats.forEach((b, bi) => {
+        const T = D + bi * S.B;
+        let durs = b.length === 1 ? [S.B] : (S.sub[b.length] || Array(b.length).fill(0).map((_, k) => k < b.length - 1 ? 1 : S.B - (b.length - 1)));
+        if (durs.reduce((a, x) => a + x, 0) !== S.B) durs = Array(b.length).fill(Math.max(1, Math.floor(S.B / b.length)));
+        let x = T;
+        b.forEach((i, k) => { events.push({ s: s + i, t: x, d: durs[k], strong: k === 0, line: li }); x += durs[k]; });
+      });
+      // line end: hold the last note, round up to a bar, leave room for the next line's pickups
+      const nb = beats.length + S.hold;
+      let E = D + Math.ceil(nb / S.bpb) * bar;
+      const next = st.lines[li + 1];
+      const nextPick = next ? Math.max(0, next.pat.indexOf(1)) * S.pu : 0;
+      const last = events[events.length - 1];
+      while (E - nextPick - last.t < S.B) E += bar;
+      let end = E - nextPick;
+      if (S.breath && end - last.t >= S.B + S.breath + 1) end -= S.breath;
+      last.d = end - last.t;
+      last.end = true;
+      s += pat.length;
+      D = E;
+    });
+    return { events, total: D, pickup: pickupLen, bar, lineOnsets };
+  }
+  function triad(scale, r) {
+    const pcs = [0, 2, 4].map(k => scale[(r + k) % 7] + 12 * Math.floor((r + k) / 7));
+    const i1 = pcs[1] - pcs[0], i2 = pcs[2] - pcs[0];
+    const q = i1 === 4 && i2 === 7 ? "" : i1 === 3 && i2 === 7 ? "m" : i1 === 3 && i2 === 6 ? "dim" : "aug";
+    return { r, pcs, q };
+  }
+  function harmonyFor(rh, st, S, r) {
+    const scale = SCALES[S.mode], chords = [];
+    const ok = [0, 1, 2, 3, 4, 5, 6].filter(d => { const q = triad(scale, d).q; return q === "" || q === "m"; });
+    const has = d => ok.includes(d);
+    const domToI = [has(4) && triad(scale, 4).q === "" ? [4, 5] : null, has(6) ? [6, 3] : null, has(3) ? [3, 2] : null, has(4) ? [4, 2] : null, has(1) && S.mode === "phr" ? [1, 4] : null].filter(Boolean);
+    const span = S.B * S.bpb / S.hr;
+    const nLines = st.lines.length;
+    // cadence per line: last line → I, others alternate half (V or modal substitute) and full/relative
+    const cad = st.lines.map((_, li) => {
+      if (li === nLines - 1) return 0;
+      if (li % 2 === 0) return pickW(r, [[has(4) ? 4 : 6, 3], [has(3) ? 3 : 4, 1], [has(6) ? 6 : 4, S.mode === "ion" ? .2 : 1]]);
+      return pickW(r, [[0, 2], [has(5) ? 5 : 0, .7], [has(2) ? 2 : 0, .4]]);
+    });
+    const slots = [];
+    for (let t = rh.pickup; t < rh.total; t += span) slots.push(t);
+    const slotAt = x => Math.max(0, Math.floor((x - rh.pickup) / span));
+    // each line's cadence chord holds from its last note until the next line's first downbeat
+    const evsOf = li => rh.events.filter(e => e.line === li);
+    const cadFrom = st.lines.map((_, li) => slotAt(evsOf(li).slice(-1)[0].t));
+    const cadTo = st.lines.map((_, li) => li + 1 < nLines ? slotAt(evsOf(li + 1).find(e => e.strong).t) : slots.length);
+    let prev = 0;
+    slots.forEach((t, k) => {
+      const li = cadFrom.findIndex((c, i) => k >= c && k < cadTo[i]);
+      const pre = cadFrom.findIndex(c => c === k + 1);
+      let d;
+      if (li >= 0) d = cad[li];
+      else if (k === 0) d = 0;
+      else if (pre >= 0) d = cad[pre] === 0 ? pickW(r, domToI) : pickW(r, [[0, 2], [has(3) ? 3 : 0, 1.5], [has(1) ? 1 : 0, 1]]);
+      else {
+        const cand = ok.map(c => {
+          const step = (c - prev + 7) % 7;
+          let w = c === 0 ? 1.6 : 1;
+          if (step === 3) w *= 2.2; else if (step === 4) w *= 1.5; else if (step === 1 || step === 6) w *= 1.2; else if (step === 0) w *= .35;
+          if (S.mode === "mix" && c === 6) w *= 1.8;
+          if (S.mode === "dor" && c === 3) w *= 1.6;
+          if (S.mode === "phr" && c === 1) w *= 2;
+          if (c === 2 && S.mode === "ion") w *= .5;
+          return [c, w];
+        });
+        d = pickW(r, cand);
+      }
+      if (chords.length && chords[chords.length - 1].deg === d) chords[chords.length - 1].d += span;
+      else chords.push({ t, d: span, deg: d });
+      prev = d;
+    });
+    const last = chords[chords.length - 1]; last.d = rh.total - last.t;
+    return { chords, cad };
+  }
+  function melodyFor(rh, harm, st, S, r) {
+    const scale = SCALES[S.mode];
+    const d7 = d => ((d % 7) + 7) % 7;
+    const pitch = deg => S.tonic + 12 * Math.floor(deg / 7) + scale[d7(deg)];
+    const chordAt = t => { if (t < rh.pickup) return null; let c = harm.chords[0]; for (const x of harm.chords) if (x.t <= t) c = x; return c; };
+    const toneSet = c => c ? [c.deg, c.deg + 2, c.deg + 4].map(d7) : [0, 2, 4];
+    const clamp = d => Math.max(S.low, Math.min(S.high, Math.round(d)));
+    const nLines = st.lines.length;
+    const peakLine = nLines >= 3 ? Math.min(nLines - 1, Math.floor(nLines * 0.6)) : nLines - 1;
+    const plan = st.lines.map((_, li) => ({
+      start: S.home + (li === 0 ? 0 : Math.round((r() - .3) * 2)),
+      peak: li === peakLine ? S.peak : S.home + 1 + Math.round((r() - .5) * 2),
+      end: harm.cad[li],
+    }));
+    const contour = (p, x, li) => {
+      const endH = li === nLines - 1 ? (S.home <= 4 ? 0 : 7) : p.end + 7 * Math.round((S.home - p.end) / 7);
+      return x < 0.6 ? p.start + (p.peak - p.start) * (x / 0.6) : p.peak + (endH - p.peak) * ((x - 0.6) / 0.4);
+    };
+    const out = rh.events.map(e => ({ ...e, deg: undefined }));
+    const lineEvents = st.lines.map((_, li) => out.filter(e => e.line === li));
+    const motifSrc = {};
+    let prev = S.home;
+    lineEvents.forEach((evs, li) => {
+      const p = plan[li], n = evs.length, isLast = li === nLines - 1, half = Math.ceil(n / 2);
+      const sig = evs.slice(0, half).map(e => e.d + (e.strong ? "s" : "w")).join(",");
+      const src = motifSrc[sig];
+      const useMotif = src !== undefined && r() < S.motif;
+      if (src === undefined) motifSrc[sig] = li;
+      const shiftM = useMotif ? (li === peakLine ? 2 : pickW(r, [[0, 1], [2, 1], [-1, .4]])) : 0;
+      const copy = k => useMotif && k < half && lineEvents[src][k] ? clamp(lineEvents[src][k].deg + shiftM) : undefined;
+      // 1. skeleton: stressed notes and the line's last note
+      let last1 = prev, last2 = null, dir = 0;
+      evs.forEach((e, k) => {
+        if (!(e.strong || k === n - 1)) return;
+        const x = n > 1 ? k / (n - 1) : 1, target = contour(p, x, li), tones = toneSet(chordAt(e.t));
+        let deg = copy(k);
+        if (deg === undefined && k === n - 1) {
+          if (isLast) deg = [0, 7, 14, -7].filter(d => d >= S.low && d <= S.high).reduce((b, d) => Math.abs(d - last1) < Math.abs(b - last1) ? d : b, S.home <= 4 ? 0 : 7);
+          else {
+            const cands = []; for (let d = S.low; d <= S.high; d++) if (tones.includes(d7(d))) cands.push(d);
+            const want = d7(p.end);
+            deg = cands.reduce((b, d) => {
+              const sc = Math.abs(d - target) + .5 * Math.abs(d - last1) + (d7(d) === want ? 0 : 1.2);
+              const sb = Math.abs(b - target) + .5 * Math.abs(b - last1) + (d7(b) === want ? 0 : 1.2);
+              return sc < sb ? d : b;
+            }, cands[0]);
+          }
+        } else if (deg === undefined) {
+          const maxLeap = r() < S.leap ? 5 : 3;
+          let best = null, bs = 1e9;
+          for (let d = S.low; d <= S.high; d++) {
+            if (!tones.includes(d7(d)) || Math.abs(d - last1) > maxLeap) continue;
+            let sc = Math.abs(d - target) + .35 * Math.abs(d - last1) + r() * .8;
+            if (d === last1) sc += r() < S.rep ? -.4 : 1.3;
+            if (last2 !== null && d === last2 && d !== last1) sc += .9;           // no see-saw
+            if (dir && Math.sign(d - last1) === -dir && Math.abs(d - last1) >= 3) sc += .6; // keep momentum
+            if (sc < bs) { bs = sc; best = d; }
+          }
+          deg = best ?? last1;
+        }
+        deg = clamp(deg);
+        if (deg !== last1) dir = Math.sign(deg - last1);
+        e.deg = deg; last2 = last1; last1 = deg;
+      });
+      // 2. pickups and weak syllables fill the gaps between skeleton notes
+      for (let k = 0; k < n; k++) {
+        if (evs[k].deg !== undefined) continue;
+        let j = k; while (j < n && evs[j].deg === undefined) j++;
+        const L = j - k, B = evs[j].deg, A = k === 0 ? null : evs[k - 1].deg;
+        const run = [];
+        for (let q = 0; q < L; q++) { const c = copy(k + q); if (c !== undefined) run.push(c); }
+        if (run.length !== L) {
+          run.length = 0;
+          if (A === null) {
+            // pickups: rise into the first stressed note, sometimes from a fourth below
+            if (L === 1) run.push(r() < .35 && pitch(B) - pitch(B - 3) === 5 ? B - 3 : B - 1);
+            else for (let q = 0; q < L; q++) run.push(B - (L - q));
+          } else if (L === 1) {
+            const gap = B - A;
+            if (Math.abs(gap) >= 2) run.push(A + Math.sign(gap) * Math.max(1, Math.floor(Math.abs(gap) / 2)));
+            else if (gap === 0) run.push(r() < S.rep ? A : A + (r() < .65 ? 1 : -1));
+            else run.push(r() < .5 ? A : B + gap);
+          } else {
+            let x = A;
+            for (let q = 0; q < L; q++) {
+              const left = L - q, gap = B - x;
+              if (Math.abs(gap) > left) x += Math.sign(gap);
+              else if (gap === 0 && q === 0) x += (r() < .6 ? 1 : -1);
+              else if (Math.abs(gap) === left) x += Math.sign(gap);
+              else x = r() < S.rep ? x : x + (gap ? Math.sign(gap) : (r() < .5 ? 1 : -1));
+              run.push(x);
+            }
+          }
+        }
+        run.forEach((d, q) => { evs[k + q].deg = clamp(d); });
+        k = j;
+      }
+      // the final note is approached by step where the line allows it
+      if (isLast && n >= 3) {
+        const f = evs[n - 1].deg, pv = evs[n - 2], before = evs[n - 3].deg;
+        if (Math.abs(pv.deg - f) > 2 && !pv.strong) {
+          const opts = [f + 1, f - 1].filter(x => Math.abs(x - before) <= 2);
+          if (opts.length) pv.deg = opts[0];
+        }
+      }
+      prev = evs[n - 1].deg;
+    });
+    out.forEach(e => { e.m = pitch(e.deg); });
+    return out;
+  }
+  function compose(st, S, seed) {
+    const r = rng(seed);
+    const rh = rhythmFor(st, S);
+    const harm = harmonyFor(rh, st, S, r);
+    const evs = melodyFor(rh, harm, st, S, r);
+    const scale = SCALES[S.mode];
+    const L = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"][mod12(S.tonic)];
+    const kStr = L + KMODE[S.mode];
+    const t = {
+      id: "c-" + S.id + "-" + seed, styleId: S.id, seed, source: "composed",
+      name: S.name, tag: L.replace("#", "♯").replace("b", "♭") + " " + MODE_NAME[S.mode] + " · " + S.M,
+      blurb: S.blurb, bpm: S.bpm, beat: S.tempoBeat, beatName: S.beatName,
+      abcHead: ["X:1", "M:" + S.M, "L:1/8", "K:" + kStr + " clef=treble-8"],
+      total: rh.total, pickup: rh.pickup, shape: st.shape.slice(), meter: st.meterName,
+      notes: evs.map(e => ({ t: e.t, d: e.d, m: e.m, s: e.s })),
+    };
+    const ki = keyInfo(t), f = ki.f0;
+    t.chords = harm.chords.map(c => {
+      const tr = triad(scale, c.deg), root = S.tonic + scale[c.deg];
+      const nm = spell(60 + mod12(root), f, mod12(ki.tonic - 1));
+      return { t: c.t, d: c.d, name: nm.L + (nm.a > 0 ? "#" : nm.a < 0 ? "b" : "") + tr.q, v: voicing(mod12(root), tr.q) };
+    });
+    t.lineBars = lineBarsFromOnsets(t, rh.lineOnsets);
+    return t;
+  }
+  function voicing(rootPc, q) {
+    const bass = 36 + mod12(rootPc - 0);
+    const b = bass < 38 ? bass + 12 : bass;
+    const third = q === "m" || q === "dim" ? 3 : 4, fifth = q === "dim" ? 6 : q === "aug" ? 8 : 7;
+    const top = [0, third, fifth].map(x => 48 + mod12(rootPc + x)).map(x => x < 50 ? x + 12 : x).sort((a, b) => a - b);
+    return [b].concat(top);
+  }
+  function voicingFromName(name) {
+    const m = name.match(/^([A-G])([#b]?)(.*)$/); if (!m) return [38, 50, 53, 57];
+    const pc = mod12(NAT[LET.indexOf(m[1])] + (m[2] === "#" ? 1 : m[2] === "b" ? -1 : 0));
+    const rest = m[3];
+    const q = /^dim/.test(rest) ? "dim" : /^m(?!aj)/.test(rest) ? "m" : /^aug|\+/.test(rest) ? "aug" : "";
+    const v = voicing(pc, q);
+    if (/7/.test(rest)) v.push(48 + mod12(pc + (/maj7/.test(rest) ? 11 : 10)) + (mod12(pc + 10) < 2 ? 12 : 0));
+    return v;
+  }
+
+  // =====================================================================
+  // Claude composer (sample capability)
+  // =====================================================================
+  const NOTE_RE = /^([A-Ga-g])([#b♯♭]?)(-?\d)$/;
+  function noteToMidi(s) {
+    const m = String(s).trim().match(NOTE_RE); if (!m) return null;
+    const a = m[2] === "#" || m[2] === "♯" ? 1 : m[2] === "b" || m[2] === "♭" ? -1 : 0;
+    return 12 * (+m[3] + 1) + NAT[LET.indexOf(m[1].toUpperCase())] + a;
+  }
+  const MODE_CODES = { major: "", ionian: "", minor: "m", aeolian: "m", "harmonic minor": "m", dorian: "dor", mixolydian: "mix", phrygian: "phr", lydian: "lyd" };
+  function claudePrompt(st, direction) {
+    const lines = st.lines.map((l, li) => {
+      const s0 = st.lines.slice(0, li).reduce((a, x) => a + x.syls.length, 0);
+      return "Line " + (li + 1) + " (" + l.syls.length + " syllables): " + l.text + "\n   " +
+        l.syls.map((s, i) => (s0 + i) + ":" + s.a + (l.pat[i] ? "*" : "")).join(" ");
+    }).join("\n");
+    return [
+      "You are a gifted composer of memorable, singable melodies (hymns, ballads, folk songs, anthems) for men's voices.",
+      "Compose 3 contrasting, original melodies for the stanza below. Each melody sets every syllable to exactly one note (no melismas). The same tune will be sung to every stanza of this shape, so it must work for the meter, not only for these words.",
+      "",
+      "STANZA (meter guessed as " + st.meterName + ", shape " + st.shape.join(".") + "). Syllables are numbered from 0; * marks the syllables my analysis thinks are stressed. Trust your own ear if it disagrees.",
+      lines,
+      "",
+      "MUSICAL RULES",
+      "- Stressed syllables fall on strong beats; unstressed ones on weak beats or pickups.",
+      "- Hold the last note of each line; let line ends cadence (half cadence mid-stanza, the tonic at the very end).",
+      "- A real hook: a memorable opening motif that returns or is answered. Avoid aimless wandering; give the melody one clear high point.",
+      "- Mostly stepwise with a few purposeful leaps; a range of at most a twelfth; men sing it.",
+      "- Pitches are WRITTEN pitch for treble clef with an 8 below (men sing an octave lower than written). Keep written pitches between C4 and G5. Use names like D4, F#4, Bb4.",
+      "- Make the three tunes clearly different in meter, mode and character.",
+      direction ? "- The songwriter asks: " + direction.slice(0, 500) : "",
+      "",
+      "TIMING",
+      "- Times are integers counted in EIGHTH notes. t=0 is the first sung note.",
+      "- meter is one of \"4/4\", \"6/8\", \"3/4\". A bar is 8 eighths in 4/4, 6 in 6/8 and 3/4.",
+      "- pickup = how many eighths come before the first bar line (0 if the first syllable is on a downbeat). Bar lines then fall at pickup, pickup+bar, ...",
+      "- Notes must not overlap: each start >= previous start + previous dur. Gaps are rests. A note may cross a bar line.",
+      "",
+      "HARMONY",
+      "- chords: simple triads (and an occasional 7th), changing on bar lines or half bars, covering from the first bar line to the end. Name them like D, Dm, F#m, Bb, G7.",
+      "",
+      "Respond with JSON only, no prose, in exactly this shape:",
+      '{"tunes":[{"name":"short evocative title","blurb":"one sentence on its character","meter":"6/8","tonic":"D","mode":"dorian","bpm":66,"pickup":0,"notes":[{"s":0,"start":0,"dur":3,"pitch":"A4"}],"chords":[{"start":0,"dur":6,"name":"Dm"}]}]}',
+      "mode is one of major, minor, harmonic minor, dorian, mixolydian, phrygian, lydian. bpm counts dotted quarters in 6/8 and quarters otherwise. notes must contain exactly one entry for every syllable number from 0 to " + (st.shape.reduce((a, b) => a + b, 0) - 1) + ", in order.",
+    ].filter(x => x !== "").join("\n");
+  }
+  function tuneFromClaude(obj, st, k, stamp) {
+    const n = st.shape.reduce((a, b) => a + b, 0);
+    const meter = ["4/4", "6/8", "3/4"].includes(obj.meter) ? obj.meter : "4/4";
+    const [mn, md] = meter.split("/").map(Number), bar = mn * 8 / md;
+    const tm = String(obj.tonic || "D").match(/^([A-Ga-g])([#b♯♭]?)/);
+    if (!tm) throw new Error("no tonic");
+    const tonic = tm[1].toUpperCase() + (tm[2] === "#" || tm[2] === "♯" ? "#" : tm[2] === "b" || tm[2] === "♭" ? "b" : "");
+    const mode = MODE_CODES[String(obj.mode || "major").toLowerCase()] ?? "";
+    const notes = (obj.notes || []).map(x => ({ s: +x.s, t: Math.round(+x.start), d: Math.round(+x.dur), m: noteToMidi(x.pitch) }))
+      .filter(x => Number.isInteger(x.s) && x.m !== null && x.d > 0 && x.t >= 0).sort((a, b) => a.s - b.s);
+    if (notes.length !== n || notes.some((x, i) => x.s !== i)) throw new Error("wrong number of notes");
+    for (let i = 1; i < n; i++) {
+      if (notes[i].t < notes[i - 1].t + 1) notes[i].t = notes[i - 1].t + 1;
+      if (notes[i - 1].t + notes[i - 1].d > notes[i].t) notes[i - 1].d = notes[i].t - notes[i - 1].t;
+    }
+    if (notes.some(x => x.m < 40 || x.m > 88)) throw new Error("pitch out of range");
+    const pickup = Math.max(0, Math.min(bar - 1, Math.round(+obj.pickup || 0)));
+    const lastEnd = notes[n - 1].t + notes[n - 1].d;
+    const total = pickup + Math.ceil(Math.max(1, lastEnd - pickup) / bar) * bar;
+    const tag = tonic.replace("#", "♯").replace("b", "♭") + " " + (obj.mode || "major") + " · " + meter;
+    const t = {
+      id: "ai-" + stamp + "-" + k, source: "claude", name: String(obj.name || "Claude tune " + (k + 1)).slice(0, 40),
+      tag, blurb: String(obj.blurb || "").slice(0, 200), bpm: Math.max(30, Math.min(200, Math.round(+obj.bpm || 80))),
+      beat: meter === "6/8" ? 3 : 2, beatName: meter === "6/8" ? "dotted-quarter" : "quarter-note",
+      abcHead: ["X:1", "M:" + meter, "L:1/8", "K:" + tonic + mode + " clef=treble-8"],
+      total, pickup, shape: st.shape.slice(), notes,
+    };
+    keyInfo(t); // throws on a bad key
+    t.chords = (obj.chords || []).map(c => ({ t: Math.round(+c.start), d: Math.round(+c.dur), name: String(c.name || "").replace(/[♯]/g, "#").replace(/[♭]/g, "b").trim() }))
+      .filter(c => c.d > 0 && c.t >= 0 && c.t < total && /^[A-G][#b]?/.test(c.name)).sort((a, b) => a.t - b.t)
+      .map(c => ({ ...c, d: Math.min(c.d, total - c.t), v: voicingFromName(c.name) }));
+    const onsets = []; let s0 = 0; st.shape.forEach(c => { onsets.push(notes[s0].t); s0 += c; });
+    t.lineBars = lineBarsFromOnsets(t, onsets);
+    return t;
+  }
+
+  // =====================================================================
+  // State
+  // =====================================================================
+  const BUILTIN = TUNES;
+  BUILTIN.forEach(t => {
+    t.source = "baladin"; t.shape = [10, 10, 10, 10]; t.pickup = 0;
+    const nBars = t.total / barLen(t); t.lineBars = t.abcLines.map(() => nBars / t.abcLines.length);
+  });
+  const STORE = "composer-v1";
+  let composed = [];      // tunes made by the built-in composer or Claude
+  let stanzas = [], stanzaIdx = 0, tune = null;
+  let octave = -12, shift = 0;
+  let lyricText = DEFAULT_TEXT;
+  const prepTune = t => { if (!t.orig) t.orig = t.notes.map(n => n.m); return t; };
+  BUILTIN.forEach(prepTune);
+  const allTunes = () => BUILTIN.concat(composed);
+  const isEdited = t => t.notes.some((n, i) => n.m !== t.orig[i]);
+  const cur = () => stanzas[stanzaIdx];
+  const fits = (t, st) => st && same(t.shape, st.shape);
+
+  function snapshot() {
+    const edits = {};
+    allTunes().forEach(t => { if (isEdited(t)) edits[t.id] = t.notes.map(n => n.m); });
+    return {
+      v: 1, text: lyricText, stanza: stanzaIdx, tune: tune && tune.id, shift, octave,
+      composed: composed.map(t => ({ ...t, notes: t.notes.map((n, i) => ({ ...n, m: t.orig[i] })), orig: undefined })), edits,
+    };
+  }
+  function applySnapshot(s) {
+    if (!s || typeof s !== "object") return;
+    if (typeof s.text === "string") lyricText = s.text;
+    composed = Array.isArray(s.composed) ? s.composed.filter(t => t && Array.isArray(t.notes) && Array.isArray(t.abcHead) && Array.isArray(t.shape)).map(t => prepTune({ ...t, orig: null })) : [];
+    allTunes().forEach(t => { t.notes.forEach((n, i) => n.m = t.orig[i]); });
+    const e = s.edits || {};
+    allTunes().forEach(t => { const a = e[t.id]; if (Array.isArray(a) && a.length === t.notes.length) a.forEach((m, i) => { if (Number.isFinite(m)) t.notes[i].m = m; }); });
+    if (Number.isInteger(s.shift) && Math.abs(s.shift) <= 6) shift = s.shift;
+    if (s.octave === 0 || s.octave === -12) octave = s.octave;
+    stanzas = parseLyrics(lyricText);
+    stanzaIdx = Number.isInteger(s.stanza) && s.stanza < stanzas.length ? s.stanza : 0;
+    tune = allTunes().find(t => t.id === s.tune) || null;
+  }
+  let saveTimer = 0;
+  function save() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(snapshot())); } catch (e) {} }, 250); }
+  try { const raw = localStorage.getItem(STORE); if (raw) applySnapshot(JSON.parse(raw)); } catch (e) {}
+  if (!stanzas.length) stanzas = parseLyrics(lyricText);
+  if (!tune) {
+    const ci = stanzas.findIndex(s => /chorus/i.test(s.name));
+    if (ci >= 0) stanzaIdx = ci;
+    tune = allTunes().find(t => fits(t, cur())) || null;
+  }
+
+  // =====================================================================
+  // Lyrics panel
+  // =====================================================================
+  const lyricsBox = $("lyricsText");
+  lyricsBox.value = lyricText;
+  let parseTimer = 0;
+  lyricsBox.addEventListener("input", () => {
+    clearTimeout(parseTimer);
+    parseTimer = setTimeout(() => {
+      lyricText = lyricsBox.value;
+      const prevName = cur() && cur().name;
+      stanzas = parseLyrics(lyricText);
+      const k = stanzas.findIndex(s => s.name === prevName);
+      stanzaIdx = k >= 0 ? k : Math.min(stanzaIdx, Math.max(0, stanzas.length - 1));
+      if (playing) stop();
+      refreshAll(); save();
+    }, 450);
+  });
+  $("clearLyrics").addEventListener("click", () => {
+    lyricsBox.value = ""; lyricText = ""; stanzas = []; stanzaIdx = 0; if (playing) stop(); refreshAll(); save(); lyricsBox.focus();
+  });
+  $("sampleLyrics").addEventListener("click", () => {
+    lyricsBox.value = DEFAULT_TEXT; lyricText = DEFAULT_TEXT; stanzas = parseLyrics(lyricText);
+    const ci = stanzas.findIndex(s => /chorus/i.test(s.name)); stanzaIdx = ci >= 0 ? ci : 0;
+    if (playing) stop(); refreshAll(); save();
+  });
+  function renderMeter() {
+    const box = $("meterInfo"); box.innerHTML = "";
+    if (!stanzas.length) { box.textContent = "Type or paste lyrics above. Separate stanzas with a blank line; a line like [Chorus] names the stanza below it."; return; }
+    const groups = new Map();
+    stanzas.forEach(st => { const k = st.shape.join("."); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(st); });
+    const p = document.createElement("p");
+    p.textContent = stanzas.length + " stanza" + (stanzas.length > 1 ? "s" : "") + " · " + [...groups.keys()].map(k => k + " (" + groups.get(k).length + "×)").join(", ");
+    box.appendChild(p);
+    const st = cur(); if (!st) return;
+    const d = document.createElement("div"); d.className = "meter-lines";
+    st.lines.forEach(l => {
+      const row = document.createElement("div"); row.className = "meter-line";
+      const c = document.createElement("span"); c.className = "mcount"; c.textContent = l.syls.length; row.appendChild(c);
+      const txt = document.createElement("span");
+      l.syls.forEach((s, i) => {
+        const sp = document.createElement("span"); sp.className = "ms" + (l.pat[i] ? " st" : "");
+        sp.textContent = s.d.replace(/-$/, ""); txt.appendChild(sp);
+        txt.appendChild(document.createTextNode(s.sp ? " " : s.d.endsWith("-") ? "-" : "·"));
+      });
+      row.appendChild(txt); d.appendChild(row);
+    });
+    const meta = document.createElement("p"); meta.className = "meter-meta";
+    meta.textContent = st.name + ": " + st.shape.join(".") + ", " + st.meterName + ". Stressed syllables are underlined; dots show syllable breaks. If a count is off, write the word with hyphens (Bal-a-din) or elide it (heav'n).";
+    box.appendChild(meta); box.appendChild(d);
+  }
+  function fillStanzas() {
+    const sel = $("stanza"); sel.innerHTML = "";
+    stanzas.forEach((st, i) => { const o = document.createElement("option"); o.value = i; o.textContent = st.name + " · " + st.shape.join("."); sel.appendChild(o); });
+    sel.value = stanzaIdx; sel.disabled = !stanzas.length;
+  }
+  $("stanza").addEventListener("change", () => {
+    stanzaIdx = +$("stanza").value; if (playing) stop();
+    const st = cur();
+    if (tune && !fits(tune, st)) tune = allTunes().find(t => fits(t, st)) || tune;
+    refreshAll(); save();
+  });
+
+  // =====================================================================
+  // Lyric lamp
+  // =====================================================================
+  const lyricEl = $("lyric");
+  let sylEls = [], lineEls = [], lineOf = [];
+  function renderLyric() {
+    lyricEl.innerHTML = ""; sylEls = []; lineEls = [];
+    const st = cur();
+    if (!st) { lyricEl.innerHTML = '<p class="empty">No lyrics yet.</p>'; return; }
+    const fl = stanzaSyls(st); lineOf = fl.lineOf;
+    let k = 0;
+    st.lines.forEach(l => {
+      const div = document.createElement("div"); div.className = "line";
+      l.syls.forEach(s => {
+        const span = document.createElement("span"); span.className = "syl"; span.textContent = s.d;
+        div.appendChild(span); if (s.sp) div.appendChild(document.createTextNode(" "));
+        sylEls[k++] = span;
+      });
+      lyricEl.appendChild(div); lineEls.push(div);
+    });
+  }
+
+  // =====================================================================
+  // Tune picker and composing
+  // =====================================================================
+  const tunesEl = $("tunes"), presetEl = $("presets");
+  function tuneCard(t, label) {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tune"; b.dataset.id = t.id;
+    b.setAttribute("aria-pressed", String(tune && t.id === tune.id));
+    b.innerHTML = '<span class="tn"><small></small></span><span class="tt"></span><span class="tb"></span>';
+    b.querySelector("small").textContent = label;
+    b.querySelector(".tn").appendChild(document.createTextNode(t.name + (isEdited(t) ? " ✎" : "")));
+    b.querySelector(".tt").textContent = t.tag; b.querySelector(".tb").textContent = t.blurb || "";
+    b.addEventListener("click", () => selectTune(t, true));
+    return b;
+  }
+  function renderTunes() {
+    const st = cur();
+    tunesEl.innerHTML = ""; presetEl.innerHTML = "";
+    const shapeKey = st ? st.shape.join(".") : "";
+    $("shapeName").textContent = st ? shapeKey + " (" + st.meterName + ")" : "—";
+    const mine = st ? composed.filter(t => fits(t, st)) : [];
+    mine.forEach((t, i) => tunesEl.appendChild(tuneCard(t, t.source === "claude" ? "Claude" : String(i + 1).padStart(2, "0"))));
+    $("noTunes").hidden = mine.length > 0 || !st;
+    $("compose").disabled = !st; $("askClaude").disabled = !st || !sampleFn;
+    $("clearComposed").hidden = !mine.length;
+    const presets = st ? BUILTIN.filter(t => fits(t, st)) : [];
+    $("presetWrap").hidden = !presets.length;
+    presets.forEach((t, i) => presetEl.appendChild(tuneCard(t, i === 0 ? "Orig" : String(i).padStart(2, "0"))));
+  }
+  $("compose").addEventListener("click", () => {
+    const st = cur(); if (!st) return;
+    const base = (Date.now() & 0xffffff);
+    const fresh = STYLES.map((S, i) => prepTune(compose(st, S, base + i * 7919)));
+    composed = composed.filter(t => !(fits(t, st) && t.source === "composed")).concat(fresh);
+    selectTune(fresh[0], false);
+    renderTunes(); save();
+    $("composeStatus").textContent = "Composed 12 tunes for " + st.shape.join(".") + ". Press again for a new set.";
+  });
+  $("clearComposed").addEventListener("click", () => {
+    const st = cur(); if (!st) return;
+    composed = composed.filter(t => !fits(t, st));
+    if (tune && !allTunes().includes(tune)) tune = allTunes().find(t => fits(t, st)) || null;
+    $("composeStatus").textContent = "";
+    refreshAll(); save();
+  });
+  let sampleFn = null, askCtl = null;
+  if (window.claude && claude.use) claude.use("sample").then(s => { sampleFn = s; $("claudeWrap").hidden = !s; renderTunes(); }).catch(() => {});
+  $("askClaude").addEventListener("click", async () => {
+    const st = cur(); if (!st || !sampleFn) return;
+    const btn = $("askClaude"), status = $("composeStatus");
+    btn.disabled = true; $("stopClaude").hidden = false;
+    askCtl = new AbortController();
+    status.textContent = "Asking Claude… (this can take a minute)";
+    try {
+      const { text } = await sampleFn(claudePrompt(st, $("claudeDirection").value.trim()), {
+        signal: askCtl.signal, cache: false, modelTier: "default",
+        onText: ({ text }) => { status.textContent = "Claude is writing… " + text.length + " characters"; },
+      });
+      const j = text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1);
+      const obj = JSON.parse(j);
+      const stamp = Date.now().toString(36), made = [], bad = [];
+      (obj.tunes || []).forEach((x, k) => { try { made.push(prepTune(tuneFromClaude(x, st, k, stamp))); } catch (e) { bad.push((x && x.name) || "tune " + (k + 1)); } });
+      if (!made.length) throw { code: "unusable" };
+      composed = composed.concat(made);
+      selectTune(made[0], false); renderTunes(); save();
+      status.textContent = "Claude wrote " + made.length + " tune" + (made.length > 1 ? "s" : "") + (bad.length ? " (" + bad.length + " didn't fit the lyrics and were skipped)" : "") + ".";
+    } catch (e) {
+      const c = e && e.code;
+      status.textContent = c === "cancelled" ? "Stopped." : c === "not_granted" ? "Claude wasn't allowed for this page." :
+        c === "rate_limited" ? "Too many requests right now; try again in a minute." : c === "unusable" || e instanceof SyntaxError ? "Claude's answer didn't come back in a usable form. Try again." :
+        "Couldn't reach Claude" + (e && e.message ? " (" + e.message + ")" : "") + ".";
+      if (c === "not_granted" || c === "sampling_disabled" || c === "not_declared") { $("claudeWrap").hidden = true; sampleFn = null; }
+    } finally { btn.disabled = !sampleFn; $("stopClaude").hidden = true; askCtl = null; }
+  });
+  $("stopClaude").addEventListener("click", () => askCtl && askCtl.abort());
+
+  // =====================================================================
+  // Sheet music
+  // =====================================================================
+  function renderSheet() {
+    const st = cur(), t = tune;
+    if (!t) { $("sheet").textContent = ""; $("abcText").value = ""; return; }
+    const abc = t.abcHead.slice();
+    if (shift) abc[abc.findIndex(h => h.startsWith("K:"))] = "K:" + keyLabel(t, shift).abc + " clef=treble-8";
+    const custom = shift !== 0 || isEdited(t) || !t.abcLines;
+    const syl = fits(t, st) ? stanzaSyls(st).syls.map(s => s.a + (s.join ? "-" : "")) : null;
+    let k = 0;
+    (custom ? genLines(t, shift) : t.abcLines).forEach(([m, n]) => {
+      abc.push(m);
+      if (syl) { const w = syl.slice(k, k + n); k += n; abc.push("w:" + w.map((s, i) => s + (s.endsWith("-") || i === w.length - 1 ? "" : " ")).join("")); }
+    });
+    try {
+      if (window.ABCJS) ABCJS.renderAbc("sheet", abc.join("\n"), { responsive: "resize", staffwidth: 700, paddingtop: 4, paddingbottom: 4 });
+      else $("sheet").textContent = abc.join("\n");
+    } catch (e) { $("sheet").textContent = abc.join("\n"); }
+    $("abcText").value = abc.join("\n");
+  }
+
+  // =====================================================================
+  // Audio
+  // =====================================================================
+  let ctx = null, master = null, playing = false, stopTimers = [], raf = 0, startT = 0, sylTimes = [];
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  function ensureCtx() {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0.8;
+      const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
+    }
+    if (ctx.state === "suspended") ctx.resume();
+  }
+  // A sung "ah": sawtooth through two vowel formants, with gentle late vibrato.
+  function voice(midi, t, dur, C = ctx, out = master) {
+    const f = hz(midi);
+    const osc = C.createOscillator(); osc.type = "sawtooth"; osc.frequency.value = f;
+    const osc2 = C.createOscillator(); osc2.type = "triangle"; osc2.frequency.value = f; osc2.detune.value = 5;
+    const vib = C.createOscillator(); vib.frequency.value = 5.2;
+    const vibG = C.createGain(); vibG.gain.setValueAtTime(0, t); vibG.gain.linearRampToValueAtTime(0, t + Math.min(.35, dur * .5)); vibG.gain.linearRampToValueAtTime(f * .006, t + Math.min(.8, dur));
+    vib.connect(vibG); vibG.connect(osc.frequency); vibG.connect(osc2.frequency);
+    const mix = C.createGain();
+    const f1 = C.createBiquadFilter(); f1.type = "bandpass"; f1.frequency.value = 730; f1.Q.value = 5;
+    const f2 = C.createBiquadFilter(); f2.type = "bandpass"; f2.frequency.value = 1090; f2.Q.value = 6;
+    const lp = C.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2400;
+    const g1 = C.createGain(); g1.gain.value = 1.1; const g2 = C.createGain(); g2.gain.value = .6; const g3 = C.createGain(); g3.gain.value = .35;
+    osc.connect(f1); osc.connect(f2); osc.connect(lp); osc2.connect(lp);
+    f1.connect(g1); f2.connect(g2); lp.connect(g3); g1.connect(mix); g2.connect(mix); g3.connect(mix);
+    const env = C.createGain(); env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(.32, t + .05);
+    env.gain.setValueAtTime(.3, t + Math.max(.06, dur - .09));
+    env.gain.linearRampToValueAtTime(0, t + dur + .06);
+    mix.connect(env); env.connect(out);
+    [osc, osc2, vib].forEach(o => { o.start(t); o.stop(t + dur + .1); });
+  }
+  function pad(midis, t, dur, C = ctx, out = master) {
+    midis.forEach((m, i) => {
+      const o = C.createOscillator(); o.type = i === 0 ? "triangle" : "sine"; o.frequency.value = hz(m + octave + 12 + shift);
+      const lp = C.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 900;
+      const g = C.createGain(); const peak = i === 0 ? .16 : .055;
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + .12);
+      g.gain.setValueAtTime(peak * .8, t + Math.max(.15, dur - .15)); g.gain.linearRampToValueAtTime(0, t + dur + .05);
+      o.connect(lp); lp.connect(g); g.connect(out); o.start(t); o.stop(t + dur + .1);
+    });
+  }
+  const canPlay = () => tune && fits(tune, cur());
+  function play() {
+    if (!canPlay()) return;
+    ensureCtx();
+    const bpm = +$("bpm").value, e = 60 / bpm / tune.beat;
+    startT = ctx.currentTime + .12; sylTimes = [];
+    tune.notes.forEach(n => { voice(n.m + octave + shift, startT + n.t * e, n.d * e * .97); sylTimes.push([startT + n.t * e, startT + (n.t + n.d) * e, n.s]); });
+    if ($("chords").checked) tune.chords.forEach(c => pad(c.v, startT + c.t * e, c.d * e));
+    const total = tune.total * e;
+    playing = true; $("play").textContent = "Stop";
+    stopTimers.push(setTimeout(() => { if ($("loop").checked && playing) { clearState(); play(); } else stop(); }, (total + .15) * 1000));
+    tick();
+  }
+  function clearState() { stopTimers.forEach(clearTimeout); stopTimers = []; cancelAnimationFrame(raf); sylEls.forEach(s => s.classList.remove("on")); lineEls.forEach(l => l.classList.remove("on")); rollRects.forEach(g => g.classList.remove("on")); }
+  function stop() {
+    playing = false; clearState(); $("play").textContent = "Play";
+    if (master) { const old = master; old.gain.setTargetAtTime(0, ctx.currentTime, .05); master = ctx.createGain(); master.gain.value = .8; const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination); setTimeout(() => old.disconnect(), 400); }
+  }
+  function tick() {
+    const now = ctx.currentTime; let active = -1;
+    for (const [a, b, i] of sylTimes) if (now >= a && now < b) active = i;
+    sylEls.forEach((s, i) => s.classList.toggle("on", i === active));
+    rollBySyl.forEach((g, i) => g && g.classList.toggle("on", i === active));
+    if (active >= 0) lineEls.forEach((l, i) => l.classList.toggle("on", i === lineOf[active]));
+    if (playing) raf = requestAnimationFrame(tick);
+  }
+  $("play").addEventListener("click", () => playing ? stop() : play());
+  function setPressed(a, b) { $(a).setAttribute("aria-pressed", "true"); $(b).setAttribute("aria-pressed", "false"); }
+  $("o-men").addEventListener("click", () => { octave = -12; setPressed("o-men", "o-high"); save(); if (playing) { stop(); play(); } });
+  $("o-high").addEventListener("click", () => { octave = 0; setPressed("o-high", "o-men"); save(); if (playing) { stop(); play(); } });
+  $("bpm").addEventListener("input", () => { $("bpmOut").textContent = $("bpm").value; });
+  $("bpm").addEventListener("change", () => { if (playing) { stop(); play(); } });
+
+  // =====================================================================
+  // Note editor (piano roll)
+  // =====================================================================
+  const EW = 20, RH = 13, GW = 38, LYR = 22;
+  let rollRects = [], rollBySyl = [], rollRange = null, drag = null, sel = 0;
+  const curFifths = () => fifthsFor(keyInfo(tune).f0, shift);
+  const ltOf = sh => mod12(keyInfo(tune).tonic + sh - 1);
+  const noteName = (m, f) => { const sp = spell(m, f, ltOf(shift)); return sp.L + accSym(sp.a); };
+  function svgEl(tag, attrs, parent) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function renderRoll() {
+    const svg = $("roll"), gut = $("rollGut");
+    svg.innerHTML = ""; gut.innerHTML = ""; rollRects = []; rollBySyl = [];
+    const t = tune;
+    $("editor").hidden = !t;
+    if (!t) return;
+    const f = curFifths(), tonic = mod12(keyInfo(t).tonic + shift);
+    const ms = t.notes.map(n => n.m).concat(t.orig);
+    const lo = Math.min(...ms) - 4, hi = Math.max(...ms) + 4;
+    rollRange = { lo, hi };
+    const H = (hi - lo + 1) * RH, W = t.total * EW + 4;
+    svg.setAttribute("width", W); svg.setAttribute("height", H + LYR);
+    gut.setAttribute("width", GW); gut.setAttribute("height", H + LYR);
+    const yOf = m => (hi - m) * RH;
+    for (let m = lo; m <= hi; m++) {
+      const d = m + shift, cls = mod12(d) === tonic ? "row-tonic" : inKey(d, f) ? "row-in" : "row-out";
+      svgEl("rect", { x: 0, y: yOf(m), width: W, height: RH, class: cls }, svg);
+      if (inKey(d, f)) svgEl("text", { x: GW - 6, y: yOf(m) + RH - 3, "text-anchor": "end", class: "gl" + (cls === "row-tonic" ? " tonic" : "") }, gut).textContent = noteName(d, f);
+    }
+    const starts = new Set(barStarts(t)), pk = t.pickup || 0;
+    for (let x = pk % t.beat; x <= t.total; x += t.beat) if (!starts.has(x)) svgEl("line", { x1: x * EW + .5, x2: x * EW + .5, y1: 0, y2: H, class: "beat" }, svg);
+    [...starts, t.total].forEach(x => svgEl("line", { x1: x * EW + .5, x2: x * EW + .5, y1: 0, y2: H, class: "bar" }, svg));
+    const st = cur(), syl = fits(t, st) ? stanzaSyls(st).syls : [];
+    t.notes.forEach((n, i) => {
+      const g = svgEl("g", { class: "rn", tabindex: -1, "data-i": i, role: "button" }, svg);
+      svgEl("rect", { x: n.t * EW + 1.5, width: Math.max(4, n.d * EW - 3), height: RH - 2 }, g);
+      svgEl("text", { x: n.t * EW + 5 }, g);
+      rollRects[i] = g; rollBySyl[n.s] = g;
+      placeNote(i);
+      svgEl("text", { x: n.t * EW + 2, y: H + 15, class: "lyr" }, svg).textContent = syl[n.s] ? syl[n.s].d.replace(/-$/, "") : "";
+    });
+    $("editedFlag").hidden = !isEdited(t); $("resetNotes").disabled = !isEdited(t);
+    if (sel >= t.notes.length) sel = 0;
+    selectNote(sel, false, false);
+  }
+  function placeNote(i) {
+    const n = tune.notes[i], g = rollRects[i], f = curFifths(), y = (rollRange.hi - n.m) * RH;
+    const [r, tx] = g.children;
+    r.setAttribute("y", y + 1); tx.setAttribute("y", y + RH - 3.5);
+    const name = noteName(n.m + shift, f);
+    tx.textContent = n.d * EW >= 16 ? name : "";
+    g.classList.toggle("changed", n.m !== tune.orig[i]);
+    g.setAttribute("aria-label", "Note " + (i + 1) + ": " + name);
+  }
+  function selectNote(i, focus, sound) {
+    if (!rollRects[i]) return;
+    rollRects.forEach((g, j) => { g.classList.toggle("sel", j === i); g.setAttribute("tabindex", j === i ? 0 : -1); });
+    sel = i;
+    const sc = $("rollScroll"), n = tune.notes[i], x = n.t * EW, w = n.d * EW;
+    if (x < sc.scrollLeft + 20) sc.scrollLeft = Math.max(0, x - 40);
+    else if (x + w > sc.scrollLeft + sc.clientWidth - 20) sc.scrollLeft = x + w - sc.clientWidth + 40;
+    if (focus) rollRects[i].focus({ preventScroll: true });
+    if (sound) preview(n.m);
+  }
+  function preview(m) { ensureCtx(); voice(m + shift + octave, ctx.currentTime + .01, .32); }
+  function snapTo(raw) {
+    if ($("chromatic").checked) return Math.round(raw);
+    const f = keyInfo(tune).f0; let best = null;
+    for (let m = Math.floor(raw) - 2; m <= Math.ceil(raw) + 2; m++) if (inKey(m, f) && (best === null || Math.abs(m - raw) < Math.abs(best - raw))) best = m;
+    return best;
+  }
+  function stepNote(m, dir, big) {
+    if (big) return m + 12 * dir;
+    if ($("chromatic").checked) return m + dir;
+    const f = keyInfo(tune).f0; let x = m + dir; while (!inKey(x, f)) x += dir; return x;
+  }
+  function setNote(i, m) {
+    const { lo, hi } = rollRange; m = Math.max(lo, Math.min(hi, m));
+    if (tune.notes[i].m === m) return false;
+    tune.notes[i].m = m; placeNote(i); preview(m); return true;
+  }
+  function commitEdits() { save(); renderSheet(); $("editedFlag").hidden = !isEdited(tune); $("resetNotes").disabled = !isEdited(tune); markCard(); }
+  function markCard() { document.querySelectorAll('.tune[data-id="' + CSS.escape(tune.id) + '"] .tn').forEach(el => { el.lastChild.textContent = tune.name + (isEdited(tune) ? " ✎" : ""); }); }
+  $("roll").addEventListener("pointerdown", e => {
+    const g = e.target.closest(".rn"); if (!g) return;
+    e.preventDefault();
+    try { g.setPointerCapture(e.pointerId); } catch (_) {}
+    const i = +g.dataset.i; selectNote(i, true, false);
+    drag = { i, g, start: tune.notes[i].m }; g.classList.add("drag"); preview(tune.notes[i].m);
+  });
+  $("roll").addEventListener("pointermove", e => {
+    if (!drag) return;
+    const top = $("roll").getBoundingClientRect().top;
+    const m = snapTo(rollRange.hi - (e.clientY - top - RH / 2) / RH);
+    if (m !== null) setNote(drag.i, m);
+  });
+  $("rollScroll").addEventListener("pointerdown", e => { if (!e.target.closest(".rn") && rollRects[sel]) rollRects[sel].focus({ preventScroll: true }); });
+  function endDrag() { if (!drag) return; drag.g.classList.remove("drag"); const changed = tune.notes[drag.i].m !== drag.start; drag = null; if (changed) commitEdits(); }
+  $("roll").addEventListener("pointerup", endDrag);
+  $("roll").addEventListener("pointercancel", endDrag);
+  $("editor").addEventListener("keydown", e => {
+    if (!e.target.closest(".roll") || !tune || !tune.notes[sel]) return;
+    const i = sel;
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const m = stepNote(tune.notes[i].m, e.key === "ArrowUp" ? 1 : -1, e.shiftKey);
+      if (m < rollRange.lo || m > rollRange.hi) { tune.notes[i].m = m; renderRoll(); selectNote(i, true, false); preview(m); commitEdits(); }
+      else if (setNote(i, m)) commitEdits();
+    } else if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault(); const j = i + (e.key === "ArrowRight" ? 1 : -1);
+      if (rollRects[j]) selectNote(j, true, true);
+    } else if (e.key === "Home" || e.key === "End") {
+      e.preventDefault(); selectNote(e.key === "Home" ? 0 : rollRects.length - 1, true, true);
+    }
+  });
+  $("resetNotes").addEventListener("click", () => { tune.notes.forEach((n, i) => n.m = tune.orig[i]); save(); renderRoll(); renderSheet(); markCard(); });
+
+  // =====================================================================
+  // Key
+  // =====================================================================
+  function fillKeys() {
+    const sel = $("key"); sel.innerHTML = ""; sel.disabled = !tune;
+    if (!tune) return;
+    for (let sh = 6; sh >= -6; sh--) {
+      const o = document.createElement("option"); o.value = sh;
+      o.textContent = keyLabel(tune, sh).name + (sh === 0 ? " (original)" : " (" + (sh > 0 ? "+" : "−") + Math.abs(sh) + ")");
+      sel.appendChild(o);
+    }
+    sel.value = shift;
+  }
+  const tagFor = t => shift ? keyLabel(t, shift).name + " · " + t.tag.split("·").slice(1).join("·").trim() : t.tag;
+  $("key").addEventListener("change", () => {
+    shift = +$("key").value; save();
+    $("nowTag").textContent = tagFor(tune);
+    renderRoll(); renderSheet(); if (playing) { stop(); play(); }
+  });
+
+  // =====================================================================
+  // MP3 (rendered offline, encoded with LAME, delivered inside a .zip) and project files
+  // =====================================================================
+  let downloads = null, lameP = null;
+  if (window.claude && claude.use) claude.use("downloads").then(d => { downloads = d; $("saveMp3").hidden = !d; $("saveProject").hidden = !d; }).catch(() => {});
+  function loadLame() {
+    if (window.lamejs) return Promise.resolve();
+    return lameP || (lameP = new Promise((res, rej) => {
+      const sc = document.createElement("script");
+      sc.src = "https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js";
+      sc.onload = () => window.lamejs ? res() : rej(new Error("encoder missing"));
+      sc.onerror = () => { lameP = null; rej(new Error("encoder failed to load")); };
+      document.head.appendChild(sc);
+    }));
+  }
+  async function renderOffline() {
+    const bpm = +$("bpm").value, e = 60 / bpm / tune.beat, rate = 44100;
+    const C = new OfflineAudioContext(1, Math.ceil((tune.total * e + 1.6) * rate), rate);
+    const out = C.createGain(); out.gain.value = .8;
+    const comp = C.createDynamicsCompressor(); out.connect(comp); comp.connect(C.destination);
+    tune.notes.forEach(n => voice(n.m + octave + shift, .1 + n.t * e, n.d * e * .97, C, out));
+    if ($("chords").checked) tune.chords.forEach(c => pad(c.v, .1 + c.t * e, c.d * e, C, out));
+    return C.startRendering();
+  }
+  function encodeMp3(buf) {
+    const pcm = buf.getChannelData(0); let peak = 0;
+    for (let i = 0; i < pcm.length; i++) peak = Math.max(peak, Math.abs(pcm[i]));
+    const g = peak > 0 ? .89 / peak : 1, n = pcm.length, i16 = new Int16Array(n);
+    for (let i = 0; i < n; i++) i16[i] = Math.max(-32768, Math.min(32767, Math.round(pcm[i] * g * 32767)));
+    const enc = new lamejs.Mp3Encoder(1, buf.sampleRate, 192), parts = [];
+    for (let i = 0; i < n; i += 1152) { const b = enc.encodeBuffer(i16.subarray(i, i + 1152)); if (b.length) parts.push(new Uint8Array(b)); }
+    const end = enc.flush(); if (end.length) parts.push(new Uint8Array(end));
+    return parts;
+  }
+  const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function zipOne(name, parts) {
+    let size = 0, crc = 0xFFFFFFFF;
+    parts.forEach(p => { size += p.length; for (let i = 0; i < p.length; i++) crc = CRC[(crc ^ p[i]) & 255] ^ (crc >>> 8); });
+    crc = (crc ^ 0xFFFFFFFF) >>> 0;
+    const nm = new TextEncoder().encode(name), d = new Date();
+    const dt = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(), tm = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+    const hdr = central => {
+      const h = new DataView(new ArrayBuffer((central ? 46 : 30) + nm.length)); let o = 0;
+      const u32 = v => { h.setUint32(o, v, true); o += 4; }, u16 = v => { h.setUint16(o, v, true); o += 2; };
+      u32(central ? 0x02014b50 : 0x04034b50); if (central) u16(20); u16(20); u16(0); u16(0); u16(tm); u16(dt); u32(crc); u32(size); u32(size); u16(nm.length); u16(0);
+      if (central) { u16(0); u16(0); u16(0); u32(0); u32(0); }
+      new Uint8Array(h.buffer).set(nm, o); return new Uint8Array(h.buffer);
+    };
+    const local = hdr(false), central = hdr(true), eocd = new DataView(new ArrayBuffer(22));
+    eocd.setUint32(0, 0x06054b50, true); eocd.setUint16(8, 1, true); eocd.setUint16(10, 1, true);
+    eocd.setUint32(12, central.length, true); eocd.setUint32(16, local.length + size, true);
+    return new Blob([local, ...parts, central, new Uint8Array(eocd.buffer)]);
+  }
+  const slug = s => s.toLowerCase().replace(/♯/g, "-sharp").replace(/♭/g, "-flat").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  function saveError(err, st) {
+    const c = err && err.code;
+    st.textContent = c === "declined" ? "Not saved." : c === "rate_limited" ? "A save is already waiting; try again in a moment." : "Couldn't save" + (err && err.message ? " (" + err.message + ")" : "") + ".";
+  }
+  $("saveMp3").addEventListener("click", async () => {
+    const btn = $("saveMp3"), st = $("saveStatus");
+    if (!downloads || !canPlay()) { st.textContent = "Pick a tune that fits this stanza first."; return; }
+    btn.disabled = true; st.textContent = "Rendering…";
+    try {
+      await loadLame();
+      const buf = await renderOffline();
+      st.textContent = "Encoding…"; await new Promise(r => setTimeout(r, 30));
+      const parts = encodeMp3(buf);
+      const base = [slug(lyricTitle()), slug(cur().name), slug(tune.name), slug(keyLabel(tune, shift).name), $("bpm").value + "bpm", isEdited(tune) ? "edited" : ""].filter(Boolean).join("-");
+      st.textContent = "";
+      await downloads.save({ filename: base + ".zip", data: zipOne(base + ".mp3", parts) });
+      st.textContent = "Saved. Unzip it to get the MP3.";
+    } catch (err) { saveError(err, st); } finally { btn.disabled = false; }
+  });
+  function lyricTitle() { const first = stanzas[0] && stanzas[0].lines[0]; return first ? first.text.split(/\s+/).slice(0, 4).join(" ") : "song"; }
+  $("saveProject").addEventListener("click", async () => {
+    const st = $("projectStatus");
+    try { await downloads.save({ filename: slug(lyricTitle()) + "-composer.json", data: JSON.stringify(snapshot(), null, 1) }); st.textContent = "Project saved."; }
+    catch (err) { saveError(err, st); }
+  });
+  $("openProject").addEventListener("change", async e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const st = $("projectStatus");
+    try {
+      const s = JSON.parse(await f.text());
+      if (!s || s.v !== 1) throw new Error("not a composer project");
+      if (playing) stop();
+      applySnapshot(s); lyricsBox.value = lyricText;
+      if (!tune) tune = allTunes().find(t => fits(t, cur())) || null;
+      refreshAll(); save(); st.textContent = "Opened " + f.name + ".";
+    } catch (err) { st.textContent = "Couldn't open that file (" + err.message + ")."; }
+    e.target.value = "";
+  });
+
+  // =====================================================================
+  // Wiring it together
+  // =====================================================================
+  function selectTune(t, autoplay) {
+    if (playing) stop();
+    tune = t; shownTune = t; sel = 0;
+    $("bpm").min = Math.max(20, Math.round(t.bpm * .4)); $("bpm").max = Math.round(t.bpm * 2.2);
+    $("bpm").value = t.bpm; $("bpmOut").textContent = t.bpm;
+    $("beatName").textContent = t.beatName;
+    document.querySelectorAll(".tune").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === t.id)));
+    renderNow(); fillKeys(); renderSheet(); renderRoll(); save();
+    if (autoplay) play();
+  }
+  function renderNow() {
+    const st = cur(), t = tune;
+    $("nowName").textContent = t ? t.name : "No tune yet";
+    $("nowTag").textContent = t ? tagFor(t) : "";
+    const ok = canPlay();
+    $("play").disabled = !ok;
+    $("mismatch").hidden = !t || !st || ok;
+    if (t && st && !ok) $("mismatch").textContent = "This tune is for " + t.shape.join(".") + " stanzas; " + st.name + " is " + st.shape.join(".") + ". Compose for this stanza or pick another tune.";
+  }
+  let shownTune = null;
+  function refreshAll() {
+    const st = cur();
+    if (tune && st && !fits(tune, st)) { const alt = allTunes().find(t => fits(t, st)); if (alt) tune = alt; }
+    if (tune !== shownTune) { shownTune = tune; if (tune) $("bpm").dataset.init = ""; }
+    fillStanzas(); renderMeter(); renderLyric(); renderTunes(); renderNow(); fillKeys();
+    if (tune) { $("bpm").min = Math.max(20, Math.round(tune.bpm * .4)); $("bpm").max = Math.round(tune.bpm * 2.2); if (!$("bpm").dataset.init) { $("bpm").value = tune.bpm; $("bpmOut").textContent = tune.bpm; $("bpm").dataset.init = 1; } $("beatName").textContent = tune.beatName; }
+    renderSheet(); renderRoll();
+  }
+  if (octave === 0) setPressed("o-high", "o-men");
+  refreshAll();
+
+  // test hooks for offline checks
+  window.__composer = { parseLyrics, compose, STYLES, genLines, tuneFromClaude, claudePrompt, analyzeLine };
+})();
+</script>
