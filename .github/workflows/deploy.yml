@@ -23,11 +23,12 @@ jobs:
       - name: Prepare deploy directory
         run: |
           mkdir -p dist
-          # .claude/ (Claude Code skills) and the standalone Node tools are repo
-          # tooling, not site content — keep them out of the published site.
+          # .claude/ (Claude Code skills), songs/ (song drafts and the tune player)
+          # and the standalone Node tools are repo tooling, not site content —
+          # keep them out of the published site.
           rsync -a \
             --exclude='.git' --exclude='.github' --exclude='dist' \
-            --exclude='.claude' \
+            --exclude='.claude' --exclude='songs' \
             --exclude='social-engine' --exclude='stripe-setup' \
             ./ dist/
 

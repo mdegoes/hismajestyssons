@@ -1,0 +1,227 @@
+[
+ {
+  "id": "wine-dark",
+  "name": "Wine-Dark",
+  "tag": "D Dorian \u00b7 6/8",
+  "bpm": 63,
+  "rhythm": "R6",
+  "key": [
+   "D",
+   "dor"
+  ],
+  "blurb": "The first one. A call from the top, lifted a third on \"Go,\" peak on \"name.\"",
+  "notes": "A d c A G F G A G E  E D E F G A B c B A  c e d c A B c d c B  A d e f e d c A E D",
+  "chords": [
+   [
+    "Dm",
+    12
+   ],
+   [
+    "F",
+    6
+   ],
+   [
+    "C",
+    6
+   ],
+   [
+    "Dm",
+    6
+   ],
+   [
+    "Am",
+    18
+   ],
+   [
+    "C",
+    6
+   ],
+   [
+    "F",
+    6
+   ],
+   [
+    "G",
+    12
+   ],
+   [
+    "Dm",
+    6
+   ],
+   [
+    "G",
+    3
+   ],
+   [
+    "Am",
+    3
+   ],
+   [
+    "Dm",
+    12
+   ]
+  ]
+ },
+ {
+  "id": "lament",
+  "name": "Highland Lament",
+  "tag": "D minor \u00b7 3/4",
+  "bpm": 84,
+  "rhythm": "R3",
+  "key": [
+   "D",
+   "m"
+  ],
+  "blurb": "Slow waltz that starts low and climbs the whole first line, like a tide coming in.",
+  "notes": "D F E D C D E F G A  A c B A G F E F G A  d f e d c d c A G A  A d c f e d A F E D"
+ },
+ {
+  "id": "capstan",
+  "name": "Capstan",
+  "tag": "A Mixolydian \u00b7 4/4",
+  "bpm": 104,
+  "rhythm": "R4",
+  "key": [
+   "A",
+   "mix"
+  ],
+  "blurb": "Work-shanty drive with repeated notes. The flat seventh on \"no home\" keeps it salty.",
+  "notes": "e e c A A B c d c A  E A A A B c B A G E  e g f e c d c B A B  B c d e e d c B G A"
+ },
+ {
+  "id": "anthem",
+  "name": "Anthem",
+  "tag": "D major \u00b7 4/4",
+  "bpm": 76,
+  "rhythm": "R4e",
+  "key": [
+   "D",
+   "maj"
+  ],
+  "blurb": "Stadium singalong. A leap of a sixth on \"Lo, brothers\" and a broad major-key lift.",
+  "notes": "A f e d A B A d e f  e g f e d e d c B A  B g f e d e f g f e  A d e g f e d B c d"
+ },
+ {
+  "id": "veils",
+  "name": "The Veils",
+  "tag": "E Phrygian \u00b7 4/4",
+  "bpm": 72,
+  "rhythm": "R4",
+  "key": [
+   "E",
+   "phr"
+  ],
+  "blurb": "Dark and narrow, built on the half step above the tonic. Line two hangs unresolved.",
+  "notes": "E F E E D E F G F E  B c B A G A G F E F  B e d c B c B A G A  G c B e d c B A F E"
+ },
+ {
+  "id": "rover",
+  "name": "Rover",
+  "tag": "G major \u00b7 6/8",
+  "bpm": 92,
+  "rhythm": "R6",
+  "key": [
+   "G",
+   "maj"
+  ],
+  "blurb": "Quick jig for a pub or a ship's deck. Bright, bouncing, easy to clap to.",
+  "notes": "d B G d c B A G A B  D G A B c d e d c A  d g f e d e d B A B  d e d g f e d B A G"
+ },
+ {
+  "id": "chorale",
+  "name": "Chorale",
+  "tag": "D harmonic minor \u00b7 4/4",
+  "bpm": 66,
+  "rhythm": "R4e",
+  "key": [
+   "D",
+   "m"
+  ],
+  "extra": [
+   [
+    "A",
+    false
+   ]
+  ],
+  "blurb": "Hymn-like and stepwise, with a sharpened leading tone pulling home on \"roam.\"",
+  "notes": "D A A B A G F E F E  E F G A A d ^c B G A  A d d e f e d ^c d e  e f e g f e d d ^c d"
+ },
+ {
+  "id": "pentatonic",
+  "name": "Five-Stone",
+  "tag": "A minor pentatonic \u00b7 4/4",
+  "bpm": 96,
+  "rhythm": "R4",
+  "key": [
+   "A",
+   "m"
+  ],
+  "blurb": "Five notes only, Celtic-rock style. Line two lands on the flat seventh.",
+  "notes": "e g e d c d e g e d  A c d e d c A c A G  g g e d c e g e d e  c d e g e d c A G A"
+ },
+ {
+  "id": "northern",
+  "name": "Northern Waltz",
+  "tag": "D Mixolydian \u00b7 3/4",
+  "bpm": 120,
+  "rhythm": "R3",
+  "key": [
+   "D",
+   "mix"
+  ],
+  "blurb": "Lilting border-ballad waltz. Climbs to the octave on \"sea,\" then walks back down.",
+  "notes": "A d c A F G A B c d  c A G F E D E F G A  d e f e d c A c d e  d c d f e d c A F D"
+ },
+ {
+  "id": "slow-air",
+  "name": "Slow Air",
+  "tag": "E minor \u00b7 4/4",
+  "bpm": 56,
+  "rhythm": "R4",
+  "key": [
+   "E",
+   "m"
+  ],
+  "blurb": "Solo-voice lament with wide intervals and long holds. Best sung alone, then joined.",
+  "notes": "B e d B A G F E F G  G B A G F E D E G F  d g f e B c B A G A  B e f g f e d B ^D E"
+ },
+ {
+  "id": "stomp",
+  "name": "Stomp",
+  "tag": "G major \u00b7 4/4",
+  "bpm": 112,
+  "rhythm": "R4e",
+  "key": [
+   "G",
+   "maj"
+  ],
+  "blurb": "Modern folk stomp. A chanted, near-monotone hook, made for foot-stamping.",
+  "notes": "B B G B c d B A G A  D G G G A B A G E D  d d B d e d B A G A  A B d g e d B A F G"
+ },
+ {
+  "id": "war-chant",
+  "name": "War Chant",
+  "tag": "E Dorian \u00b7 4/4",
+  "bpm": 80,
+  "rhythm": "R4",
+  "key": [
+   "E",
+   "dor"
+  ],
+  "blurb": "Low, narrow and droning, like a host on the march. Rises a fifth for the second half.",
+  "notes": "E E D E E G F E D E  E G G A G B A G F E  B B A B B d c B A B  B e d e d B A G F E"
+ },
+ {
+  "id": "lydian",
+  "name": "Lydian Dawn",
+  "tag": "F Lydian \u00b7 6/8",
+  "bpm": 56,
+  "rhythm": "R6",
+  "key": [
+   "F",
+   "lyd"
+  ],
+  "blurb": "Dreamy, rocking and luminous. The raised fourth gives \"across\" an open-sky shimmer.",
+  "notes": "c f e c A B c d c A  G F G A B c d c B G  d g f e d c B c d e  d f e g f e d c G F"
+ }
+]

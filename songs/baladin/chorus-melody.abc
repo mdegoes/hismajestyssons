@@ -1,0 +1,17 @@
+X:1
+T:Lo, Brothers
+T:Chorus of The Ballad of Baladin
+C:Melody: new composition
+M:6/8
+L:1/8
+Q:3/8=63
+K:D dorian clef=treble-8
+%%MIDI program 0
+"Dm"A3 d2c | "Dm"A3 z2G | "F"F2G A2G | "C"E3 z2E |
+w:Lo, bro-thers, lo, a-cross the wine-dark sea: The
+"Dm"D2E F2G | "Am"A2B c2B | "Am"A6- | A3 z3 |
+w:man who has no name can have no home.
+"C"c3 e2d | "F"c3 z2A | "G"B2c d2c | "G"B3 z2A |
+w:Go, bro-thers, go, find him who can-not see. Re-
+"Dm"d2e f2e | "G"d2c "Am"A2E | "Dm"D6- | D3 z3 |]
+w:store his name lest he for-ev-er roam.
